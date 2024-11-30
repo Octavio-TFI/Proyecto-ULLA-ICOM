@@ -28,7 +28,7 @@ jobs:
           git push origin $NEW_TAG
 
       - name: Create GitHub release
-        uses: comnoco/create-release@v2.0.5
+        uses: actions/create-release@v1
         with:
           tag_name: v${{ steps.gitversion.outputs.version }}
           release_name: Release v${{ steps.gitversion.outputs.version }}
