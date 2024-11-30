@@ -1,0 +1,40 @@
+name: Release on Merge to Main
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow on push to the main branch
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code
+      - name: Checkout repository 
+        uses: actions/checkout@v4
+
+      - name: Git Version
+        id: gitversion
+        uses: codacy/git-version@2.4.0
+        with:
+          release-branch: main
+        
+      - name: Create new Git tag
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          NEW_TAG="v${{ steps.gitversion.outputs.version }}"
+          git tag $NEW_TAG
+          git push origin $NEW_TAG
+
+      - name: Create GitHub release
+        uses: actions/create-release@v2
+        with:
+          tag_name: v${{ steps.gitversion.outputs.version }}
+          release_name: Release v${{ steps.gitversion.outputs.version }}
+          body: |
+            Release notes for version v${{ steps.gitversion.outputs.version }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
