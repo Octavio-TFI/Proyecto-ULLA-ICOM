@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Repositories
 {
-    internal interface IUnitOfWork
+    public interface IUnitOfWork
     {
         /// <summary>
         /// Repositorio de mensajes

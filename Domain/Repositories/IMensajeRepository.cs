@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Repositories
 {
-    internal interface IMensajeRepository
+    public interface IMensajeRepository
     {
         /// <summary>
         /// Guarda un mensaje en la DB

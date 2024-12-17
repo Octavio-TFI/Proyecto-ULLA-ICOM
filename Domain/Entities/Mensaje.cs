@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    internal abstract class Mensaje
+    public abstract class Mensaje
     {
         /// <summary>
         /// Id del mensaje
