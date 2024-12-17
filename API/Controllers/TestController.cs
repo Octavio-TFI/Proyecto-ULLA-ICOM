@@ -1,3 +1,4 @@
+using API.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -8,7 +9,7 @@ namespace API.Controllers
         : ControllerBase
     {
         [HttpPost]
-        public Task Post()
+        public Task Post(MensajePrueba mensajePrueba)
         {
             return Task.CompletedTask;
         }
