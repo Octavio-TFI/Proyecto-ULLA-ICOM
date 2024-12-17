@@ -1,4 +1,7 @@
-﻿namespace API.Controllers.Tests
+﻿using AppServices.Abstractions;
+using AppServices.Abstractions.DTOs;
+
+namespace API.Controllers.Tests
 {
     [TestFixture()]
     public class TestControllerTests
@@ -7,9 +10,10 @@
         public void PostTest()
         {
             // Arrange
-            var mensaje = new MensajePrueba { ChatId = Guid.Empty, Texto = "Test" };
+            var mensaje = new MensajePrueba { ChatId = new Guid(), Texto = "Test" };
 
             var loggerMock = new Mock<ILogger<TestController>>();
+            var recibidorMensajesMock = new Mock<IRecibidorMensajes>();
 
             var testController = new TestController(loggerMock.Object);
 
@@ -21,6 +25,15 @@
                 .InformationWasCalled()
                 .MessageEquals("Mensaje recibido: Test")
                 .Times(1);
+
+            recibidorMensajesMock.Verify(
+                x => x.RecibirMensajeAsync(
+                    It.Is<MensajeDTO>(
+                        m => m.UsuarioId == mensaje.ChatId.ToString() &&
+                            m.ChatId == mensaje.ChatId.ToString() &&
+                            m.Texto == mensaje.Texto &&
+                            m.Plataforma == "Test")),
+                Times.Once);
 
             Assert.That(result, Is.EqualTo(Task.CompletedTask));
         }
