@@ -27,5 +27,10 @@ namespace AppServices.Abstractions.DTOs
         /// Platforma utilizada para enviar el mensaje
         /// </summary>
         public required string Plataforma { get; init; }
+
+        /// <summary>
+        /// DateTime de cuando se recibio el mensaje
+        /// </summary>
+        public required DateTime DateTime { get; init; }
     }
 }

@@ -10,7 +10,12 @@ namespace API.Controllers.Tests
         public void PostTest()
         {
             // Arrange
-            var mensaje = new MensajePrueba { ChatId = new Guid(), Texto = "Test" };
+            var mensaje = new MensajePrueba
+            {
+                ChatId = new Guid(),
+                Texto = "Test",
+                DateTime = DateTime.Now
+            };
 
             var loggerMock = new Mock<ILogger<TestController>>();
             var recibidorMensajesMock = new Mock<IRecibidorMensajes>();
@@ -34,7 +39,8 @@ namespace API.Controllers.Tests
                         m => m.UsuarioId == mensaje.ChatId.ToString() &&
                             m.ChatId == mensaje.ChatId.ToString() &&
                             m.Texto == mensaje.Texto &&
-                            m.Plataforma == "Test")),
+                            m.Plataforma == "Test" &&
+                            m.DateTime == mensaje.DateTime)),
                 Times.Once);
 
             Assert.That(result, Is.EqualTo(Task.CompletedTask));

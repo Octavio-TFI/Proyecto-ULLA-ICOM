@@ -21,6 +21,7 @@ namespace API.Controllers
                     UsuarioId = mensaje.ChatId.ToString(),
                     ChatId = mensaje.ChatId.ToString(),
                     Texto = mensaje.Texto,
+                    DateTime = mensaje.DateTime,
                     Plataforma = "Test"
                 });
 
