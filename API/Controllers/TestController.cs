@@ -22,7 +22,8 @@ namespace API.Controllers
                     ChatId = mensaje.ChatId.ToString(),
                     Texto = mensaje.Texto,
                     DateTime = mensaje.DateTime,
-                    Plataforma = "Test"
+                    Plataforma = "Test",
+                    TipoMensaje = TipoMensajeDTO.Texto
                 });
 
             _logger.LogInformation("Mensaje recibido: {Texto}", mensaje.Texto);

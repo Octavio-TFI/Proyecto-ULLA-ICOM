@@ -40,7 +40,8 @@ namespace API.Controllers.Tests
                             m.ChatId == mensaje.ChatId.ToString() &&
                             m.Texto == mensaje.Texto &&
                             m.Plataforma == "Test" &&
-                            m.DateTime == mensaje.DateTime)),
+                            m.DateTime == mensaje.DateTime &&
+                            m.TipoMensaje == TipoMensajeDTO.Texto)),
                 Times.Once);
 
             Assert.That(result, Is.EqualTo(Task.CompletedTask));

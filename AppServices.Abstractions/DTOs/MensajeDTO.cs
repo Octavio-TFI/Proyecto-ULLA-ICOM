@@ -32,5 +32,11 @@ namespace AppServices.Abstractions.DTOs
         /// DateTime de cuando se recibio el mensaje
         /// </summary>
         public required DateTime DateTime { get; init; }
+
+
+        /// <summary>
+        /// Tipo del mensaje
+        /// </summary>
+        public required TipoMensajeDTO TipoMensaje { get; init; }
     }
 }
