@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace API.Controllers.Tests
+﻿namespace API.Controllers.Tests
 {
     [TestFixture()]
     public class TestControllerTests
@@ -19,6 +17,11 @@ namespace API.Controllers.Tests
             var result = testController.Post(mensaje);
 
             // Assert
+            loggerMock.VerifyLog()
+                .InformationWasCalled()
+                .MessageEquals("Mensaje recibido: Test")
+                .Times(1);
+
             Assert.That(result, Is.EqualTo(Task.CompletedTask));
         }
     }

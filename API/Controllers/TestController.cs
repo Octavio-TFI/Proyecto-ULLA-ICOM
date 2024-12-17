@@ -11,6 +11,8 @@ namespace API.Controllers
         [HttpPost]
         public Task Post(MensajePrueba mensajePrueba)
         {
+            _logger.LogInformation("Mensaje recibido: {Texto}", mensajePrueba.Texto);
+
             return Task.CompletedTask;
         }
     }

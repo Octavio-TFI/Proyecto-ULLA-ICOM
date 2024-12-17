@@ -1,5 +1,7 @@
 ﻿global using API.Controllers;
 global using API.DTOs;
+global using Microsoft.Extensions.Logging;
+global using Microsoft.Extensions.Logging.Mock;
 global using Moq;
 global using NUnit.Framework;
 global using System;
