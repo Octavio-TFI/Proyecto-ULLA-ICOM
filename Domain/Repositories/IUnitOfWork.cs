@@ -9,6 +9,11 @@ namespace Domain.Repositories
     public interface IUnitOfWork
     {
         /// <summary>
+        /// Repositorio de chats
+        /// </summary>
+        IChatRepository Chats { get; }
+
+        /// <summary>
         /// Repositorio de mensajes
         /// </summary>
         IMensajeRepository Mensajes { get; }
