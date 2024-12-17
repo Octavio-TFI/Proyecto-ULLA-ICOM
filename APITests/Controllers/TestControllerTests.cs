@@ -15,7 +15,9 @@ namespace API.Controllers.Tests
             var loggerMock = new Mock<ILogger<TestController>>();
             var recibidorMensajesMock = new Mock<IRecibidorMensajes>();
 
-            var testController = new TestController(loggerMock.Object);
+            var testController = new TestController(
+                loggerMock.Object,
+                recibidorMensajesMock.Object);
 
             // Act
             var result = testController.Post(mensaje);
