@@ -21,17 +21,14 @@ namespace AppServices
                     mensaje.Plataforma);
 
             // Si el chat no existe, se crea uno nuevo
-            if (chat is null)
-            {
-                chat = await _unitOfWork.Chats
-                    .InsertAsync(
-                        new Chat
-                        {
-                            UsuarioId = mensaje.UsuarioId,
-                            ChatPlataformaId = mensaje.ChatPlataformaId,
-                            Plataforma = mensaje.Plataforma
-                        });
-            }
+            chat ??= await _unitOfWork.Chats
+                .InsertAsync(
+                    new Chat
+                    {
+                        UsuarioId = mensaje.UsuarioId,
+                        ChatPlataformaId = mensaje.ChatPlataformaId,
+                        Plataforma = mensaje.Plataforma
+                    });
 
             await _unitOfWork.Mensajes
                 .InsertAsync(
