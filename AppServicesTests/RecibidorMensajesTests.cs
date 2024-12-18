@@ -79,6 +79,8 @@ namespace AppServices.Tests
                             m.DateTime == mensajeDTO.DateTime &&
                             m.Texto == mensajeDTO.Texto)),
                 Times.Once);
+
+            unitOfWorkMock.Verify(u => u.SaveChangesAsync(), Times.Once);
         }
     }
 }

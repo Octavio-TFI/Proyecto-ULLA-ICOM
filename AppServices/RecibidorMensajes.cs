@@ -41,6 +41,8 @@ namespace AppServices
                         DateTime = mensaje.DateTime,
                         Texto = mensaje.Texto
                     });
+
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
