@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AppServices.Abstractions.DTOs
 {
-    public record MensajeDTO
+    public record MensajeTextoDTO
     {
         /// <summary>
         /// Id del usuario en la plataforma que envia el mensaje
@@ -32,11 +32,5 @@ namespace AppServices.Abstractions.DTOs
         /// DateTime de cuando se recibio el mensaje
         /// </summary>
         public required DateTime DateTime { get; init; }
-
-
-        /// <summary>
-        /// Tipo del mensaje
-        /// </summary>
-        public required TipoMensajeDTO TipoMensaje { get; init; }
     }
 }

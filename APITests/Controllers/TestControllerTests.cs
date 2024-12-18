@@ -10,7 +10,7 @@ namespace API.Controllers.Tests
         public void PostTest()
         {
             // Arrange
-            var mensaje = new MensajePrueba
+            var mensaje = new MensajeTextoPrueba
             {
                 ChatId = new Guid(),
                 Texto = "Test",
@@ -34,14 +34,13 @@ namespace API.Controllers.Tests
                 .Times(1);
 
             recibidorMensajesMock.Verify(
-                x => x.RecibirMensajeAsync(
-                    It.Is<MensajeDTO>(
+                x => x.RecibirMensajeTextoAsync(
+                    It.Is<MensajeTextoDTO>(
                         m => m.UsuarioId == mensaje.ChatId.ToString() &&
                             m.ChatId == mensaje.ChatId.ToString() &&
                             m.Texto == mensaje.Texto &&
                             m.Plataforma == "Test" &&
-                            m.DateTime == mensaje.DateTime &&
-                            m.TipoMensaje == TipoMensajeDTO.Texto)),
+                            m.DateTime == mensaje.DateTime)),
                 Times.Once);
 
             Assert.That(result, Is.EqualTo(Task.CompletedTask));

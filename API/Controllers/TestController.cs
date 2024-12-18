@@ -13,17 +13,16 @@ namespace API.Controllers
         : ControllerBase
     {
         [HttpPost]
-        public async Task Post(MensajePrueba mensaje)
+        public async Task Post(MensajeTextoPrueba mensaje)
         {
-            await _recibidorMensajes.RecibirMensajeAsync(
-                new MensajeDTO
+            await _recibidorMensajes.RecibirMensajeTextoAsync(
+                new MensajeTextoDTO
                 {
                     UsuarioId = mensaje.ChatId.ToString(),
                     ChatId = mensaje.ChatId.ToString(),
                     Texto = mensaje.Texto,
                     DateTime = mensaje.DateTime,
-                    Plataforma = "Test",
-                    TipoMensaje = TipoMensajeDTO.Texto
+                    Plataforma = "Test"
                 });
 
             _logger.LogInformation("Mensaje recibido: {Texto}", mensaje.Texto);

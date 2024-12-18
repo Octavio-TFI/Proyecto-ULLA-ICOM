@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.Abstractions.DTOs
+namespace Domain.ValueObjects
 {
-    public enum TipoMensajeDTO
+    public enum TipoMensaje
     {
         Texto
     }

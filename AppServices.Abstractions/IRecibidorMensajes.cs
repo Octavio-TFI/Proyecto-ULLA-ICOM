@@ -8,9 +8,9 @@ namespace AppServices.Abstractions
     public interface IRecibidorMensajes
     {
         /// <summary>
-        /// Recibe un mensaje y lo procesa
+        /// Recibe un mensaje de texto y lo procesa
         /// </summary>
         /// <param name="mensaje">Mensaje a recibir</param>
-        Task RecibirMensajeAsync(MensajeDTO mensaje);
+        Task RecibirMensajeTextoAsync(MensajeTextoDTO mensaje);
     }
 }

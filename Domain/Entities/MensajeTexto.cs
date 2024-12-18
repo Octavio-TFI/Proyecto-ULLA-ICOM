@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    internal class MensajeTexto : Mensaje
+    public class MensajeTexto : Mensaje
     {
         /// <summary>
         /// Texto del mensaje

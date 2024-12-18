@@ -1,6 +1,6 @@
 ﻿namespace API.DTOs
 {
-    public record MensajePrueba
+    public record MensajeTextoPrueba
     {
         public required Guid ChatId { get; init; }
 
