@@ -2,6 +2,7 @@
 using AppServices.Abstractions.DTOs;
 using Domain.Entities;
 using Domain.Repositories;
+using Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,21 +15,37 @@ namespace AppServices
     {
         public async Task RecibirMensajeTextoAsync(MensajeTextoDTO mensaje)
         {
-            var chat = await _unitOfWork.Chats
-                .GetAsync(
-                    mensaje.UsuarioId,
-                    mensaje.ChatPlataformaId,
-                    mensaje.Plataforma);
+            Chat chat;
 
-            // Si el chat no existe, se crea uno nuevo
-            chat ??= await _unitOfWork.Chats
-                .InsertAsync(
-                    new Chat
-                    {
-                        UsuarioId = mensaje.UsuarioId,
-                        ChatPlataformaId = mensaje.ChatPlataformaId,
-                        Plataforma = mensaje.Plataforma
-                    });
+            try 
+            {
+                chat = await _unitOfWork.Chats
+                    .GetAsync(
+                        mensaje.UsuarioId,
+                        mensaje.ChatPlataformaId,
+                        mensaje.Plataforma);
+            }
+            catch (NotFoundException) 
+            {
+                // Si el chat no existe, se crea uno nuevo
+                await _unitOfWork.Chats
+                    .InsertAsync(
+                        new Chat
+                        {
+                            UsuarioId = mensaje.UsuarioId,
+                            ChatPlataformaId = mensaje.ChatPlataformaId,
+                            Plataforma = mensaje.Plataforma
+                        });
+
+                // Se guarda el chat para obtener el Id
+                await _unitOfWork.SaveChangesAsync();
+
+                chat = await _unitOfWork.Chats
+                    .GetAsync(
+                        mensaje.UsuarioId,
+                        mensaje.ChatPlataformaId,
+                        mensaje.Plataforma);
+            }
 
             await _unitOfWork.Mensajes
                 .InsertAsync(
