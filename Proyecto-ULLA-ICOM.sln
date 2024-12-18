@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35514.174
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{94AE3A98-897D-44A9-9857-5CCA0C9CB65F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1-API", "API\1-API.csproj", "{94AE3A98-897D-44A9-9857-5CCA0C9CB65F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APITests", "APITests\APITests.csproj", "{97ACF019-4DAC-4690-B336-D7707565EF2C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "6-ControllersTests", "APITests\6-ControllersTests.csproj", "{97ACF019-4DAC-4690-B336-D7707565EF2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppServices.Abstractions", "AppServices.Abstractions\AppServices.Abstractions.csproj", "{BF15D016-F2D7-40F8-95F1-A111453AC4E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3-AppServices.Abstractions", "AppServices.Abstractions\3-AppServices.Abstractions.csproj", "{BF15D016-F2D7-40F8-95F1-A111453AC4E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{1EC49E39-0FE3-46C8-A8DB-C7984D395A73}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "5-Domain", "Domain\5-Domain.csproj", "{1EC49E39-0FE3-46C8-A8DB-C7984D395A73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppServices", "AppServices\AppServices.csproj", "{019665E8-0EC9-48A1-A00A-51DF9D0F5AD7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4-AppServices", "AppServices\4-AppServices.csproj", "{019665E8-0EC9-48A1-A00A-51DF9D0F5AD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppServicesTests", "AppServicesTests\AppServicesTests.csproj", "{219E3F94-28A7-4A65-8146-93E02621296B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7-AppServicesTests", "AppServicesTests\7-AppServicesTests.csproj", "{219E3F94-28A7-4A65-8146-93E02621296B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2-Controllers", "Controllers\2-Controllers.csproj", "{064B521E-E6CA-400F-A942-9873700DE912}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{219E3F94-28A7-4A65-8146-93E02621296B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{219E3F94-28A7-4A65-8146-93E02621296B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{219E3F94-28A7-4A65-8146-93E02621296B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{064B521E-E6CA-400F-A942-9873700DE912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{064B521E-E6CA-400F-A942-9873700DE912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{064B521E-E6CA-400F-A942-9873700DE912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{064B521E-E6CA-400F-A942-9873700DE912}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

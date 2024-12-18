@@ -4,6 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	<RootNamespace>API</RootNamespace>
+	  <AssemblyName>API</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AppServices.Abstractions\AppServices.Abstractions.csproj" />
+    <ProjectReference Include="..\AppServices.Abstractions\3-AppServices.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

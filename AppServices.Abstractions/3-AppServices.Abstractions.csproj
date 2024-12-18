@@ -4,11 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<RootNamespace>AppServices.Abstractions</RootNamespace>
+	  <AssemblyName>AppServices.Abstractions</AssemblyName>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AppServices.Abstractions\AppServices.Abstractions.csproj" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-  </ItemGroup>
 
 </Project>

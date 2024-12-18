@@ -1,4 +1,4 @@
-﻿namespace API.DTOs
+﻿namespace Controllers.DTOs
 {
     public record MensajeTextoPrueba
     {

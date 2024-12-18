@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AppServices
 {
-    public class RecibidorMensajes(IUnitOfWork _unitOfWork) : IRecibidorMensajes
+    internal class RecibidorMensajes(IUnitOfWork _unitOfWork) : IRecibidorMensajes
     {
         public async Task RecibirMensajeTextoAsync(MensajeTextoDTO mensaje)
         {
