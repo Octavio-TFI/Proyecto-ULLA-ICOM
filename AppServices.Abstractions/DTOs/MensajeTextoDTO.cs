@@ -16,7 +16,7 @@ namespace AppServices.Abstractions.DTOs
         /// <summary>
         /// Id del chat en la plataforma que envia el mensaje
         /// </summary>
-        public required string ChatId { get; init; }
+        public required string ChatPlataformaId { get; init; }
 
         /// <summary>
         /// Texto del mensaje

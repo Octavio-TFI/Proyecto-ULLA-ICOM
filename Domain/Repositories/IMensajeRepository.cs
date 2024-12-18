@@ -10,9 +10,9 @@ namespace Domain.Repositories
     public interface IMensajeRepository
     {
         /// <summary>
-        /// Guarda un mensaje en la DB
+        /// Inserta un mensaje en la DB
         /// </summary>
-        /// <param name="mensaje">Mensaje a guardar en la DB</param>
-        Task SaveAsync(Mensaje mensaje);
+        /// <param name="mensaje">Mensaje a insertar en la DB</param>
+        Task InsertAsync(Mensaje mensaje);
     }
 }

@@ -17,16 +17,30 @@ namespace AppServices
             var chat = await _unitOfWork.Chats
                 .GetAsync(
                     mensaje.UsuarioId,
-                    mensaje.ChatId,
+                    mensaje.ChatPlataformaId,
                     mensaje.Plataforma);
 
+            // Si el chat no existe, se crea uno nuevo
             if (chat is null)
             {
-                throw new ArgumentException("Chat no encontrado");
+                await _unitOfWork.Chats
+                    .InsertAsync(
+                        new Chat
+                        {
+                            UsuarioId = mensaje.UsuarioId,
+                            ChatPlataformaId = mensaje.ChatPlataformaId,
+                            Plataforma = mensaje.Plataforma
+                        });
+
+                chat = await _unitOfWork.Chats
+                    .GetAsync(
+                        mensaje.UsuarioId,
+                        mensaje.ChatPlataformaId,
+                        mensaje.Plataforma);
             }
 
             await _unitOfWork.Mensajes
-                .SaveAsync(
+                .InsertAsync(
                     new MensajeTexto
                     {
                         ChatId = chat.Id,

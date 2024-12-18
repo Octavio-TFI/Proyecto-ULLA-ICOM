@@ -19,7 +19,7 @@ namespace API.Controllers
                 new MensajeTextoDTO
                 {
                     UsuarioId = mensaje.ChatId.ToString(),
-                    ChatId = mensaje.ChatId.ToString(),
+                    ChatPlataformaId = mensaje.ChatId.ToString(),
                     Texto = mensaje.Texto,
                     DateTime = mensaje.DateTime,
                     Plataforma = "Test"

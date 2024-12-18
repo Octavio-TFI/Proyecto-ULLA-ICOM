@@ -15,12 +15,14 @@ namespace AppServices.Tests
     public class RecibidorMensajesTests
     {
         [Test()]
-        public async Task RecibirMensajeAsyncTest()
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task RecibirMensajeTextoAsyncTest(bool chatExists)
         {
             // Arrange
             var mensaje = new MensajeTextoDTO
             {
-                ChatId = "chat2",
+                ChatPlataformaId = "chat2",
                 DateTime = DateTime.Now,
                 Plataforma = "Test",
                 Texto = "Hola",
@@ -31,7 +33,7 @@ namespace AppServices.Tests
             {
                 Id = 10,
                 UsuarioId = "usuario",
-                ChatId = "chat2",
+                ChatPlataformaId = "chat2",
                 Plataforma = "Test"
             };
 
@@ -39,11 +41,12 @@ namespace AppServices.Tests
             var chatRepositoryMock = new Mock<IChatRepository>();
             var mensajeRepositoryMock = new Mock<IMensajeRepository>();
 
-            chatRepositoryMock.Setup(
+            chatRepositoryMock.SetupSequence(
                 r => r.GetAsync(
                     mensaje.UsuarioId,
-                    mensaje.ChatId,
+                    mensaje.ChatPlataformaId,
                     mensaje.Plataforma))
+                .ReturnsAsync(chatExists ? chat : null)
                 .ReturnsAsync(chat);
 
             unitOfWorkMock.Setup(u => u.Chats)
@@ -58,8 +61,12 @@ namespace AppServices.Tests
             await recibidorMensajes.RecibirMensajeTextoAsync(mensaje);
 
             // Assert
+            chatRepositoryMock.Verify(
+                r => r.InsertAsync(It.IsAny<Chat>()),
+                chatExists ? Times.Never : Times.Once);
+
             mensajeRepositoryMock.Verify(
-                r => r.SaveAsync(It.Is<MensajeTexto>(m => m.ChatId == chat.Id)),
+                r => r.InsertAsync(It.Is<MensajeTexto>(m => m.ChatId == chat.Id)),
                 Times.Once);
         }
     }

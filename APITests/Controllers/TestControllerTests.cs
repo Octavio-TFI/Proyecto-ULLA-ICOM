@@ -37,7 +37,7 @@ namespace API.Controllers.Tests
                 x => x.RecibirMensajeTextoAsync(
                     It.Is<MensajeTextoDTO>(
                         m => m.UsuarioId == mensaje.ChatId.ToString() &&
-                            m.ChatId == mensaje.ChatId.ToString() &&
+                            m.ChatPlataformaId == mensaje.ChatId.ToString() &&
                             m.Texto == mensaje.Texto &&
                             m.Plataforma == "Test" &&
                             m.DateTime == mensaje.DateTime)),

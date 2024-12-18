@@ -12,7 +12,7 @@ namespace Domain.Entities
 
         public required string UsuarioId { get; init; }
 
-        public required string ChatId { get; init; }
+        public required string ChatPlataformaId { get; init; }
 
         public required string Plataforma { get; init; }
     }
