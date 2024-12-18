@@ -22,6 +22,7 @@ namespace Domain.Repositories
         /// Inserta un chat en la DB
         /// </summary>
         /// <param name="chat">Chat a insertar en la DB</param>
-        Task InsertAsync(Chat chat);
+        /// <returns>Chat insertado en la DB</returns>
+        Task<Chat> InsertAsync(Chat chat);
     }
 }

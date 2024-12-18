@@ -20,7 +20,7 @@ namespace AppServices.Tests
         public async Task RecibirMensajeTextoAsyncTest(bool chatExists)
         {
             // Arrange
-            var mensaje = new MensajeTextoDTO
+            var mensajeDTO = new MensajeTextoDTO
             {
                 ChatPlataformaId = "chat2",
                 DateTime = DateTime.Now,
@@ -43,10 +43,17 @@ namespace AppServices.Tests
 
             chatRepositoryMock.SetupSequence(
                 r => r.GetAsync(
-                    mensaje.UsuarioId,
-                    mensaje.ChatPlataformaId,
-                    mensaje.Plataforma))
-                .ReturnsAsync(chatExists ? chat : null)
+                    mensajeDTO.UsuarioId,
+                    mensajeDTO.ChatPlataformaId,
+                    mensajeDTO.Plataforma))
+                .ReturnsAsync(chatExists ? chat : null);
+
+            chatRepositoryMock.Setup(
+                r => r.InsertAsync(
+                    It.Is<Chat>(
+                        c => c.UsuarioId == mensajeDTO.UsuarioId &&
+                            c.ChatPlataformaId == mensajeDTO.ChatPlataformaId &&
+                            c.Plataforma == mensajeDTO.Plataforma)))
                 .ReturnsAsync(chat);
 
             unitOfWorkMock.Setup(u => u.Chats)
@@ -58,7 +65,7 @@ namespace AppServices.Tests
             var recibidorMensajes = new RecibidorMensajes(unitOfWorkMock.Object);
 
             // Act
-            await recibidorMensajes.RecibirMensajeTextoAsync(mensaje);
+            await recibidorMensajes.RecibirMensajeTextoAsync(mensajeDTO);
 
             // Assert
             chatRepositoryMock.Verify(
@@ -66,7 +73,11 @@ namespace AppServices.Tests
                 chatExists ? Times.Never : Times.Once);
 
             mensajeRepositoryMock.Verify(
-                r => r.InsertAsync(It.Is<MensajeTexto>(m => m.ChatId == chat.Id)),
+                r => r.InsertAsync(
+                    It.Is<MensajeTexto>(
+                        m => m.ChatId == chat.Id &&
+                            m.DateTime == mensajeDTO.DateTime &&
+                            m.Texto == mensajeDTO.Texto)),
                 Times.Once);
         }
     }
