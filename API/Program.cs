@@ -1,4 +1,5 @@
 using Controllers;
+using AppServices;
 using System.Reflection;
 using System.Reflection.Metadata;
 
@@ -10,6 +11,7 @@ var controllersAssembly = Assembly.GetAssembly(typeof(TestController))
     ?? throw new Exception("Assembly de Controllers no econtrada");
 
 builder.Services.AddControllers().AddApplicationPart(controllersAssembly);
+builder.Services.AddAppServices();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

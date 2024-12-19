@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AppServices\4-AppServices.csproj" />
     <ProjectReference Include="..\Controllers\2-Controllers.csproj" />
   </ItemGroup>
 
