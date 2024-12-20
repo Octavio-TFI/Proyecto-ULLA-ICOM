@@ -1,5 +1,6 @@
 ﻿using AppServices;
 using AppServices.Abstractions.DTOs;
+using AppServices.Ports;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;
@@ -47,13 +48,10 @@ namespace AppServices.Tests
                     mensajeDTO.Plataforma))
                 .ReturnsAsync(chat);
 
-            unitOfWorkMock.Setup(u => u.Chats)
-                .Returns(chatRepositoryMock.Object);
-
-            unitOfWorkMock.Setup(u => u.Mensajes)
-                .Returns(mensajeRepositoryMock.Object);
-
-            var recibidorMensajes = new RecibidorMensajes(unitOfWorkMock.Object);
+            var recibidorMensajes = new RecibidorMensajes(
+                unitOfWorkMock.Object,
+                chatRepositoryMock.Object,
+                mensajeRepositoryMock.Object);
 
             // Act
             await recibidorMensajes.RecibirMensajeTextoAsync(mensajeDTO);
@@ -106,16 +104,13 @@ namespace AppServices.Tests
                 .ThrowsAsync(new NotFoundException())
                 .ReturnsAsync(chat);
 
-            unitOfWorkMock.Setup(u => u.Chats)
-                .Returns(chatRepositoryMock.Object);
-
-            unitOfWorkMock.Setup(u => u.Mensajes)
-                .Returns(mensajeRepositoryMock.Object);
-
             unitOfWorkMock.Setup(x => x.SaveChangesAsync())
                 .Callback(() => chat.Id = 10);
 
-            var recibidorMensajes = new RecibidorMensajes(unitOfWorkMock.Object);
+            var recibidorMensajes = new RecibidorMensajes(
+                unitOfWorkMock.Object,
+                chatRepositoryMock.Object,
+                mensajeRepositoryMock.Object);
 
             // Act
             await recibidorMensajes.RecibirMensajeTextoAsync(mensajeDTO);
@@ -125,15 +120,15 @@ namespace AppServices.Tests
                 r => r.InsertAsync(
                     It.Is<Chat>(
                         c => c.UsuarioId == mensajeDTO.UsuarioId &&
-                        c.ChatPlataformaId == mensajeDTO.ChatPlataformaId &&
-                        c.Plataforma == mensajeDTO.Plataforma)));
+                            c.ChatPlataformaId == mensajeDTO.ChatPlataformaId &&
+                            c.Plataforma == mensajeDTO.Plataforma)));
 
             mensajeRepositoryMock.Verify(
                 r => r.InsertAsync(
                     It.Is<MensajeTexto>(
                         m => m.ChatId == 10 &&
-                        m.DateTime == mensajeDTO.DateTime &&
-                        m.Texto == mensajeDTO.Texto)),
+                            m.DateTime == mensajeDTO.DateTime &&
+                            m.Texto == mensajeDTO.Texto)),
                 Times.Once);
 
             unitOfWorkMock.Verify(u => u.SaveChangesAsync(), Times.Exactly(2));

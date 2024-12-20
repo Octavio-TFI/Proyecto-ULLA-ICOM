@@ -1,8 +1,9 @@
 ﻿using AppServices.Abstractions;
 using AppServices.Abstractions.DTOs;
+using AppServices.Ports;
 using Domain.Entities;
-using Domain.Repositories;
 using Domain.Exceptions;
+using Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,50 +12,50 @@ using System.Threading.Tasks;
 
 namespace AppServices
 {
-    internal class RecibidorMensajes(IUnitOfWork _unitOfWork) : IRecibidorMensajes
+    internal class RecibidorMensajes(
+        IUnitOfWork _unitOfWork,
+        IChatRepository _chatRepository,
+        IMensajeRepository _mensajeRepository)
+        : IRecibidorMensajes
     {
         public async Task RecibirMensajeTextoAsync(MensajeTextoDTO mensaje)
         {
             Chat chat;
 
-            try 
+            try
             {
-                chat = await _unitOfWork.Chats
-                    .GetAsync(
-                        mensaje.UsuarioId,
-                        mensaje.ChatPlataformaId,
-                        mensaje.Plataforma);
+                chat = await _chatRepository.GetAsync(
+                    mensaje.UsuarioId,
+                    mensaje.ChatPlataformaId,
+                    mensaje.Plataforma);
             }
-            catch (NotFoundException) 
+            catch (NotFoundException)
             {
                 // Si el chat no existe, se crea uno nuevo
-                await _unitOfWork.Chats
-                    .InsertAsync(
-                        new Chat
-                        {
-                            UsuarioId = mensaje.UsuarioId,
-                            ChatPlataformaId = mensaje.ChatPlataformaId,
-                            Plataforma = mensaje.Plataforma
-                        });
+                await _chatRepository.InsertAsync(
+                    new Chat
+                    {
+                        UsuarioId = mensaje.UsuarioId,
+                        ChatPlataformaId = mensaje.ChatPlataformaId,
+                        Plataforma = mensaje.Plataforma
+                    });
 
                 // Se guarda el chat para obtener el Id
                 await _unitOfWork.SaveChangesAsync();
 
-                chat = await _unitOfWork.Chats
-                    .GetAsync(
-                        mensaje.UsuarioId,
-                        mensaje.ChatPlataformaId,
-                        mensaje.Plataforma);
+                chat = await _chatRepository.GetAsync(
+                    mensaje.UsuarioId,
+                    mensaje.ChatPlataformaId,
+                    mensaje.Plataforma);
             }
 
-            await _unitOfWork.Mensajes
-                .InsertAsync(
-                    new MensajeTexto
-                    {
-                        ChatId = chat.Id,
-                        DateTime = mensaje.DateTime,
-                        Texto = mensaje.Texto
-                    });
+            await _mensajeRepository.InsertAsync(
+                new MensajeTexto
+                {
+                    ChatId = chat.Id,
+                    DateTime = mensaje.DateTime,
+                    Texto = mensaje.Texto
+                });
 
             await _unitOfWork.SaveChangesAsync();
         }
