@@ -32,7 +32,7 @@ namespace AppServices
             catch (NotFoundException)
             {
                 // Si el chat no existe, se crea uno nuevo
-                await _chatRepository.InsertAsync(
+                chat = await _chatRepository.InsertAsync(
                     new Chat
                     {
                         UsuarioId = mensaje.UsuarioId,
@@ -42,11 +42,6 @@ namespace AppServices
 
                 // Se guarda el chat para obtener el Id
                 await _unitOfWork.SaveChangesAsync();
-
-                chat = await _chatRepository.GetAsync(
-                    mensaje.UsuarioId,
-                    mensaje.ChatPlataformaId,
-                    mensaje.Plataforma);
             }
 
             await _mensajeRepository.InsertAsync(

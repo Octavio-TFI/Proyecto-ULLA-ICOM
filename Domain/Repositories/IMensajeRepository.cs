@@ -13,6 +13,7 @@ namespace Domain.Repositories
         /// Inserta un mensaje en la DB
         /// </summary>
         /// <param name="mensaje">Mensaje a insertar en la DB</param>
-        Task InsertAsync(Mensaje mensaje);
+        /// <returns>Mensaje creado</returns>
+        Task<Mensaje> InsertAsync(Mensaje mensaje);
     }
 }

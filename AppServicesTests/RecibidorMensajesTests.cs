@@ -96,12 +96,14 @@ namespace AppServices.Tests
             var chatRepositoryMock = new Mock<IChatRepository>();
             var mensajeRepositoryMock = new Mock<IMensajeRepository>();
 
-            chatRepositoryMock.SetupSequence(
+            chatRepositoryMock.Setup(
                 r => r.GetAsync(
                     mensajeDTO.UsuarioId,
                     mensajeDTO.ChatPlataformaId,
                     mensajeDTO.Plataforma))
-                .ThrowsAsync(new NotFoundException())
+                .ThrowsAsync(new NotFoundException());
+
+            chatRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<Chat>()))
                 .ReturnsAsync(chat);
 
             unitOfWorkMock.Setup(x => x.SaveChangesAsync())
