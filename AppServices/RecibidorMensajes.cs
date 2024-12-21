@@ -18,8 +18,7 @@ namespace AppServices
         IUnitOfWork _unitOfWork,
         IChatRepository _chatRepository,
         IMensajeFactory _mensajeFactory,
-        IMensajeRepository _mensajeRepository)
-        : IRecibidorMensajes
+        IMensajeRepository _mensajeRepository) : IRecibidorMensajes
     {
         public async Task RecibirMensajeTextoAsync(
             MensajeTextoRecibidoDTO mensajeRecibido)
@@ -32,8 +31,7 @@ namespace AppServices
                     mensajeRecibido.UsuarioId,
                     mensajeRecibido.ChatPlataformaId,
                     mensajeRecibido.Plataforma);
-            }
-            catch (NotFoundException)
+            } catch(NotFoundException)
             {
                 // Si el chat no existe, se crea uno nuevo
                 chat = await _chatRepository.InsertAsync(

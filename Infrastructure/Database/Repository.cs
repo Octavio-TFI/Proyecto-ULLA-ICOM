@@ -9,12 +9,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database
 {
-    internal abstract class Repository<T>(DbContext _context)
-        where T : Entity
+    internal abstract class Repository<T>(DbContext _context) where T : Entity
     {
         public async Task<T> InsertAsync(T entity)
         {
-            await _context.Set<T>().AddAsync(entity);
+            await _context.AddAsync(entity);
 
             return entity;
         }
