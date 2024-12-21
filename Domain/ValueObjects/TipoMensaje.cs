@@ -8,6 +8,7 @@ namespace Domain.ValueObjects
 {
     public enum TipoMensaje
     {
+        Indefinido,
         // Mensaje enviado por el usuario
         Usuario,
         // Mensaje generado por el asistente
