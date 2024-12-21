@@ -6,13 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public abstract class Mensaje
+    public abstract class Mensaje : Entity
     {
-        /// <summary>
-        /// Id del mensaje
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// DateTime de cuando se recibio el mensaje
         /// </summary>
