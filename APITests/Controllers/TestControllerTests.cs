@@ -35,7 +35,7 @@ namespace API.Controllers.Tests
 
             recibidorMensajesMock.Verify(
                 x => x.RecibirMensajeTextoAsync(
-                    It.Is<MensajeTextoDTO>(
+                    It.Is<MensajeTextoRecibidoDTO>(
                         m => m.UsuarioId == mensaje.ChatId.ToString() &&
                             m.ChatPlataformaId == mensaje.ChatId.ToString() &&
                             m.Texto == mensaje.Texto &&

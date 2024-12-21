@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Domain.Entities;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Events
 {
-    internal class MensajeRecibidoEvent : INotification
+    public record MensajeRecibidoEvent<M> : INotification
+        where M : Mensaje
     {
+        public required M Mensaje { get; init; }
     }
 }

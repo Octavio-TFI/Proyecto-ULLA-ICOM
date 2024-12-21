@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AppServices.Abstractions.DTOs
 {
-    public record MensajeTextoDTO
+    public record MensajeTextoRecibidoDTO
     {
         /// <summary>
         /// Id del usuario en la plataforma que envia el mensaje

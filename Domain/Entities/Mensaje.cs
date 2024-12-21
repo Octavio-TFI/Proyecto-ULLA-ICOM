@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Domain.Events;
+using Domain.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +19,11 @@ namespace Domain.Entities
         /// Id del Chat
         /// </summary>
         public required int ChatId { get; init; }
+
+        /// <summary>
+        /// Tipo del mensaje.
+        /// Enviado por usuario o generado por el asistente(LLM)
+        /// </summary>
+        public required TipoMensaje Tipo { get; init; }
     }
 }

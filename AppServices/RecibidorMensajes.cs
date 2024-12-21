@@ -1,9 +1,11 @@
 ﻿using AppServices.Abstractions;
 using AppServices.Abstractions.DTOs;
 using AppServices.Ports;
+using Domain.Abstractions.Factories;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;
+using Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,19 +17,21 @@ namespace AppServices
     internal class RecibidorMensajes(
         IUnitOfWork _unitOfWork,
         IChatRepository _chatRepository,
+        IMensajeFactory _mensajeFactory,
         IMensajeRepository _mensajeRepository)
         : IRecibidorMensajes
     {
-        public async Task RecibirMensajeTextoAsync(MensajeTextoDTO mensaje)
+        public async Task RecibirMensajeTextoAsync(
+            MensajeTextoRecibidoDTO mensajeRecibido)
         {
             Chat chat;
 
             try
             {
                 chat = await _chatRepository.GetAsync(
-                    mensaje.UsuarioId,
-                    mensaje.ChatPlataformaId,
-                    mensaje.Plataforma);
+                    mensajeRecibido.UsuarioId,
+                    mensajeRecibido.ChatPlataformaId,
+                    mensajeRecibido.Plataforma);
             }
             catch (NotFoundException)
             {
@@ -35,22 +39,22 @@ namespace AppServices
                 chat = await _chatRepository.InsertAsync(
                     new Chat
                     {
-                        UsuarioId = mensaje.UsuarioId,
-                        ChatPlataformaId = mensaje.ChatPlataformaId,
-                        Plataforma = mensaje.Plataforma
+                        UsuarioId = mensajeRecibido.UsuarioId,
+                        ChatPlataformaId = mensajeRecibido.ChatPlataformaId,
+                        Plataforma = mensajeRecibido.Plataforma
                     });
 
                 // Se guarda el chat para obtener el Id
                 await _unitOfWork.SaveChangesAsync();
             }
 
-            await _mensajeRepository.InsertAsync(
-                new MensajeTexto
-                {
-                    ChatId = chat.Id,
-                    DateTime = mensaje.DateTime,
-                    Texto = mensaje.Texto
-                });
+            var mensaje = _mensajeFactory.CreateMensajeTexto(
+                chat.Id,
+                mensajeRecibido.DateTime,
+                TipoMensaje.Usuario,
+                mensajeRecibido.Texto);
+
+            await _mensajeRepository.InsertAsync(mensaje);
 
             await _unitOfWork.SaveChangesAsync();
         }

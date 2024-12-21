@@ -11,6 +11,6 @@ namespace AppServices.Abstractions
         /// Recibe un mensaje de texto y lo procesa
         /// </summary>
         /// <param name="mensaje">Mensaje a recibir</param>
-        Task RecibirMensajeTextoAsync(MensajeTextoDTO mensaje);
+        Task RecibirMensajeTextoAsync(MensajeTextoRecibidoDTO mensaje);
     }
 }

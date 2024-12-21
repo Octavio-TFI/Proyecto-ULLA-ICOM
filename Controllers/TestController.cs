@@ -17,7 +17,7 @@ namespace Controllers
         public async Task Post(MensajeTextoPrueba mensaje)
         {
             await _recibidorMensajes.RecibirMensajeTextoAsync(
-                new MensajeTextoDTO
+                new MensajeTextoRecibidoDTO
                 {
                     UsuarioId = mensaje.ChatId.ToString(),
                     ChatPlataformaId = mensaje.ChatId.ToString(),

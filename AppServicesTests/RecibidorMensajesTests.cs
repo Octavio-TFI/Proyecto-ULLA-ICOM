@@ -2,6 +2,7 @@
 using AppServices.Abstractions.DTOs;
 using AppServices.Ports;
 using Domain.Entities;
+using Domain.Events;
 using Domain.Exceptions;
 using Domain.Repositories;
 using NUnit.Framework;
@@ -20,7 +21,7 @@ namespace AppServices.Tests
         public async Task RecibirMensajeTextoAsync_ChatExistsTest()
         {
             // Arrange
-            var mensajeDTO = new MensajeTextoDTO
+            var mensajeDTO = new MensajeTextoRecibidoDTO
             {
                 ChatPlataformaId = "chat2",
                 DateTime = DateTime.Now,
@@ -66,7 +67,9 @@ namespace AppServices.Tests
                     It.Is<MensajeTexto>(
                         m => m.ChatId == chat.Id &&
                             m.DateTime == mensajeDTO.DateTime &&
-                            m.Texto == mensajeDTO.Texto)),
+                            m.Texto == mensajeDTO.Texto &&
+                            m.Events[0].GetType() == typeof(MensajeRecibidoEvent) &&
+                            ((MensajeRecibidoEvent)m.Events[0]).Mensaje == m)),
                 Times.Once);
 
             unitOfWorkMock.Verify(u => u.SaveChangesAsync(), Times.Once);
@@ -76,7 +79,7 @@ namespace AppServices.Tests
         public async Task RecibirMensajeTextoAsync_ChatDoesntExistTest()
         {
             // Arrange
-            var mensajeDTO = new MensajeTextoDTO
+            var mensajeDTO = new MensajeTextoRecibidoDTO
             {
                 ChatPlataformaId = "chat2",
                 DateTime = DateTime.Now,
@@ -130,7 +133,9 @@ namespace AppServices.Tests
                     It.Is<MensajeTexto>(
                         m => m.ChatId == 10 &&
                             m.DateTime == mensajeDTO.DateTime &&
-                            m.Texto == mensajeDTO.Texto)),
+                            m.Texto == mensajeDTO.Texto &&
+                            m.Events[0].GetType() == typeof(MensajeRecibidoEvent) &&
+                            ((MensajeRecibidoEvent)m.Events[0]).Mensaje == m)),
                 Times.Once);
 
             unitOfWorkMock.Verify(u => u.SaveChangesAsync(), Times.Exactly(2));
