@@ -3,23 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35514.174
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1-API", "API\1-API.csproj", "{94AE3A98-897D-44A9-9857-5CCA0C9CB65F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "10-API", "API\10-API.csproj", "{94AE3A98-897D-44A9-9857-5CCA0C9CB65F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7-ControllersTests", "APITests\7-ControllersTests.csproj", "{97ACF019-4DAC-4690-B336-D7707565EF2C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "16-ControllersTests", "APITests\16-ControllersTests.csproj", "{97ACF019-4DAC-4690-B336-D7707565EF2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3-AppServices.Abstractions", "AppServices.Abstractions\3-AppServices.Abstractions.csproj", "{BF15D016-F2D7-40F8-95F1-A111453AC4E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "12-AppServices.Abstractions", "AppServices.Abstractions\12-AppServices.Abstractions.csproj", "{BF15D016-F2D7-40F8-95F1-A111453AC4E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "5-Domain", "Domain\5-Domain.csproj", "{1EC49E39-0FE3-46C8-A8DB-C7984D395A73}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "14-Domain", "Domain\14-Domain.csproj", "{1EC49E39-0FE3-46C8-A8DB-C7984D395A73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4-AppServices", "AppServices\4-AppServices.csproj", "{019665E8-0EC9-48A1-A00A-51DF9D0F5AD7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "13-AppServices", "AppServices\13-AppServices.csproj", "{019665E8-0EC9-48A1-A00A-51DF9D0F5AD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "8-AppServicesTests", "AppServicesTests\8-AppServicesTests.csproj", "{219E3F94-28A7-4A65-8146-93E02621296B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "17-AppServicesTests", "AppServicesTests\17-AppServicesTests.csproj", "{219E3F94-28A7-4A65-8146-93E02621296B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2-Controllers", "Controllers\2-Controllers.csproj", "{064B521E-E6CA-400F-A942-9873700DE912}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "11-Controllers", "Controllers\11-Controllers.csproj", "{064B521E-E6CA-400F-A942-9873700DE912}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "9-DomainTests", "DomainTests\9-DomainTests.csproj", "{B6C679E1-EEF4-42BB-B3FB-5F2289D4233E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "18-DomainTests", "DomainTests\18-DomainTests.csproj", "{B6C679E1-EEF4-42BB-B3FB-5F2289D4233E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "6-Infrastructure", "Infrastructure\6-Infrastructure.csproj", "{9D4348D1-0E83-4E78-A4A4-F7EFE0147495}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15-Infrastructure", "Infrastructure\15-Infrastructure.csproj", "{9D4348D1-0E83-4E78-A4A4-F7EFE0147495}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "19-InfrastructureTests", "InfrastructureTests\19-InfrastructureTests.csproj", "{8DC967F0-47F4-410D-BA5E-3980B797B0AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{9D4348D1-0E83-4E78-A4A4-F7EFE0147495}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D4348D1-0E83-4E78-A4A4-F7EFE0147495}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D4348D1-0E83-4E78-A4A4-F7EFE0147495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DC967F0-47F4-410D-BA5E-3980B797B0AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DC967F0-47F4-410D-BA5E-3980B797B0AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DC967F0-47F4-410D-BA5E-3980B797B0AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DC967F0-47F4-410D-BA5E-3980B797B0AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

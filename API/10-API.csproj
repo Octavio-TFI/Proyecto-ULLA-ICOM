@@ -17,9 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AppServices\4-AppServices.csproj" />
-    <ProjectReference Include="..\Controllers\2-Controllers.csproj" />
-    <ProjectReference Include="..\Infrastructure\6-Infrastructure.csproj" />
+    <ProjectReference Include="..\AppServices\13-AppServices.csproj" />
+    <ProjectReference Include="..\Controllers\11-Controllers.csproj" />
+    <ProjectReference Include="..\Infrastructure\15-Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

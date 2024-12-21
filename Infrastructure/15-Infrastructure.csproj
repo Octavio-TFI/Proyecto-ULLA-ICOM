@@ -18,8 +18,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AppServices\4-AppServices.csproj" />
-    <ProjectReference Include="..\Domain\5-Domain.csproj" />
+    <ProjectReference Include="..\AppServices\13-AppServices.csproj" />
+    <ProjectReference Include="..\Domain\14-Domain.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>Infrastructure.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
 
 </Project>

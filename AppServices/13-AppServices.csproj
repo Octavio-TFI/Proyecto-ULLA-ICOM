@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AppServices.Abstractions\3-AppServices.Abstractions.csproj" />
-    <ProjectReference Include="..\Domain\5-Domain.csproj" />
+    <ProjectReference Include="..\AppServices.Abstractions\12-AppServices.Abstractions.csproj" />
+    <ProjectReference Include="..\Domain\14-Domain.csproj" />
   </ItemGroup>
 
 	<ItemGroup>
