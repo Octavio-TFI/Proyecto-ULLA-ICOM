@@ -1,8 +1,8 @@
 using AppServices;
 using Controllers;
+using Domain;
 using Infrastructure.Database;
 using System.Reflection;
-using System.Reflection.Metadata;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +13,7 @@ var controllersAssembly = Assembly.GetAssembly(typeof(TestController))
 
 builder.Services.AddControllers().AddApplicationPart(controllersAssembly);
 builder.Services.AddAppServices();
+builder.Services.AddDomainServices();
 
 string connectionString = builder.Configuration.GetConnectionString("Default")
     ??
