@@ -8,11 +8,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database
 {
-    internal class MensajeRepository : IMensajeRepository
+    internal class MensajeRepository(ChatContext _context) 
+        : Repository<Mensaje>(_context)
+        , IMensajeRepository
     {
-        public Task<Mensaje> InsertAsync(Mensaje mensaje)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

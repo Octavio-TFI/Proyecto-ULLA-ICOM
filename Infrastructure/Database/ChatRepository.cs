@@ -8,17 +8,14 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database
 {
-    internal class ChatRepository : IChatRepository
+    internal class ChatRepository(ChatContext _context) 
+        : Repository<Chat>(_context)
+        , IChatRepository
     {
         public Task<Chat> GetAsync(
             string usuarioId,
             string chatId,
             string plataforma)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Chat> InsertAsync(Chat chat)
         {
             throw new NotImplementedException();
         }
