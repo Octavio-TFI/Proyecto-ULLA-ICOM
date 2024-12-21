@@ -16,11 +16,11 @@ namespace Domain.Entities
         /// <summary>
         /// DateTime de cuando se recibio el mensaje
         /// </summary>
-        public DateTime DateTime { get; init; }
+        public required DateTime DateTime { get; init; }
 
         /// <summary>
         /// Id del Chat
         /// </summary>
-        public int ChatId { get; init; }
+        public required int ChatId { get; init; }
     }
 }

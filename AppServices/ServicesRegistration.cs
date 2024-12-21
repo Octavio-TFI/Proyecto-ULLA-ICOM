@@ -18,7 +18,7 @@ namespace AppServices
         public static IServiceCollection AddAppServices(
             this IServiceCollection services)
         {
-            return services.AddSingleton<IRecibidorMensajes, RecibidorMensajes>();
+            return services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
         }
     }
 }
