@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database
 {
-    internal class ChatContext : DbContext
+    internal class ChatContext : BaseContext
     {
         public DbSet<Chat> Chats { get; set; }
 
@@ -21,7 +21,8 @@ namespace Infrastructure.Database
         {
         }
 
-        public ChatContext(DbContextOptions<ChatContext> options) : base(options)
+        public ChatContext(DbContextOptions<ChatContext> options) : base(
+            options)
         {
         }
 
@@ -38,7 +39,8 @@ namespace Infrastructure.Database
             modelBuilder.Entity<Chat>().HasKey(c => c.Id);
 
             modelBuilder.Entity<Chat>()
-                .HasIndex(c => new { c.UsuarioId, c.ChatPlataformaId, c.Plataforma })
+                .HasIndex(
+                    c => new { c.UsuarioId, c.ChatPlataformaId, c.Plataforma })
                 .IsUnique();
         }
 
