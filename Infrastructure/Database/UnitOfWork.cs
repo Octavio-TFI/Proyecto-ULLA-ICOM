@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database
 {
-    internal class UnitOfWork : IUnitOfWork
+    internal class UnitOfWork(ChatContext _chatContext) : IUnitOfWork
     {
         public Task SaveChangesAsync()
-        {
-            throw new NotImplementedException();
-        }
+        { return _chatContext.SaveChangesAsync(); }
     }
 }
