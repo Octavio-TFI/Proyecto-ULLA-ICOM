@@ -14,11 +14,14 @@ namespace Domain.Repositories
         /// Obtiene un chat de la DB
         /// </summary>
         /// <param name="usuarioId">Id del usuario que creo el chat</param>
-        /// <param name="chatId">Id del chat en la plataforma</param>
+        /// <param name="chatPlataformaId">Id del chat en la plataforma</param>
         /// <param name="plataforma">Plataforma de mensajeria</param>
         /// <returns>Chat de la flataforma indicada con estos Ids</returns>
         /// <exception cref="NotFoundException"/>
-        Task<Chat> GetAsync(string usuarioId, string chatId, string plataforma);
+        Task<Chat> GetAsync(
+            string usuarioId,
+            string chatPlataformaId,
+            string plataforma);
 
         /// <summary>
         /// Inserta un chat en la DB
