@@ -27,6 +27,8 @@ namespace Infrastructure.Database
         }
 
         static void ConfigureOutboxEventModel(ModelBuilder modelBuilder)
-        { modelBuilder.Entity<OutboxEvent>().HasKey(e => e.Id); }
+        {
+            modelBuilder.Entity<OutboxEvent>().HasKey(e => e.Id);
+        }
     }
 }

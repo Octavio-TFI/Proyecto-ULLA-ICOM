@@ -10,6 +10,8 @@ namespace Infrastructure.Database
     internal class UnitOfWork(ChatContext _chatContext) : IUnitOfWork
     {
         public Task SaveChangesAsync()
-        { return _chatContext.SaveChangesAsync(); }
+        {
+            return _chatContext.SaveChangesAsync();
+        }
     }
 }
