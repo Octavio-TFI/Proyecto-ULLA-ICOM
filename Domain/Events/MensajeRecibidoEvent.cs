@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Events
 {
-    public record MensajeRecibidoEvent<M> : INotification
-        where M : Mensaje
+    public record MensajeRecibidoEvent : INotification
     {
-        public required M Mensaje { get; init; }
+        public required int ChatId { get; init; }
     }
 }

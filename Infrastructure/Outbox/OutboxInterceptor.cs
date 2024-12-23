@@ -13,6 +13,11 @@ namespace Infrastructure.Outbox
 {
     internal class OutboxInterceptor : SaveChangesInterceptor
     {
+        static readonly JsonSerializerSettings serializerSettings = new()
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        };
+
         public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
             DbContextEventData eventData,
             InterceptionResult<int> result,
@@ -51,7 +56,7 @@ namespace Infrastructure.Outbox
             DateTime ocurredOn)
         {
             var type = @event.GetType().Name;
-            var json = JsonConvert.SerializeObject(@event);
+            var json = JsonConvert.SerializeObject(@event, serializerSettings);
 
             return new OutboxEvent
             {

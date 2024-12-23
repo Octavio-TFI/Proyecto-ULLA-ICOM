@@ -39,9 +39,9 @@ namespace Domain.Factories.Tests
             Assert.That(mensaje.Texto, Is.EqualTo(texto));
             Assert.That(
                 mensaje.Events,
-                Has.One.TypeOf<MensajeRecibidoEvent<MensajeTexto>>().With
-                    .Property(nameof(MensajeRecibidoEvent<MensajeTexto>.Mensaje))
-                    .EqualTo(mensaje));
+                Has.One.TypeOf<MensajeRecibidoEvent>().With
+                    .Property(nameof(MensajeRecibidoEvent.ChatId))
+                    .EqualTo(mensaje.ChatId));
         }
     }
 }

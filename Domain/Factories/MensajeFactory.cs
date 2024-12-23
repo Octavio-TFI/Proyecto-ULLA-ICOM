@@ -26,12 +26,7 @@ namespace Domain.Factories
                 Texto = texto
             };
 
-            mensaje.Events
-                .Add(
-                    new MensajeRecibidoEvent<MensajeTexto>
-                    {
-                        Mensaje = mensaje
-                    });
+            mensaje.Events.Add(new MensajeRecibidoEvent { ChatId = chatId });
 
             return mensaje;
         }
