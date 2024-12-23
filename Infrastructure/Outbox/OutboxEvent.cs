@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database
+namespace Infrastructure.Outbox
 {
     internal class OutboxEvent
     {

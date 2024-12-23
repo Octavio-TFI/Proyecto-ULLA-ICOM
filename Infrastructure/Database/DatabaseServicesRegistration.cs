@@ -1,5 +1,6 @@
 ﻿using AppServices.Ports;
 using Domain.Repositories;
+using Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -19,7 +20,8 @@ namespace Infrastructure.Database
             services.AddDbContext<ChatContext>(
                 options =>
                 {
-                    options.UseSqlServer(connectionString);
+                    options.UseSqlServer(connectionString)
+                        .AddInterceptors(new OutboxInterceptor());
                 });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
