@@ -22,7 +22,7 @@ jobs:
         with:
           release-branch: main
           minor-identifier: feat
-          major-identifier: /\bBREAKING\sCHANGE\b/
+          major-identifier: breaking
         
       - name: Create new Git tag
         run: |
