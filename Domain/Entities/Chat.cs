@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.Abstractions.DTOs
+namespace Domain.Entities
 {
-    public record MensajeDTO
+    public class Chat : Entity
     {
         /// <summary>
         /// Id del usuario en la plataforma que envia el mensaje
@@ -16,12 +16,7 @@ namespace AppServices.Abstractions.DTOs
         /// <summary>
         /// Id del chat en la plataforma que envia el mensaje
         /// </summary>
-        public required string ChatId { get; init; }
-
-        /// <summary>
-        /// Texto del mensaje
-        /// </summary>
-        public required string Texto { get; init; }
+        public required string ChatPlataformaId { get; init; }
 
         /// <summary>
         /// Platforma utilizada para enviar el mensaje

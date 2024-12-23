@@ -1,9 +1,10 @@
-using API.DTOs;
 using AppServices.Abstractions;
 using AppServices.Abstractions.DTOs;
+using Controllers.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
-namespace API.Controllers
+namespace Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -13,14 +14,15 @@ namespace API.Controllers
         : ControllerBase
     {
         [HttpPost]
-        public async Task Post(MensajePrueba mensaje)
+        public async Task Post(MensajeTextoPrueba mensaje)
         {
-            await _recibidorMensajes.RecibirMensajeAsync(
-                new MensajeDTO
+            await _recibidorMensajes.RecibirMensajeTextoAsync(
+                new MensajeTextoRecibidoDTO
                 {
                     UsuarioId = mensaje.ChatId.ToString(),
-                    ChatId = mensaje.ChatId.ToString(),
+                    ChatPlataformaId = mensaje.ChatId.ToString(),
                     Texto = mensaje.Texto,
+                    DateTime = mensaje.DateTime,
                     Plataforma = "Test"
                 });
 
