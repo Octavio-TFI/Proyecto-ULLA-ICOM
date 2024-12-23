@@ -12,6 +12,9 @@ jobs:
       # Checkout the code
       - name: Checkout repository 
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}   # checkout the correct branch name
+          fetch-depth: 0                # fetch the whole repo history
 
       - name: Git Version
         id: gitversion
