@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Infrastructure.Outbox.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace Infrastructure.Outbox
             this IServiceCollection services)
         {
             services.AddHostedService<OutboxService>();
+            services.AddSingleton<IOutboxProcessor, OutboxProcessor>();
+            services.AddSingleton<IOutboxPublisher, OutboxPublisher>();
 
             return services;
         }
