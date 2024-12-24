@@ -1,0 +1,24 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Infrastructure.Outbox.Abstractions
+{
+    internal interface IOutboxPublisher
+    {
+        /// <summary>
+        /// Publica un evento de outbox.
+        /// </summary>
+        /// <param name="outboxEvent">Evento de outbox</param>
+        /// <param name="context">Contexto de base de datos</param>
+        /// <param name="cancellationToken">Cancelation token</param>
+        /// <returns></returns>
+        Task PublishOutboxEventsAsync(
+            OutboxEvent outboxEvent,
+            DbContext context,
+            CancellationToken cancellationToken);
+    }
+}
