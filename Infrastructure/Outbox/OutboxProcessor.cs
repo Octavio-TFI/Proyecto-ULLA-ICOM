@@ -4,6 +4,7 @@ using Infrastructure.Outbox.Abstractions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Outbox
 {
-    internal class OutboxProcessor(IServiceScopeFactory _serviceScopeFactory) : IOutboxProcessor
+    internal class OutboxProcessor(
+        IServiceScopeFactory _serviceScopeFactory,
+        ILogger<OutboxProcessor> _logger) : IOutboxProcessor
     {
         static readonly JsonSerializerSettings _jsonSettings = new()
         {
@@ -39,12 +42,14 @@ namespace Infrastructure.Outbox
                 outboxEvents,
                 async (outboxEvent, CancellationToken) => await ProcessEventAsync(
                     publisher,
+                    context,
                     outboxEvent,
                     cancellationToken));
         }
 
-        private static async Task ProcessEventAsync(
+        private async Task ProcessEventAsync(
             IPublisher publisher,
+            DbContext context,
             OutboxEvent outboxEvent,
             CancellationToken cancellationToken)
         {
@@ -60,7 +65,15 @@ namespace Infrastructure.Outbox
                 }
             } catch(Exception ex)
             {
+                _logger.LogError(ex, "Error al procesar el evento de Outbox");
+
+                return;
             }
+
+            outboxEvent.IsProcessed = true;
+            outboxEvent.ProcessedOn = DateTime.Now;
+
+            await context.SaveChangesAsync(cancellationToken);
         }
     }
 }
