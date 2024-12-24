@@ -37,7 +37,7 @@ namespace Infrastructure.Outbox
                 }
             } catch(Exception ex)
             {
-                _logger.LogError(ex, "Error al procesar el evento de Outbox");
+                _logger.LogError(ex, "Error al publicar el evento de Outbox");
 
                 return;
             }
