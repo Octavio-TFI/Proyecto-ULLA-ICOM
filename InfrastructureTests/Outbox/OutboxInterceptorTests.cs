@@ -33,8 +33,17 @@ namespace Infrastructure.Outbox.Tests
                 ChatId = 2
             }];
 
-            var event1Json = JsonConvert.SerializeObject(domainEvents1.First());
-            var event2Json = JsonConvert.SerializeObject(domainEvents2.First());
+            var jsonSettings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            };
+
+            var event1Json = JsonConvert.SerializeObject(
+                domainEvents1.First(),
+                jsonSettings);
+            var event2Json = JsonConvert.SerializeObject(
+                domainEvents2.First(),
+                jsonSettings);
 
             var entity1 = new MensajeTexto
             {
