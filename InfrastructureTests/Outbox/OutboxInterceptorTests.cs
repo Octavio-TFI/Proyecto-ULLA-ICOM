@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InfrastructureTests.Outbox
+namespace Infrastructure.Outbox.Tests
 {
     internal class OutboxInterceptorTests
     {
