@@ -1,4 +1,8 @@
 ﻿global using Domain.Repositories;
+global using Infrastructure.Database;
+global using Infrastructure.Outbox;
+global using Infrastructure.Outbox.Abstractions;
+global using Microsoft.Extensions.DependencyInjection;
 global using Moq;
 global using NUnit.Framework;
 global using System;
