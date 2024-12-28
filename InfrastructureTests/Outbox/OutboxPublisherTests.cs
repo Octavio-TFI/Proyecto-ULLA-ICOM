@@ -1,16 +1,4 @@
-﻿using Domain.Events;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Mock;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Infrastructure.Outbox.Tests
+﻿namespace Infrastructure.Outbox.Tests
 {
     internal class OutboxPublisherTests
     {
