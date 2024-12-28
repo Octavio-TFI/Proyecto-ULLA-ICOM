@@ -28,13 +28,12 @@ namespace Infrastructure.Outbox
             try
             {
                 var domainEvent = JsonConvert.DeserializeObject<INotification>(
-                    outboxEvent.EventData,
-                    _jsonSettings);
+                        outboxEvent.EventData,
+                        _jsonSettings) ??
+                    throw new NullReferenceException(
+                        "Deserializacion de domain event devolvio null");
 
-                if(domainEvent is not null)
-                {
-                    await _publisher.Publish(domainEvent, cancellationToken);
-                }
+                await _publisher.Publish(domainEvent, cancellationToken);
             } catch(Exception ex)
             {
                 _logger.LogError(ex, "Error al publicar el evento de Outbox");
