@@ -2,8 +2,6 @@
 using Domain.Events;
 using Domain.Repositories;
 using MediatR;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
