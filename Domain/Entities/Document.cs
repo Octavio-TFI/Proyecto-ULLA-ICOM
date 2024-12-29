@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class EmbeddingDoc : Entity
+    public class Document : Entity
     {
-        public required string Titulo { get; set; }
-
         public required string Texto { get; set; }
 
-        public required string EmbeddingTitulo { get; set; }
+        public required float[] Embedding { get; set; }
 
-        public required string EmbeddingTexto { get; set; }
+        public IEnumerable<Document> Childs { get; set; } = [];
     }
 }
