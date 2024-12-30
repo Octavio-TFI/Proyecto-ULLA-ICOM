@@ -19,16 +19,24 @@ namespace Infrastructure.Database.Embeddings.Tests
             {
                 new()
                 {
-                    Titulo = "Titulo",
+                    Titulo = "Titulo0",
                     EmbeddingTitulo = [0.1f, 0.2f, 0.3f],
-                    Descripcion = "Descripcion",
+                    Descripcion = "Descripcion0",
                     EmbeddingDescripcion = [1, 1, 1],
-                    Solucion = "Solucion"
+                    Solucion = "Solucion0"
+                },
+                new()
+                {
+                    Titulo = "Titulo1",
+                    EmbeddingTitulo = [0.4f, 0.5f, 0.6f],
+                    Descripcion = "Descripcion1",
+                    EmbeddingDescripcion = [1, 1, 1],
+                    Solucion = "Solucion1"
                 },
                 new()
                 {
                     Titulo = "Titulo2",
-                    EmbeddingTitulo = [0.4f, 0.5f, 0.6f],
+                    EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
                     Descripcion = "Descripcion2",
                     EmbeddingDescripcion = [1, 1, 1],
                     Solucion = "Solucion2"
@@ -36,17 +44,17 @@ namespace Infrastructure.Database.Embeddings.Tests
                 new()
                 {
                     Titulo = "Titulo3",
-                    EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
+                    EmbeddingTitulo = [-0.7f, -0.8f, -0.9f],
                     Descripcion = "Descripcion3",
-                    EmbeddingDescripcion = [1, 1, 1],
+                    EmbeddingDescripcion = [-1,-1,-1],
                     Solucion = "Solucion3"
                 },
                 new()
                 {
                     Titulo = "Titulo4",
-                    EmbeddingTitulo = [-0.7f, -0.8f, -0.9f],
+                    EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
                     Descripcion = "Descripcion4",
-                    EmbeddingDescripcion = [-1,-1,-1],
+                    EmbeddingDescripcion = [1, 1, 1],
                     Solucion = "Solucion4"
                 },
                 new()
@@ -56,14 +64,6 @@ namespace Infrastructure.Database.Embeddings.Tests
                     Descripcion = "Descripcion5",
                     EmbeddingDescripcion = [1, 1, 1],
                     Solucion = "Solucion5"
-                },
-                new()
-                {
-                    Titulo = "Titulo6",
-                    EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
-                    Descripcion = "Descripcion6",
-                    EmbeddingDescripcion = [1, 1, 1],
-                    Solucion = "Solucion6"
                 },
             };
 

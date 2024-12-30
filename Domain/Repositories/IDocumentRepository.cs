@@ -14,7 +14,7 @@ namespace Domain.Repositories
         /// </summary>
         /// <param name="embedding">Vector de embedding</param>
         /// <returns>Documentos similares al embedding</returns>
-        Task<IEnumerable<Document>> GetDocumentosRelacionadosAsync(
+        Task<List<Document>> GetDocumentosRelacionadosAsync(
             ReadOnlyMemory<float> embedding);
     }
 }

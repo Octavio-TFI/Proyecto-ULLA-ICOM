@@ -50,6 +50,7 @@ namespace Infrastructure.Database
                 });
 
             services.AddScoped<IConsultaRepository, ConsultaRepository>();
+            services.AddScoped<IDocumentRepository, DocumentRepository>();
             services.AddKeyedScoped<IUnitOfWork, UnitOfWork<EmbeddingContext>>(
                 Contexts.Embedding);
 

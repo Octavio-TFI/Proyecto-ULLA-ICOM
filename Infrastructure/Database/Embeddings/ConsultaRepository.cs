@@ -18,7 +18,7 @@ namespace Infrastructure.Database.Embeddings
             var embeddingArray = embedding.ToArray();
 
             // Obtener por similitud de embedding con titulo
-            var consultasTitulo = _context.Consultas
+            var consultasTituloTask = _context.Consultas
                 .Select(
                     x => new VectorSearchResult<Consulta>
                     {
@@ -33,7 +33,7 @@ namespace Infrastructure.Database.Embeddings
                 .ToListAsync();
 
             // Obtener por similitud de embedding con descripcion
-            var consultasDescripcion = _context.Consultas
+            var consultasDescripcionTask = _context.Consultas
                 .Select(
                     x => new VectorSearchResult<Consulta>
                     {
@@ -47,11 +47,11 @@ namespace Infrastructure.Database.Embeddings
                 .Take(5)
                 .ToListAsync();
 
-            await Task.WhenAll(consultasTitulo, consultasDescripcion);
+            await Task.WhenAll(consultasTituloTask, consultasDescripcionTask);
 
             // Unir consultas
-            return consultasTitulo.Result
-                .Union(consultasDescripcion.Result)
+            return consultasTituloTask.Result
+                .Union(consultasDescripcionTask.Result)
                 .OrderBy(c => c.Distance)
                 .Select(c => c.Entity)
                 .Take(5)
