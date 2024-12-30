@@ -1,0 +1,60 @@
+﻿using InfrastructureTests.Database.Tests;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Infrastructure.Database.Embeddings.Tests
+{
+    internal class ConsultaRepositoryTests
+    {
+        [Test]
+        public async Task GetConsultasSimilaresAsync()
+        {
+            // Arrange
+            var embedding = new float[] { 0.1f, 0.2f, 0.3f };
+
+            var consultas = new List<Consulta>
+            {
+                new()
+                {
+                    Titulo = "Titulo",
+                    EmbeddingTitulo = [0.1f, 0.2f, 0.3f],
+                    Descripcion = "Descripcion",
+                    EmbeddingDescripcion = [0,0,0],
+                    Solucion = "Solucion"
+                },
+                new()
+                {
+                    Titulo = "Titulo2",
+                    EmbeddingTitulo = [0.4f, 0.5f, 0.6f],
+                    Descripcion = "Descripcion2",
+                    EmbeddingDescripcion = [0,0,0],
+                    Solucion = "Solucion2"
+                },
+                new()
+                {
+                    Titulo = "Titulo3",
+                    EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
+                    Descripcion = "Descripcion3",
+                    EmbeddingDescripcion = [0, 0, 0],
+                    Solucion = "Solucion3"
+                },
+            };
+
+            var context = DatabaseTestsHelper.CreateInMemoryEmbeddingContext();
+            await context.Consultas.AddRangeAsync(consultas);
+            await context.SaveChangesAsync();
+
+            var repository = new ConsultaRepository(context);
+
+            // Act
+            var result = await repository.GetConsultasSimilaresAsync(embedding);
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result[0].Id, Is.EqualTo(1));
+        }
+    }
+}

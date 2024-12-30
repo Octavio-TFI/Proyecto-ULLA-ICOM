@@ -42,9 +42,10 @@ namespace Infrastructure.Database
                 {
                     options.UseSqlServer(
                         connectionString,
-                        o => o.MigrationsHistoryTable(
-                                tableName: HistoryRepository.DefaultTableName,
-                                schema: "Embedding"))
+                        o => o.UseVectorSearch()
+                                .MigrationsHistoryTable(
+                                    tableName: HistoryRepository.DefaultTableName,
+                                    schema: "Embedding"))
                         .AddInterceptors(new OutboxInterceptor());
                 });
 
