@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AppServices.Ports
 {
-    internal interface IGeneradorRespuesta
+    public interface IGeneradorRespuesta
     {
         /// <summary>
         /// Genera una respuesta a partir de ultimos mensajes de un chat.

@@ -30,7 +30,6 @@ namespace AppServices.KernelPlugins.Tests
                 EmbeddingTitulo = [1, 2, 3],
                 EmbeddingDescripcion = [4, 5, 6],
                 Solucion = "Solucion",
-                Version = new Version(1, 0)
             };
 
             var searchResult = new List<Consulta> { consultaSimilar };

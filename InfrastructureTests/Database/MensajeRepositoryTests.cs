@@ -81,7 +81,7 @@ namespace Infrastructure.Database.Tests
         public async Task GetUltimosMensajesChatAsync()
         {
             // Arrange
-            var context = DatabaseTestsHelper.CreateInMemoryContext();
+            var context = DatabaseTestsHelper.CreateInMemoryChatContext();
             await context.AddRangeAsync(_mensajes);
             await context.SaveChangesAsync();
 

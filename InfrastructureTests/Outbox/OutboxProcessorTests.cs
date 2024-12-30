@@ -15,11 +15,14 @@ namespace Infrastructure.Outbox.Tests
             // Arrange
             var serviceScopeFactory = new Mock<IServiceScopeFactory>();
             var outboxPublisher = new Mock<IOutboxPublisher>();
-            var chatContext = DatabaseTestsHelper.CreateInMemoryContext();
+            var chatContext = DatabaseTestsHelper.CreateInMemoryChatContext();
+            var embeddingContext = DatabaseTestsHelper
+                .CreateInMemoryEmbeddingContext();
 
             var serviceScopeMock = new Mock<IServiceScope>();
             var serviceProvider = new ServiceCollection()
                 .AddSingleton(chatContext)
+                .AddSingleton(embeddingContext)
                 .BuildServiceProvider();
 
             serviceScopeMock.Setup(x => x.ServiceProvider)
@@ -51,7 +54,8 @@ namespace Infrastructure.Outbox.Tests
                 },
             };
 
-            chatContext.OutboxEvents.AddRange(outboxEvents);
+            chatContext.OutboxEvents.AddRange(outboxEvents.Take(2));
+            embeddingContext.OutboxEvents.Add(outboxEvents.Last());
             await chatContext.SaveChangesAsync();
 
             var outboxProcessor = new OutboxProcessor(

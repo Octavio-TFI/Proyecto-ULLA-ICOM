@@ -18,7 +18,7 @@ namespace Infrastructure.Database.Tests
         public async Task GetAsync_Found_ReturnsChat()
         {
             // Arrange
-            var context = DatabaseTestsHelper.CreateInMemoryContext();
+            var context = DatabaseTestsHelper.CreateInMemoryChatContext();
             var repository = new ChatRepository(context);
 
             var chat = new Chat
@@ -53,7 +53,7 @@ namespace Infrastructure.Database.Tests
             string plataforma)
         {
             // Arrange
-            var context = DatabaseTestsHelper.CreateInMemoryContext();
+            var context = DatabaseTestsHelper.CreateInMemoryChatContext();
             var repository = new ChatRepository(context);
 
             var chat = new Chat

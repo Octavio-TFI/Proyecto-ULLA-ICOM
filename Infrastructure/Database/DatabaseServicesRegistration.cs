@@ -1,8 +1,10 @@
 ﻿using AppServices.Ports;
 using Domain.Repositories;
 using Infrastructure.Database.Chats;
+using Infrastructure.Database.Embeddings;
 using Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -21,13 +23,29 @@ namespace Infrastructure.Database
             services.AddDbContext<ChatContext>(
                 options =>
                 {
-                    options.UseSqlServer(connectionString)
+                    options.UseSqlServer(
+                        connectionString,
+                        o => o.MigrationsHistoryTable(
+                                tableName: HistoryRepository.DefaultTableName,
+                                schema: "Chat"))
                         .AddInterceptors(new OutboxInterceptor());
                 });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<IMensajeRepository, MensajeRepository>();
+
+            services.AddDbContext<EmbeddingContext>(
+                options =>
+                {
+                    options.UseSqlServer(
+                        connectionString,
+                        o => o.MigrationsHistoryTable(
+                                tableName: HistoryRepository.DefaultTableName,
+                                schema: "Embedding"))
+                        .AddInterceptors(new OutboxInterceptor());
+                });
+
 
             return services;
         }

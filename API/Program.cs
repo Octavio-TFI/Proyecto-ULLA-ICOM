@@ -2,6 +2,7 @@ using AppServices;
 using Controllers;
 using Domain;
 using Infrastructure.Database;
+using Infrastructure.LLM;
 using Infrastructure.Outbox;
 using System.Reflection;
 
@@ -20,6 +21,7 @@ string connectionString = builder.Configuration.GetConnectionString("Default") ?
 
 builder.Services.AddDatabaseServices(connectionString);
 builder.Services.AddOutboxServices();
+builder.Services.AddLLMServices();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -18,8 +18,6 @@ namespace Domain.Entities
 
         public required float[] EmbeddingDescripcion { get; set; }
 
-        public required Version Version { get; set; }
-
         public override string ToString()
         {
             return base.ToString()!;

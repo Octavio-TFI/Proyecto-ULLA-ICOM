@@ -11,7 +11,7 @@ namespace Infrastructure.Database.Chats
 {
     internal class ChatContext : BaseContext
     {
-        public DbSet<Domain.Entities.Chat> Chats { get; set; }
+        public DbSet<Chat> Chats { get; set; }
 
         public DbSet<Mensaje> Mensajes { get; set; }
 
@@ -29,6 +29,8 @@ namespace Infrastructure.Database.Chats
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.HasDefaultSchema("Chat");
 
             ConfigureChatModel(modelBuilder);
             ConfigureMensajeModel(modelBuilder);

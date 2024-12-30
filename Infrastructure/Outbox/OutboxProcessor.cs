@@ -1,5 +1,7 @@
 ﻿using AppServices.Ports;
+using Infrastructure.Database;
 using Infrastructure.Database.Chats;
+using Infrastructure.Database.Embeddings;
 using Infrastructure.Outbox.Abstractions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,9 +26,29 @@ namespace Infrastructure.Outbox
         {
             var services = _serviceScopeFactory.CreateScope().ServiceProvider;
 
-            var context = services.GetRequiredService<ChatContext>();
+            var chatContext = services.GetRequiredService<ChatContext>();
+            var embeddingContext = services
+                .GetRequiredService<EmbeddingContext>();
 
-            var outboxEvents = await context.OutboxEvents
+            var chatContextTask = ProcessContextEvents(
+                _outboxPublisher,
+                chatContext,
+                cancellationToken);
+
+            var embeddingContextTask = ProcessContextEvents(
+                _outboxPublisher,
+                embeddingContext,
+                cancellationToken);
+
+            await Task.WhenAll(chatContextTask, embeddingContextTask);
+        }
+
+        private static async Task ProcessContextEvents(
+            IOutboxPublisher _outboxPublisher,
+            BaseContext chatContext,
+            CancellationToken cancellationToken)
+        {
+            var outboxEvents = await chatContext.OutboxEvents
                 .Where(x => x.IsProcessed == false)
                 .OrderBy(x => x.OccurredOn)
                 .Take(100)
@@ -37,7 +59,7 @@ namespace Infrastructure.Outbox
                 async (outboxEvent, CancellationToken) => await _outboxPublisher
                     .PublishOutboxEventsAsync(
                         outboxEvent,
-                        context,
+                        chatContext,
                         cancellationToken));
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Database.Chats;
+using Infrastructure.Database.Embeddings;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,22 @@ namespace InfrastructureTests.Database.Tests
 {
     internal static class DatabaseTestsHelper
     {
-        public static ChatContext CreateInMemoryContext()
+        public static ChatContext CreateInMemoryChatContext()
         {
             var options = new DbContextOptionsBuilder<ChatContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
             return new ChatContext(options);
+        }
+
+        public static EmbeddingContext CreateInMemoryEmbeddingContext()
+        {
+            var options = new DbContextOptionsBuilder<EmbeddingContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+
+            return new EmbeddingContext(options);
         }
     }
 }

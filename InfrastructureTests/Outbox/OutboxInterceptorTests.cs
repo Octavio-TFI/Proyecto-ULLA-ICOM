@@ -75,7 +75,7 @@ namespace Infrastructure.Outbox.Tests
 
             static string messageGenerator(EventDefinitionBase _, EventData __) => string.Empty;
 
-            var context = DatabaseTestsHelper.CreateInMemoryContext();
+            var context = DatabaseTestsHelper.CreateInMemoryChatContext();
             await context.AddRangeAsync(entities);
 
             var eventDataMock = new DbContextEventData(
