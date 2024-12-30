@@ -49,6 +49,7 @@ namespace Infrastructure.Database
                         .AddInterceptors(new OutboxInterceptor());
                 });
 
+            services.AddScoped<IConsultaRepository, ConsultaRepository>();
             services.AddKeyedScoped<IUnitOfWork, UnitOfWork<EmbeddingContext>>(
                 Contexts.Embedding);
 
