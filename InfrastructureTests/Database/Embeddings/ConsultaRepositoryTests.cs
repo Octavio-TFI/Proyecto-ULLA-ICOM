@@ -41,6 +41,30 @@ namespace Infrastructure.Database.Embeddings.Tests
                     EmbeddingDescripcion = [0, 0, 0],
                     Solucion = "Solucion3"
                 },
+                new()
+                {
+                    Titulo = "Titulo4",
+                    EmbeddingTitulo = [-0.7f, -0.8f, -0.9f],
+                    Descripcion = "Descripcion4",
+                    EmbeddingDescripcion = [0, 0, 0],
+                    Solucion = "Solucion4"
+                },
+                new()
+                {
+                    Titulo = "Titulo5",
+                    EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
+                    Descripcion = "Descripcion5",
+                    EmbeddingDescripcion = [0, 0, 0],
+                    Solucion = "Solucion5"
+                },
+                new()
+                {
+                    Titulo = "Titulo6",
+                    EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
+                    Descripcion = "Descripcion6",
+                    EmbeddingDescripcion = [0, 0, 0],
+                    Solucion = "Solucion6"
+                },
             };
 
             var context = DatabaseTestsHelper.CreateInMemoryEmbeddingContext();
@@ -53,8 +77,13 @@ namespace Infrastructure.Database.Embeddings.Tests
             var result = await repository.GetConsultasSimilaresAsync(embedding);
 
             // Assert
-            Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result[0].Id, Is.EqualTo(1));
+            Assert.That(result, Has.Count.EqualTo(5));
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.That(result[0].Id, Is.EqualTo(1));
+                    Assert.That(result, Has.No.Member(consultas[3]));
+                });
         }
     }
 }

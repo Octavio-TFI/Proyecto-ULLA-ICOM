@@ -15,7 +15,13 @@ namespace Infrastructure.Database.Embeddings
         public Task<List<Consulta>> GetConsultasSimilaresAsync(
             ReadOnlyMemory<float> embedding)
         {
-            return _context.Consultas.Take(5).ToListAsync();
+            return _context.Consultas
+                .OrderBy(
+                    x => _context.CosineSimilarity(
+                        x.EmbeddingTitulo,
+                        embedding.ToArray()))
+                .Take(5)
+                .ToListAsync();
         }
     }
 }

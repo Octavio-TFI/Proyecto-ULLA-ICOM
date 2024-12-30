@@ -11,12 +11,8 @@ namespace Infrastructure.Database.Embeddings.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "Embedding");
-
             migrationBuilder.CreateTable(
                 name: "Consultas",
-                schema: "Embedding",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -24,8 +20,8 @@ namespace Infrastructure.Database.Embeddings.Migrations
                     Titulo = table.Column<string>(type: "TEXT", nullable: false),
                     Descripcion = table.Column<string>(type: "TEXT", nullable: false),
                     Solucion = table.Column<string>(type: "TEXT", nullable: false),
-                    EmbeddingTitulo = table.Column<string>(type: "TEXT", nullable: false),
-                    EmbeddingDescripcion = table.Column<string>(type: "TEXT", nullable: false)
+                    EmbeddingTitulo = table.Column<string>(type: "float[768]", nullable: false),
+                    EmbeddingDescripcion = table.Column<string>(type: "float[768]", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -34,13 +30,12 @@ namespace Infrastructure.Database.Embeddings.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Documents",
-                schema: "Embedding",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Texto = table.Column<string>(type: "TEXT", nullable: false),
-                    Embedding = table.Column<string>(type: "TEXT", nullable: false),
+                    Embedding = table.Column<string>(type: "float[768]", nullable: false),
                     DocumentId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
@@ -49,14 +44,12 @@ namespace Infrastructure.Database.Embeddings.Migrations
                     table.ForeignKey(
                         name: "FK_Documents_Documents_DocumentId",
                         column: x => x.DocumentId,
-                        principalSchema: "Embedding",
                         principalTable: "Documents",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "OutboxEvents",
-                schema: "Embedding",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -74,7 +67,6 @@ namespace Infrastructure.Database.Embeddings.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Documents_DocumentId",
-                schema: "Embedding",
                 table: "Documents",
                 column: "DocumentId");
         }
@@ -83,16 +75,13 @@ namespace Infrastructure.Database.Embeddings.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Consultas",
-                schema: "Embedding");
+                name: "Consultas");
 
             migrationBuilder.DropTable(
-                name: "Documents",
-                schema: "Embedding");
+                name: "Documents");
 
             migrationBuilder.DropTable(
-                name: "OutboxEvents",
-                schema: "Embedding");
+                name: "OutboxEvents");
         }
     }
 }

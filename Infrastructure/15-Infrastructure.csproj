@@ -35,10 +35,4 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Update="vec0.dll">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	</ItemGroup>
-
 </Project>

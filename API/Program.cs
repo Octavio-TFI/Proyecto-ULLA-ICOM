@@ -1,7 +1,6 @@
 using AppServices;
 using Controllers;
 using Domain;
-using Domain.Repositories;
 using Infrastructure.Database;
 using Infrastructure.LLM;
 using Infrastructure.Outbox;
@@ -29,10 +28,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
-var consultas = await app.Services.CreateScope().ServiceProvider
-    .GetRequiredService<IConsultaRepository>()
-    .GetConsultasSimilaresAsync(new ReadOnlyMemory<float>([1,1,1]));
 
 // Configure the HTTP request pipeline.
 if(app.Environment.IsDevelopment())

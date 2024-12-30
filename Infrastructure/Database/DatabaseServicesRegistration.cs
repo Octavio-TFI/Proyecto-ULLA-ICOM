@@ -43,11 +43,7 @@ namespace Infrastructure.Database
             services.AddDbContext<EmbeddingContext>(
                 options =>
                 {
-                    options.UseSqlite(
-                        "Data Source=Embeddings.db",
-                        o => o.MigrationsHistoryTable(
-                                tableName: HistoryRepository.DefaultTableName,
-                                schema: "Embedding"))
+                    options.UseSqlite("Data Source=Embeddings.db")
                         .AddInterceptors(
                             new OutboxInterceptor(),
                             new SQLiteExtensionInterceptor());

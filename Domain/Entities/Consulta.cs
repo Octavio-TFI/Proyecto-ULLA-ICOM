@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Consulta : Entity
+    public class Consulta
+        : Entity
     {
         public required string Titulo { get; set; }
 

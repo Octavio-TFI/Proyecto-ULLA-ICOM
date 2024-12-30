@@ -15,9 +15,7 @@ namespace Infrastructure.Database.Embeddings.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasDefaultSchema("Embedding")
-                .HasAnnotation("ProductVersion", "9.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
             modelBuilder.Entity("Domain.Entities.Consulta", b =>
                 {
@@ -31,11 +29,11 @@ namespace Infrastructure.Database.Embeddings.Migrations
 
                     b.PrimitiveCollection<string>("EmbeddingDescripcion")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("float[768]");
 
                     b.PrimitiveCollection<string>("EmbeddingTitulo")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("float[768]");
 
                     b.Property<string>("Solucion")
                         .IsRequired()
@@ -47,7 +45,7 @@ namespace Infrastructure.Database.Embeddings.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Consultas", "Embedding");
+                    b.ToTable("Consultas");
                 });
 
             modelBuilder.Entity("Domain.Entities.Document", b =>
@@ -61,7 +59,7 @@ namespace Infrastructure.Database.Embeddings.Migrations
 
                     b.PrimitiveCollection<string>("Embedding")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("float[768]");
 
                     b.Property<string>("Texto")
                         .IsRequired()
@@ -71,7 +69,7 @@ namespace Infrastructure.Database.Embeddings.Migrations
 
                     b.HasIndex("DocumentId");
 
-                    b.ToTable("Documents", "Embedding");
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("Infrastructure.Outbox.OutboxEvent", b =>
@@ -99,7 +97,7 @@ namespace Infrastructure.Database.Embeddings.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OutboxEvents", "Embedding");
+                    b.ToTable("OutboxEvents");
                 });
 
             modelBuilder.Entity("Domain.Entities.Document", b =>
