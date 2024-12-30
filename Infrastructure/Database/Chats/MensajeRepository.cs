@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database
+namespace Infrastructure.Database.Chats
 {
     internal class MensajeRepository(ChatContext _context) : Repository<Mensaje>(
         _context), IMensajeRepository

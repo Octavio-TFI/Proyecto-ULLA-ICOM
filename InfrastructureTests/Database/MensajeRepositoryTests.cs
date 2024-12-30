@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Infrastructure.Database.Chats;
 using InfrastructureTests.Database.Tests;
 
 namespace Infrastructure.Database.Tests

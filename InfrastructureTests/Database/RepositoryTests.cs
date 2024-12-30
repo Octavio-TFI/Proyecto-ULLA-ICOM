@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.ValueObjects;
+using Infrastructure.Database.Chats;
 using InfrastructureTests.Database.Tests;
 using Microsoft.EntityFrameworkCore;
 using System;

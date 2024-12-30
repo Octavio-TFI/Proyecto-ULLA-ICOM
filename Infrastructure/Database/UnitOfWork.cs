@@ -1,4 +1,5 @@
 ﻿using AppServices.Ports;
+using Infrastructure.Database.Chats;
 using System;
 using System.Collections.Generic;
 using System.Linq;

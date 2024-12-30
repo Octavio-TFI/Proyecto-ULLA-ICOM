@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database
+namespace Infrastructure.Database.Chats
 {
     internal class ChatContext : BaseContext
     {
-        public DbSet<Chat> Chats { get; set; }
+        public DbSet<Domain.Entities.Chat> Chats { get; set; }
 
         public DbSet<Mensaje> Mensajes { get; set; }
 

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Infrastructure.Database.Migrations
+namespace Infrastructure.Database.Chats.Migrations
 {
     /// <inheritdoc />
     public partial class TipoMensaje : Migration

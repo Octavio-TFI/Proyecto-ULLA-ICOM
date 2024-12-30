@@ -1,5 +1,6 @@
 ﻿using AppServices.Ports;
 using Domain.Repositories;
+using Infrastructure.Database.Chats;
 using Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

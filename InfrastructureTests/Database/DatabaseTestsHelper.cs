@@ -1,4 +1,4 @@
-﻿using Infrastructure.Database;
+﻿using Infrastructure.Database.Chats;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

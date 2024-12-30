@@ -1,5 +1,5 @@
 ﻿using AppServices.Ports;
-using Infrastructure.Database;
+using Infrastructure.Database.Chats;
 using Infrastructure.Outbox.Abstractions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
