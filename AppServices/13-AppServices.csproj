@@ -5,7 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<RootNamespace>AppServices</RootNamespace>
-	  <AssemblyName>AppServices</AssemblyName>
+	<AssemblyName>AppServices</AssemblyName>
+	<NoWarn>SKEXP0001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
