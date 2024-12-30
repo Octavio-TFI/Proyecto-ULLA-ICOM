@@ -14,9 +14,7 @@ namespace AppServices.EventHandlers.Tests
             // Arrange
             var mensajeRepositoryMock = new Mock<IMensajeRepository>();
             var generadorRespuestaMock = new Mock<IGeneradorRespuesta>();
-            var handler = new MensajeRecibidoHandler(
-                mensajeRepositoryMock.Object,
-                generadorRespuestaMock.Object);
+            var unitOfWorkMock = new Mock<IUnitOfWork>();
 
             var chatId = 1;
             var request = new MensajeRecibidoEvent { ChatId = chatId };
@@ -44,9 +42,15 @@ namespace AppServices.EventHandlers.Tests
             mensajeRepositoryMock.Setup(
                 repo => repo.GetUltimosMensajesChatAsync(chatId))
                 .ReturnsAsync(mensajes);
+
             generadorRespuestaMock.Setup(
                 gen => gen.GenerarRespuestaAsync(mensajes))
                 .ReturnsAsync(respuesta);
+
+            var handler = new MensajeRecibidoHandler(
+                mensajeRepositoryMock.Object,
+                generadorRespuestaMock.Object,
+                unitOfWorkMock.Object);
 
             // Act
             await handler.Handle(request, cancellationToken);
@@ -63,6 +67,8 @@ namespace AppServices.EventHandlers.Tests
             mensajeRepositoryMock.Verify(
                 repo => repo.InsertAsync(respuesta),
                 Times.Once);
+
+            unitOfWorkMock.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
     }
 }

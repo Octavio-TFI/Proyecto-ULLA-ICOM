@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database.Tests
+namespace Infrastructure.Database.Chats.Tests
 {
     internal class ChatRepositoryTests
     {

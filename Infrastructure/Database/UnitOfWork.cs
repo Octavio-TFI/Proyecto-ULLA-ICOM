@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database
 {
-    internal class UnitOfWork(ChatContext _chatContext) : IUnitOfWork
+    internal class UnitOfWork<Context>(Context _context) : IUnitOfWork
+        where Context : BaseContext
     {
         public Task SaveChangesAsync()
         {
-            return _chatContext.SaveChangesAsync();
+            return _context.SaveChangesAsync();
         }
     }
 }

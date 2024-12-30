@@ -1,4 +1,5 @@
 ﻿using AppServices.Ports;
+using Domain;
 using Domain.Repositories;
 using Infrastructure.Database.Chats;
 using Infrastructure.Database.Embeddings;
@@ -31,7 +32,8 @@ namespace Infrastructure.Database
                         .AddInterceptors(new OutboxInterceptor());
                 });
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddKeyedScoped<IUnitOfWork, UnitOfWork<ChatContext>>(
+                Contexts.Chat);
             services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<IMensajeRepository, MensajeRepository>();
 
@@ -46,6 +48,8 @@ namespace Infrastructure.Database
                         .AddInterceptors(new OutboxInterceptor());
                 });
 
+            services.AddKeyedScoped<IUnitOfWork, UnitOfWork<EmbeddingContext>>(
+                Contexts.Embedding);
 
             return services;
         }

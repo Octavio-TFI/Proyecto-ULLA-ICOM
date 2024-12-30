@@ -2,7 +2,7 @@
 using Infrastructure.Database.Chats;
 using InfrastructureTests.Database.Tests;
 
-namespace Infrastructure.Database.Tests
+namespace Infrastructure.Database.Chats.Tests
 {
     internal class MensajeRepositoryTests
     {
