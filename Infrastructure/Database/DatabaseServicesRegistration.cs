@@ -48,7 +48,9 @@ namespace Infrastructure.Database
                         o => o.MigrationsHistoryTable(
                                 tableName: HistoryRepository.DefaultTableName,
                                 schema: "Embedding"))
-                        .AddInterceptors(new OutboxInterceptor());
+                        .AddInterceptors(
+                            new OutboxInterceptor(),
+                            new SQLiteExtensionInterceptor());
                 });
 
             services.AddScoped<IConsultaRepository, ConsultaRepository>();
