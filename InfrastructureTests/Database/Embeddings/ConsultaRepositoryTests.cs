@@ -46,7 +46,7 @@ namespace Infrastructure.Database.Embeddings.Tests
                     Titulo = "Titulo4",
                     EmbeddingTitulo = [-0.7f, -0.8f, -0.9f],
                     Descripcion = "Descripcion4",
-                    EmbeddingDescripcion = [1, 1, 1],
+                    EmbeddingDescripcion = [-1,-1,-1],
                     Solucion = "Solucion4"
                 },
                 new()
