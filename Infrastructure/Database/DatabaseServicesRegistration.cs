@@ -4,6 +4,7 @@ using Domain.Repositories;
 using Infrastructure.Database.Chats;
 using Infrastructure.Database.Embeddings;
 using Infrastructure.Outbox;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,15 +38,16 @@ namespace Infrastructure.Database
             services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<IMensajeRepository, MensajeRepository>();
 
+            // Como SQL Server todavia no soporta Vector Search
+            // Se utiliza SQLite
             services.AddDbContext<EmbeddingContext>(
                 options =>
                 {
-                    options.UseSqlServer(
-                        connectionString,
-                        o => o.UseVectorSearch()
-                                .MigrationsHistoryTable(
-                                    tableName: HistoryRepository.DefaultTableName,
-                                    schema: "Embedding"))
+                    options.UseSqlite(
+                        "Data Source=Embeddings.db",
+                        o => o.MigrationsHistoryTable(
+                                tableName: HistoryRepository.DefaultTableName,
+                                schema: "Embedding"))
                         .AddInterceptors(new OutboxInterceptor());
                 });
 

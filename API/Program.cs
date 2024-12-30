@@ -1,6 +1,7 @@
 using AppServices;
 using Controllers;
 using Domain;
+using Domain.Repositories;
 using Infrastructure.Database;
 using Infrastructure.LLM;
 using Infrastructure.Outbox;
@@ -16,7 +17,7 @@ builder.Services.AddControllers().AddApplicationPart(controllersAssembly);
 builder.Services.AddAppServices();
 builder.Services.AddDomainServices();
 
-string connectionString = builder.Configuration.GetConnectionString("Default") ??
+string connectionString = builder.Configuration.GetConnectionString("Chat") ??
     throw new Exception("Connection string no configurado");
 
 builder.Services.AddDatabaseServices(connectionString);
@@ -28,6 +29,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+var consultas = await app.Services.CreateScope().ServiceProvider
+    .GetRequiredService<IConsultaRepository>()
+    .GetConsultasSimilaresAsync(new ReadOnlyMemory<float>([1,1,1]));
 
 // Configure the HTTP request pipeline.
 if(app.Environment.IsDevelopment())

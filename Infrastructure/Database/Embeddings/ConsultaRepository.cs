@@ -9,20 +9,13 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database.Embeddings
 {
-    internal class ConsultaRepository(EmbeddingContext _context) : IConsultaRepository
+    internal class ConsultaRepository(EmbeddingContext _context)
+        : IConsultaRepository
     {
         public Task<List<Consulta>> GetConsultasSimilaresAsync(
             ReadOnlyMemory<float> embedding)
         {
-            return _context.Consultas
-                .OrderBy(
-                    c => EF.Functions
-                        .VectorDistance(
-                            "cosine",
-                            c.EmbeddingTitulo,
-                            embedding.ToArray()))
-                .Take(5)
-                .ToListAsync();
+            return _context.Consultas.Take(5).ToListAsync();
         }
     }
 }

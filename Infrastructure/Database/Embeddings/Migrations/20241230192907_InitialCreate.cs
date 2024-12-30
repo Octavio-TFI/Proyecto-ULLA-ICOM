@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Database.Embeddings.Migrations
 {
     /// <inheritdoc />
-    public partial class InitalCreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,13 +19,13 @@ namespace Infrastructure.Database.Embeddings.Migrations
                 schema: "Embedding",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Solucion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmbeddingTitulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmbeddingDescripcion = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Titulo = table.Column<string>(type: "TEXT", nullable: false),
+                    Descripcion = table.Column<string>(type: "TEXT", nullable: false),
+                    Solucion = table.Column<string>(type: "TEXT", nullable: false),
+                    EmbeddingTitulo = table.Column<string>(type: "TEXT", nullable: false),
+                    EmbeddingDescripcion = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,11 +37,11 @@ namespace Infrastructure.Database.Embeddings.Migrations
                 schema: "Embedding",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Texto = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Embedding = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DocumentId = table.Column<int>(type: "int", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Texto = table.Column<string>(type: "TEXT", nullable: false),
+                    Embedding = table.Column<string>(type: "TEXT", nullable: false),
+                    DocumentId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -59,13 +59,13 @@ namespace Infrastructure.Database.Embeddings.Migrations
                 schema: "Embedding",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EventType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EventData = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OccurredOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ProcessedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsProcessed = table.Column<bool>(type: "bit", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    EventType = table.Column<string>(type: "TEXT", nullable: false),
+                    EventData = table.Column<string>(type: "TEXT", nullable: false),
+                    OccurredOn = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ProcessedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    IsProcessed = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
