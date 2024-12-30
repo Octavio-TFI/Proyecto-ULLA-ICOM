@@ -7,29 +7,33 @@ using System.Threading.Tasks;
 
 namespace AppServices.KernelPlugins.Tests
 {
-    internal class DocumentacionPluginTests
+    internal class ConsultasPluginTests
     {
         [Test]
-        public async Task BuscarDocumentacionAsyncTest()
+        public async Task BuscarConsultasAsyncTest()
         {
             // Arrange
-            var textEmbeddingGenerationService 
+            var textEmbeddingGenerationService
                 = new Mock<ITextEmbeddingGenerationService>();
 
-            var documentRepository = new Mock<IDocumentRepository>();
-            var documentacionPlugin = new DocumentacionPlugin(
+            var consultaRepository = new Mock<IConsultaRepository>();
+            var consultasPlugin = new ConsultasPlugin(
                 textEmbeddingGenerationService.Object,
-                documentRepository.Object);
+                consultaRepository.Object);
 
             var consulta = "consulta";
             var embeddingConsulta = new ReadOnlyMemory<float>([1, 2, 3]);
-            var document = new Document
+            var consultaSimilar = new Consulta
             {
-                Texto = "Documentacion",
-                Embedding = [1,2,3]
+                Titulo = "Consulta",
+                Descripcion = "Descripcion",
+                EmbeddingTitulo = [1, 2, 3],
+                EmbeddingDescripcion = [4, 5, 6],
+                Solucion = "Solucion",
+                Version = new Version(1, 0)
             };
-            var searchResult = new List<Document> { document };
 
+            var searchResult = new List<Consulta> { consultaSimilar };
             textEmbeddingGenerationService
                 .Setup(
                     t => t.GenerateEmbeddingsAsync(
@@ -38,17 +42,16 @@ namespace AppServices.KernelPlugins.Tests
                         default))
                 .ReturnsAsync([embeddingConsulta]);
 
-            documentRepository
-                .Setup(d => d.GetDocumentosRelacionadosAsync(embeddingConsulta))
+            consultaRepository
+                .Setup(d => d.GetConsultasSimilaresAsync(embeddingConsulta))
                 .ReturnsAsync(searchResult);
 
             // Act
-            var result = await documentacionPlugin.BuscarDocumentacionAsync(
-                consulta);
+            var result = await consultasPlugin.BuscarConsultasAsync(consulta);
 
             // Assert
             Assert.AreEqual(1, result.Count());
-            Assert.AreEqual(document.ToString(), result.First());
+            Assert.AreEqual(consultaSimilar.ToString(), result.First());
         }
     }
 }

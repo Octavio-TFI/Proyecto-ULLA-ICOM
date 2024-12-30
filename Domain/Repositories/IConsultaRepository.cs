@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Domain.Repositories
 {
-    public interface IDocumentRepository
+    public interface IConsultaRepository
     {
         /// <summary>
-        /// Obtiene documentos relacionados a un vector de embedding
+        /// Obtiene consultas similares a un vector de embedding
         /// </summary>
         /// <param name="embedding">Vector de embedding</param>
-        /// <returns>Documentos similares al embedding</returns>
-        Task<IEnumerable<Document>> GetDocumentosRelacionadosAsync(
+        /// <returns>Consultas similares al embedding</returns>
+        Task<IEnumerable<Consulta>> GetConsultasSimilaresAsync(
             ReadOnlyMemory<float> embedding);
     }
 }
