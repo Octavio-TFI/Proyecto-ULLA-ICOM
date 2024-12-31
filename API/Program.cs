@@ -4,6 +4,7 @@ using Domain;
 using Infrastructure.Database;
 using Infrastructure.LLM;
 using Infrastructure.Outbox;
+using Microsoft.SemanticKernel.Embeddings;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
