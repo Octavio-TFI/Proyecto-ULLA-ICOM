@@ -19,7 +19,9 @@ namespace AppServices.Abstractions
         /// <param name="datosRecuperados">Datos recuperados con busqueda vectorial</param>
         /// <param name="consulta">Consulta realizada por el usuario</param>
         /// <returns>Datos recuperados filtrados</returns>
-        public Task<List<T>> Rank<T>(List<T> datosRecuperados, string consulta)
+        public Task<List<T>> RankAsync<T>(
+            List<T> datosRecuperados,
+            string consulta)
             where T : Entity;
     }
 }
