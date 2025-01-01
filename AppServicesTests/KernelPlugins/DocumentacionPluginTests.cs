@@ -1,4 +1,5 @@
-﻿using Microsoft.SemanticKernel.Embeddings;
+﻿using AppServices.Abstractions;
+using Microsoft.SemanticKernel.Embeddings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,13 @@ namespace AppServices.KernelPlugins.Tests
             // Arrange
             var textEmbeddingGenerationService 
                 = new Mock<ITextEmbeddingGenerationService>();
-
             var documentRepository = new Mock<IDocumentRepository>();
+            var rankerMock = new Mock<IRanker>();
+
             var documentacionPlugin = new DocumentacionPlugin(
                 textEmbeddingGenerationService.Object,
-                documentRepository.Object);
+                documentRepository.Object,
+                rankerMock.Object);
 
             var consulta = "consulta";
             var embeddingConsulta = new ReadOnlyMemory<float>([1, 2, 3]);
@@ -28,7 +31,7 @@ namespace AppServices.KernelPlugins.Tests
                 Texto = "Documentacion",
                 Embedding = [1,2,3]
             };
-            var searchResult = new List<Document> { document };
+            var searchResult = new List<Document> { document, document };
 
             textEmbeddingGenerationService
                 .Setup(
@@ -42,13 +45,16 @@ namespace AppServices.KernelPlugins.Tests
                 .Setup(d => d.GetDocumentosRelacionadosAsync(embeddingConsulta))
                 .ReturnsAsync(searchResult);
 
+            rankerMock.Setup(x => x.RankAsync(searchResult, consulta))
+                .ReturnsAsync([document]);
+
             // Act
             var result = await documentacionPlugin.BuscarDocumentacionAsync(
                 consulta);
 
             // Assert
-            Assert.AreEqual(1, result.Count());
-            Assert.AreEqual(document.ToString(), result.First());
+            Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(document.ToString(), Is.EqualTo(result.First()));
         }
     }
 }

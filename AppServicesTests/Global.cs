@@ -1,4 +1,5 @@
-﻿global using AppServices.Abstractions.DTOs;
+﻿global using AppServices.Abstractions;
+global using AppServices.Abstractions.DTOs;
 global using AppServices.Ports;
 global using Domain.Abstractions.Factories;
 global using Domain.Entities;
@@ -6,6 +7,7 @@ global using Domain.Events;
 global using Domain.Exceptions;
 global using Domain.Repositories;
 global using Domain.ValueObjects;
+global using Microsoft.SemanticKernel.Embeddings;
 global using Moq;
 global using NUnit.Framework;
 global using System;

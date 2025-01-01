@@ -1,4 +1,5 @@
-﻿using Domain.Repositories;
+﻿using AppServices.Abstractions;
+using Domain.Repositories;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
 using System;
@@ -12,7 +13,8 @@ namespace AppServices.KernelPlugins
 {
     internal class ConsultasPlugin(
         ITextEmbeddingGenerationService _textEmbeddingGenerationService,
-        IConsultaRepository _consultaRepository)
+        IConsultaRepository _consultaRepository,
+        IRanker _ranker)
     {
         [KernelFunction("Buscar consultas")]
         [Description("Busca consultas simialres a la consulta actual")]

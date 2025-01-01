@@ -15,11 +15,13 @@ namespace AppServices.KernelPlugins.Tests
             // Arrange
             var textEmbeddingGenerationService
                 = new Mock<ITextEmbeddingGenerationService>();
-
             var consultaRepository = new Mock<IConsultaRepository>();
+            var rankerMock = new Mock<IRanker>();
+
             var consultasPlugin = new ConsultasPlugin(
                 textEmbeddingGenerationService.Object,
-                consultaRepository.Object);
+                consultaRepository.Object,
+                rankerMock.Object);
 
             var consulta = "consulta";
             var embeddingConsulta = new ReadOnlyMemory<float>([1, 2, 3]);
@@ -32,7 +34,12 @@ namespace AppServices.KernelPlugins.Tests
                 Solucion = "Solucion",
             };
 
-            var searchResult = new List<Consulta> { consultaSimilar };
+            var searchResult = new List<Consulta>
+            {
+                consultaSimilar,
+                consultaSimilar
+            };
+
             textEmbeddingGenerationService
                 .Setup(
                     t => t.GenerateEmbeddingsAsync(
@@ -45,12 +52,15 @@ namespace AppServices.KernelPlugins.Tests
                 .Setup(d => d.GetConsultasSimilaresAsync(embeddingConsulta))
                 .ReturnsAsync(searchResult);
 
+            rankerMock.Setup(x => x.RankAsync(searchResult, consulta))
+                .ReturnsAsync([consultaSimilar]);
+
             // Act
             var result = await consultasPlugin.BuscarConsultasAsync(consulta);
 
             // Assert
-            Assert.AreEqual(1, result.Count());
-            Assert.AreEqual(consultaSimilar.ToString(), result.First());
+            Assert.That(result.Count(), Is.EqualTo(1));
+            Assert.That(consultaSimilar.ToString(), Is.EqualTo(result.First()));
         }
     }
 }
