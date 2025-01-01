@@ -24,10 +24,12 @@ namespace AppServices.KernelPlugins
             var embeddingConsulta = await _textEmbeddingGenerationService
                 .GenerateEmbeddingAsync(consulta);
 
-            var documents = await _consultaRepository
+            var consultas = await _consultaRepository
                 .GetConsultasSimilaresAsync(embeddingConsulta);
 
-            return documents.Select(d => d.ToString());
+            var rankedConsultas = await _ranker.RankAsync(consultas, consulta);
+
+            return rankedConsultas.Select(d => d.ToString());
         }
     }
 }

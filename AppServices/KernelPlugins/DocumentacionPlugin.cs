@@ -29,7 +29,9 @@ namespace AppServices.KernelPlugins
             var documents = await _documentRepository
                 .GetDocumentosRelacionadosAsync(embeddingConsulta);
 
-            return documents.Select(d => d.ToString());
+            var rankedDocuments = await _ranker.RankAsync(documents, consulta);
+
+            return rankedDocuments.Select(d => d.ToString());
         }
     }
 }
