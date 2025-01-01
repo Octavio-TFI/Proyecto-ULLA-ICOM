@@ -1,11 +1,13 @@
 ﻿using AppServices.Abstractions;
 using AppServices.Abstractions.DTOs;
 using AppServices.Ports;
+using Domain;
 using Domain.Abstractions.Factories;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;
 using Domain.ValueObjects;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ using System.Threading.Tasks;
 namespace AppServices
 {
     internal class RecibidorMensajes(
-        IUnitOfWork _unitOfWork,
+        [FromKeyedServices(Contexts.Chat)] IUnitOfWork _unitOfWork,
         IChatRepository _chatRepository,
         IMensajeFactory _mensajeFactory,
         IMensajeRepository _mensajeRepository) : IRecibidorMensajes

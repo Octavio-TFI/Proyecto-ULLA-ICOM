@@ -22,4 +22,10 @@
     <ProjectReference Include="..\Infrastructure\15-Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="vec0.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

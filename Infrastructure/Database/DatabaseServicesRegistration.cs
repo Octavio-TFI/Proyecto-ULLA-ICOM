@@ -1,7 +1,12 @@
 ﻿using AppServices.Ports;
+using Domain;
 using Domain.Repositories;
+using Infrastructure.Database.Chats;
+using Infrastructure.Database.Embeddings;
 using Infrastructure.Outbox;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -20,13 +25,34 @@ namespace Infrastructure.Database
             services.AddDbContext<ChatContext>(
                 options =>
                 {
-                    options.UseSqlServer(connectionString)
+                    options.UseSqlServer(
+                        connectionString,
+                        o => o.MigrationsHistoryTable(
+                                tableName: HistoryRepository.DefaultTableName,
+                                schema: "Chat"))
                         .AddInterceptors(new OutboxInterceptor());
                 });
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddKeyedScoped<IUnitOfWork, UnitOfWork<ChatContext>>(
+                Contexts.Chat);
             services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<IMensajeRepository, MensajeRepository>();
+
+            // Como SQL Server todavia no soporta Vector Search
+            // Se utiliza SQLite
+            services.AddDbContext<EmbeddingContext>(
+                options =>
+                {
+                    options.UseSqlite("Data Source=Embeddings.db")
+                        .AddInterceptors(
+                            new OutboxInterceptor(),
+                            new SQLiteExtensionInterceptor());
+                });
+
+            services.AddScoped<IConsultaRepository, ConsultaRepository>();
+            services.AddScoped<IDocumentRepository, DocumentRepository>();
+            services.AddKeyedScoped<IUnitOfWork, UnitOfWork<EmbeddingContext>>(
+                Contexts.Embedding);
 
             return services;
         }

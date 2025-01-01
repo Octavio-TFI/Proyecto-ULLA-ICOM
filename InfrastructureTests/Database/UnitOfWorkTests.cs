@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Infrastructure.Database.Chats;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,8 @@ namespace Infrastructure.Database.Tests
         public async Task SaveChangesAsync_ShouldSaveChanges()
         {
             // Arrange
-            var contextMock = new Mock<ChatContext>();
-            var unitOfWork = new UnitOfWork(contextMock.Object);
+            var contextMock = new Mock<BaseContext>();
+            var unitOfWork = new UnitOfWork<BaseContext>(contextMock.Object);
 
             // Act
             await unitOfWork.SaveChangesAsync();

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Infrastructure.Database.Migrations
+namespace Infrastructure.Database.Chats.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -11,11 +11,16 @@ namespace Infrastructure.Database.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "Chat");
+
             migrationBuilder.CreateSequence(
-                name: "MensajeSequence");
+                name: "MensajeSequence",
+                schema: "Chat");
 
             migrationBuilder.CreateTable(
                 name: "Chats",
+                schema: "Chat",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -30,12 +35,32 @@ namespace Infrastructure.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MensajesDeTexto",
+                name: "OutboxEvents",
+                schema: "Chat",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [MensajeSequence]"),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EventType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EventData = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OccurredOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProcessedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsProcessed = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OutboxEvents", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MensajesDeTexto",
+                schema: "Chat",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [Chat].[MensajeSequence]"),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ChatId = table.Column<int>(type: "int", nullable: false),
+                    Tipo = table.Column<int>(type: "int", nullable: false),
                     Texto = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -44,6 +69,7 @@ namespace Infrastructure.Database.Migrations
                     table.ForeignKey(
                         name: "FK_MensajesDeTexto_Chats_ChatId",
                         column: x => x.ChatId,
+                        principalSchema: "Chat",
                         principalTable: "Chats",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -51,12 +77,14 @@ namespace Infrastructure.Database.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Chats_UsuarioId_ChatPlataformaId_Plataforma",
+                schema: "Chat",
                 table: "Chats",
                 columns: new[] { "UsuarioId", "ChatPlataformaId", "Plataforma" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MensajesDeTexto_ChatId",
+                schema: "Chat",
                 table: "MensajesDeTexto",
                 column: "ChatId");
         }
@@ -65,13 +93,20 @@ namespace Infrastructure.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MensajesDeTexto");
+                name: "MensajesDeTexto",
+                schema: "Chat");
 
             migrationBuilder.DropTable(
-                name: "Chats");
+                name: "OutboxEvents",
+                schema: "Chat");
+
+            migrationBuilder.DropTable(
+                name: "Chats",
+                schema: "Chat");
 
             migrationBuilder.DropSequence(
-                name: "MensajeSequence");
+                name: "MensajeSequence",
+                schema: "Chat");
         }
     }
 }

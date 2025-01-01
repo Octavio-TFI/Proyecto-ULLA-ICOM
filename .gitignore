@@ -367,3 +367,5 @@ FodyWeavers.xsd
 /ExtractedMDA.xml
 /*.exe
 /*.bat
+/API/Embeddings.db-shm
+/API/Embeddings.db-wal

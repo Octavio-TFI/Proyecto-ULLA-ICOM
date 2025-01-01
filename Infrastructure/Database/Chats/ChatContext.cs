@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database
+namespace Infrastructure.Database.Chats
 {
     internal class ChatContext : BaseContext
     {
@@ -29,6 +29,8 @@ namespace Infrastructure.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.HasDefaultSchema("Chat");
 
             ConfigureChatModel(modelBuilder);
             ConfigureMensajeModel(modelBuilder);
