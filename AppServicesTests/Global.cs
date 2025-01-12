@@ -7,6 +7,7 @@ global using Domain.Events;
 global using Domain.Exceptions;
 global using Domain.Repositories;
 global using Domain.ValueObjects;
+global using Microsoft.SemanticKernel;
 global using Microsoft.SemanticKernel.Embeddings;
 global using Moq;
 global using NUnit.Framework;

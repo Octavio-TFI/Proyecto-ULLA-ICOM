@@ -35,7 +35,7 @@ namespace AppServices
 
                 var functionResult = await _kernel.InvokeAsync(
                     "Ranker",
-                    nameof(T),
+                    typeof(T).Name,
                     arguments);
 
                 var result = JsonConvert.DeserializeObject<RankerResult>(
