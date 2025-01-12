@@ -1,4 +1,6 @@
-﻿using InfrastructureTests.Database.Tests;
+﻿using Infrastructure.Database.Chats;
+using Infrastructure.Database.Embeddings;
+using InfrastructureTests.Database.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,9 @@ namespace Infrastructure.Outbox.Tests
         {
             // Arrange
             var serviceScopeFactory = new Mock<IServiceScopeFactory>();
-            var outboxPublisher = new Mock<IOutboxPublisher>();
+            var outboxPublisherChat = new Mock<IOutboxPublisher<ChatContext>>();
+            var outboxPublisherEmbedding = new Mock<IOutboxPublisher<EmbeddingContext>>(
+                );
             var chatContext = DatabaseTestsHelper.CreateInMemoryChatContext();
             var embeddingContext = DatabaseTestsHelper
                 .CreateInMemoryEmbeddingContext();
@@ -23,6 +27,8 @@ namespace Infrastructure.Outbox.Tests
             var serviceProvider = new ServiceCollection()
                 .AddSingleton(chatContext)
                 .AddSingleton(embeddingContext)
+                .AddSingleton(outboxPublisherChat.Object)
+                .AddSingleton(outboxPublisherEmbedding.Object)
                 .BuildServiceProvider();
 
             serviceScopeMock.Setup(x => x.ServiceProvider)
@@ -59,8 +65,7 @@ namespace Infrastructure.Outbox.Tests
             await chatContext.SaveChangesAsync();
 
             var outboxProcessor = new OutboxProcessor(
-                serviceScopeFactory.Object,
-                outboxPublisher.Object);
+                serviceScopeFactory.Object);
 
             // Act
             await outboxProcessor.ProcessOutboxAsync(CancellationToken.None);
@@ -68,18 +73,16 @@ namespace Infrastructure.Outbox.Tests
             // Assert
             foreach(var outboxEvent in outboxEvents.Take(2))
             {
-                outboxPublisher.Verify(
+                outboxPublisherChat.Verify(
                     x => x.PublishOutboxEventsAsync(
-                        outboxEvent,
-                        chatContext,
+                        It.Is<OutboxEvent>(e => e.Id == outboxEvent.Id),
                         CancellationToken.None),
                     Times.Once);
             }
 
-            outboxPublisher.Verify(
+            outboxPublisherEmbedding.Verify(
                 x => x.PublishOutboxEventsAsync(
-                    outboxEvents.Last(),
-                    chatContext,
+                    It.Is<OutboxEvent>(e => e.Id == outboxEvents.Last().Id),
                     CancellationToken.None),
                 Times.Never);
         }

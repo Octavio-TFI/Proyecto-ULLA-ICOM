@@ -17,9 +17,8 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Outbox
 {
-    internal class OutboxProcessor(
-        IServiceScopeFactory _serviceScopeFactory,
-        IOutboxPublisher _outboxPublisher) : IOutboxProcessor
+    internal class OutboxProcessor(IServiceScopeFactory _serviceScopeFactory)
+        : IOutboxProcessor
     {
         public async Task ProcessOutboxAsync(
             CancellationToken cancellationToken)
@@ -31,36 +30,40 @@ namespace Infrastructure.Outbox
                 .GetRequiredService<EmbeddingContext>();
 
             var chatContextTask = ProcessContextEvents(
-                _outboxPublisher,
                 chatContext,
                 cancellationToken);
 
             var embeddingContextTask = ProcessContextEvents(
-                _outboxPublisher,
                 embeddingContext,
                 cancellationToken);
 
             await Task.WhenAll(chatContextTask, embeddingContextTask);
         }
 
-        private static async Task ProcessContextEvents(
-            IOutboxPublisher _outboxPublisher,
-            BaseContext chatContext,
+        async Task ProcessContextEvents<Context>(
+            Context context,
             CancellationToken cancellationToken)
+            where Context : BaseContext
         {
-            var outboxEvents = await chatContext.OutboxEvents
+            var outboxEvents = await context.OutboxEvents
                 .Where(x => x.IsProcessed == false)
                 .OrderBy(x => x.OccurredOn)
                 .Take(100)
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             await Parallel.ForEachAsync(
                 outboxEvents,
-                async (outboxEvent, CancellationToken) => await _outboxPublisher
-                    .PublishOutboxEventsAsync(
+                async (outboxEvent, CancellationToken) =>
+                {
+                    var outboxPublisher = _serviceScopeFactory.CreateScope()
+                        .ServiceProvider
+                        .GetRequiredService<IOutboxPublisher<Context>>();
+
+                    await outboxPublisher.PublishOutboxEventsAsync(
                         outboxEvent,
-                        chatContext,
-                        cancellationToken));
+                        cancellationToken);
+                });
         }
     }
 }
