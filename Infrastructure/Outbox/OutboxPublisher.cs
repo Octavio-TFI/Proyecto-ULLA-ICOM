@@ -1,6 +1,8 @@
-﻿using Infrastructure.Outbox.Abstractions;
+﻿using Infrastructure.Database;
+using Infrastructure.Outbox.Abstractions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -11,9 +13,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Outbox
 {
-    internal class OutboxPublisher(
+    internal class OutboxPublisher<Context>(
         IPublisher _publisher,
-        ILogger<OutboxPublisher> _logger) : IOutboxPublisher
+        ILogger<OutboxPublisher<Context>> _logger,
+        Context _context)
+        : IOutboxPublisher<Context> where Context : BaseContext
     {
         static readonly JsonSerializerSettings _jsonSettings = new()
         {
@@ -22,7 +26,6 @@ namespace Infrastructure.Outbox
 
         public async Task PublishOutboxEventsAsync(
             OutboxEvent outboxEvent,
-            DbContext context,
             CancellationToken cancellationToken)
         {
             try
@@ -44,7 +47,8 @@ namespace Infrastructure.Outbox
             outboxEvent.IsProcessed = true;
             outboxEvent.ProcessedOn = DateTime.Now;
 
-            await context.SaveChangesAsync(cancellationToken);
+            _context.Update(outboxEvent);
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

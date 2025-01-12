@@ -23,17 +23,17 @@
                 OccurredOn = DateTime.Now
             };
 
-            var context = new Mock<DbContext>();
+            var context = new Mock<BaseContext>();
             var publisher = new Mock<IPublisher>();
-            var logger = new Mock<ILogger<OutboxPublisher>>();
-            var outboxPublisher = new OutboxPublisher(
+            var logger = new Mock<ILogger<OutboxPublisher<BaseContext>>>();
+            var outboxPublisher = new OutboxPublisher<BaseContext>(
                 publisher.Object,
-                logger.Object);
+                logger.Object,
+                context.Object);
 
             // Act
             await outboxPublisher.PublishOutboxEventsAsync(
                 outboxEvent,
-                context.Object,
                 CancellationToken.None);
 
             // Assert
@@ -44,6 +44,8 @@
                     It.IsAny<INotification>(),
                     CancellationToken.None),
                 Times.Once);
+
+            context.Verify(c => c.Update(outboxEvent), Times.Once);
             context.Verify(
                 c => c.SaveChangesAsync(CancellationToken.None),
                 Times.Once);
@@ -73,12 +75,13 @@
                 OccurredOn = DateTime.Now
             };
 
-            var context = new Mock<DbContext>();
+            var context = new Mock<BaseContext>();
             var publisher = new Mock<IPublisher>();
-            var logger = new Mock<ILogger<OutboxPublisher>>();
-            var outboxPublisher = new OutboxPublisher(
+            var logger = new Mock<ILogger<OutboxPublisher<BaseContext>>>();
+            var outboxPublisher = new OutboxPublisher<BaseContext>(
                 publisher.Object,
-                logger.Object);
+                logger.Object,
+                context.Object);
 
             publisher.Setup(
                 p => p.Publish(
@@ -89,7 +92,6 @@
             // Act
             await outboxPublisher.PublishOutboxEventsAsync(
                 outboxEvent,
-                context.Object,
                 CancellationToken.None);
 
             // Assert
@@ -97,6 +99,7 @@
                 .ErrorWasCalled()
                 .MessageEquals("Error al publicar el evento de Outbox");
 
+            context.Verify(c => c.Update(outboxEvent), Times.Never);
             context.Verify(
                 c => c.SaveChangesAsync(CancellationToken.None),
                 Times.Never);
@@ -120,17 +123,17 @@
                 OccurredOn = DateTime.Now
             };
 
-            var context = new Mock<DbContext>();
+            var context = new Mock<BaseContext>();
             var publisher = new Mock<IPublisher>();
-            var logger = new Mock<ILogger<OutboxPublisher>>();
-            var outboxPublisher = new OutboxPublisher(
+            var logger = new Mock<ILogger<OutboxPublisher<BaseContext>>>();
+            var outboxPublisher = new OutboxPublisher<BaseContext>(
                 publisher.Object,
-                logger.Object);
+                logger.Object,
+                context.Object);
 
             // Act
             await outboxPublisher.PublishOutboxEventsAsync(
                 outboxEvent,
-                context.Object,
                 CancellationToken.None);
 
             // Assert
@@ -138,6 +141,7 @@
                 .ErrorWasCalled()
                 .MessageEquals("Error al publicar el evento de Outbox");
 
+            context.Verify(c => c.Update(outboxEvent), Times.Never);
             context.Verify(
                 c => c.SaveChangesAsync(CancellationToken.None),
                 Times.Never);
@@ -164,17 +168,17 @@
                 OccurredOn = DateTime.Now
             };
 
-            var context = new Mock<DbContext>();
+            var context = new Mock<BaseContext>();
             var publisher = new Mock<IPublisher>();
-            var logger = new Mock<ILogger<OutboxPublisher>>();
-            var outboxPublisher = new OutboxPublisher(
+            var logger = new Mock<ILogger<OutboxPublisher<BaseContext>>>();
+            var outboxPublisher = new OutboxPublisher<BaseContext>(
                 publisher.Object,
-                logger.Object);
+                logger.Object,
+                context.Object);
 
             // Act
             await outboxPublisher.PublishOutboxEventsAsync(
                 outboxEvent,
-                context.Object,
                 CancellationToken.None);
 
             // Assert
@@ -182,6 +186,7 @@
                 .ErrorWasCalled()
                 .MessageEquals("Error al publicar el evento de Outbox");
 
+            context.Verify(c => c.Update(outboxEvent), Times.Never);
             context.Verify(
                 c => c.SaveChangesAsync(CancellationToken.None),
                 Times.Never);

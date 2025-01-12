@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	<RootNamespace>API</RootNamespace>
 	  <AssemblyName>API</AssemblyName>
+	  <NoWarn>SKEXP0010</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,9 +24,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Prompts\Ranker\Document\config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Prompts\Ranker\Document\skprompt.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="vec0.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Prompts\Ranker\Consulta\" />
   </ItemGroup>
 
 </Project>

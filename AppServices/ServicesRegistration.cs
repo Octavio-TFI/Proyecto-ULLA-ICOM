@@ -19,6 +19,8 @@ namespace AppServices
         public static IServiceCollection AddAppServices(
             this IServiceCollection services)
         {
+            services.AddSingleton<IRanker, Ranker>();
+
             services.AddMediatR(
                 c => c.RegisterServicesFromAssembly(
                     Assembly.GetExecutingAssembly()));

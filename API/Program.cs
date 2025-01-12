@@ -1,10 +1,11 @@
 using AppServices;
 using Controllers;
 using Domain;
+using Domain.Entities;
 using Infrastructure.Database;
 using Infrastructure.LLM;
 using Infrastructure.Outbox;
-using Microsoft.SemanticKernel.Embeddings;
+using Microsoft.SemanticKernel;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);

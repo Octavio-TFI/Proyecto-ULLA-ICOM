@@ -1,4 +1,5 @@
-﻿using Domain.Repositories;
+﻿using AppServices.Abstractions;
+using Domain.Repositories;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
 using System;
@@ -12,20 +13,23 @@ namespace AppServices.KernelPlugins
 {
     internal class ConsultasPlugin(
         ITextEmbeddingGenerationService _textEmbeddingGenerationService,
-        IConsultaRepository _consultaRepository)
+        IConsultaRepository _consultaRepository,
+        IRanker _ranker)
     {
         [KernelFunction("Buscar consultas")]
-        [Description("Busca consultas simialres a la consulta actual")]
+        [Description("Busca consultas simialares a la consulta actual")]
         public async Task<IEnumerable<string>> BuscarConsultasAsync(
             string consulta)
         {
             var embeddingConsulta = await _textEmbeddingGenerationService
                 .GenerateEmbeddingAsync(consulta);
 
-            var documents = await _consultaRepository
+            var consultas = await _consultaRepository
                 .GetConsultasSimilaresAsync(embeddingConsulta);
 
-            return documents.Select(d => d.ToString());
+            var rankedConsultas = await _ranker.RankAsync(consultas, consulta);
+
+            return rankedConsultas.Select(d => d.ToString());
         }
     }
 }

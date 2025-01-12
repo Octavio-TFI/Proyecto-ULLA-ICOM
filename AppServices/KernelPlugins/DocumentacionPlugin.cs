@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using AppServices.Abstractions;
+using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
@@ -14,7 +15,8 @@ namespace AppServices.KernelPlugins
 {
     internal class DocumentacionPlugin(
         ITextEmbeddingGenerationService _textEmbeddingGenerationService,
-        IDocumentRepository _documentRepository)
+        IDocumentRepository _documentRepository,
+        IRanker _ranker)
     {
         [KernelFunction("Buscar documentacion")]
         [Description("Busca documentación relevante a la consulta")]
@@ -27,7 +29,9 @@ namespace AppServices.KernelPlugins
             var documents = await _documentRepository
                 .GetDocumentosRelacionadosAsync(embeddingConsulta);
 
-            return documents.Select(d => d.ToString());
+            var rankedDocuments = await _ranker.RankAsync(documents, consulta);
+
+            return rankedDocuments.Select(d => d.ToString());
         }
     }
 }
