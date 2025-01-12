@@ -15,7 +15,8 @@ namespace AppServices.EventHandlers
     internal class MensajeRecibidoHandler(
         IMensajeRepository _mensajeRepository,
         IGeneradorRespuesta _generadorRespuesta,
-        [FromKeyedServices(Contexts.Chat)] IUnitOfWork _unitOfWork) : INotificationHandler<MensajeRecibidoEvent>
+        [FromKeyedServices(Contexts.Chat)] IUnitOfWork _unitOfWork)
+        : INotificationHandler<MensajeRecibidoEvent>
     {
         public async Task Handle(
             MensajeRecibidoEvent request,

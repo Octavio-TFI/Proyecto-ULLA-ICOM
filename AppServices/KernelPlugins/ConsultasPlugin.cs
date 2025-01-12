@@ -17,7 +17,7 @@ namespace AppServices.KernelPlugins
         IRanker _ranker)
     {
         [KernelFunction("Buscar consultas")]
-        [Description("Busca consultas simialres a la consulta actual")]
+        [Description("Busca consultas simialares a la consulta actual")]
         public async Task<IEnumerable<string>> BuscarConsultasAsync(
             string consulta)
         {
