@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Factories
 {
-    internal class MensajeFactory : IMensajeFactory
+    internal class MensajeFactory
+        : IMensajeFactory
     {
-        public MensajeTexto CreateMensajeTexto(
+        public MensajeTexto CreateMensajeTextoRecibido(
             int chatId,
             DateTime dateTime,
             TipoMensaje tipoMensaje,
@@ -27,6 +28,21 @@ namespace Domain.Factories
             };
 
             mensaje.Events.Add(new MensajeRecibidoEvent { ChatId = chatId });
+
+            return mensaje;
+        }
+
+        public MensajeTexto CreateMensajeTextoGenerado(int chatId, string texto)
+        {
+            var mensaje = new MensajeTexto
+            {
+                ChatId = chatId,
+                DateTime = DateTime.Now,
+                Tipo = TipoMensaje.Asistente,
+                Texto = texto
+            };
+
+            mensaje.Events.Add(new MensajeGeneradoEvent { ChatId = chatId });
 
             return mensaje;
         }
