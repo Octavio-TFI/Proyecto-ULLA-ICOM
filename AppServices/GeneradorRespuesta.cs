@@ -18,31 +18,12 @@ namespace AppServices
     internal class GeneradorRespuesta(
         [FromKeyedServices(TipoKernel.GeneradorRepuestas)] Kernel _kernel,
         IMensajeFactory _mensajeFactory,
-        IFileManager _fileManager)
+        IChatHistoryFactory _chatHistoryFactory)
         : IGeneradorRespuesta
     {
         public async Task<Mensaje> GenerarRespuestaAsync(List<Mensaje> mensajes)
         {
-            ChatHistory chatHistory = [];
-
-            string systemPrompt = await _fileManager.ReadAllTextAsync(
-                "Prompts/GeneradorRespuesta/SystemPrompt.txt");
-
-            chatHistory.AddSystemMessage(systemPrompt);
-
-            foreach(Mensaje mensaje in mensajes)
-            {
-                if(mensaje is MensajeTexto mensajeTexto)
-                {
-                    if(mensaje.Tipo == TipoMensaje.Usuario)
-                    {
-                        chatHistory.AddUserMessage(mensajeTexto.Texto);
-                    } else if(mensaje.Tipo == TipoMensaje.Asistente)
-                    {
-                        chatHistory.AddAssistantMessage(mensajeTexto.Texto);
-                    }
-                }
-            }
+            var chatHistory = await _chatHistoryFactory.CreateAsync(mensajes);
 
             var executionSettings = new PromptExecutionSettings()
             {
