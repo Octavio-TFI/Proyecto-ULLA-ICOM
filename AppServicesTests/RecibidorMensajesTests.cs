@@ -47,7 +47,7 @@ namespace AppServices.Tests
                 .ReturnsAsync(chat);
 
             mensajeFactoryMock.Setup(
-                f => f.CreateMensajeTexto(
+                f => f.CreateMensajeTextoRecibido(
                     chat.Id,
                     mensajeRecibidoDTO.DateTime,
                     TipoMensaje.Usuario,
@@ -68,7 +68,9 @@ namespace AppServices.Tests
                 r => r.InsertAsync(It.IsAny<Chat>()),
                 Times.Never);
 
-            mensajeRepositoryMock.Verify(r => r.InsertAsync(mensaje), Times.Once);
+            mensajeRepositoryMock.Verify(
+                r => r.InsertAsync(mensaje),
+                Times.Once);
 
             unitOfWorkMock.Verify(u => u.SaveChangesAsync(), Times.Once);
         }
@@ -120,7 +122,7 @@ namespace AppServices.Tests
                 .Callback(() => chat.Id = 10);
 
             mensajeFactoryMock.Setup(
-                f => f.CreateMensajeTexto(
+                f => f.CreateMensajeTextoRecibido(
                     10,
                     mensajeRecibidoDTO.DateTime,
                     TipoMensaje.Usuario,
@@ -141,10 +143,13 @@ namespace AppServices.Tests
                 r => r.InsertAsync(
                     It.Is<Chat>(
                         c => c.UsuarioId == mensajeRecibidoDTO.UsuarioId &&
-                            c.ChatPlataformaId == mensajeRecibidoDTO.ChatPlataformaId &&
+                            c.ChatPlataformaId ==
+                            mensajeRecibidoDTO.ChatPlataformaId &&
                             c.Plataforma == mensajeRecibidoDTO.Plataforma)));
 
-            mensajeRepositoryMock.Verify(r => r.InsertAsync(mensaje), Times.Once);
+            mensajeRepositoryMock.Verify(
+                r => r.InsertAsync(mensaje),
+                Times.Once);
 
             unitOfWorkMock.Verify(u => u.SaveChangesAsync(), Times.Exactly(2));
         }

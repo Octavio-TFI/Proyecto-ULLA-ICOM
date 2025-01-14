@@ -1,11 +1,10 @@
 using AppServices;
 using Controllers;
 using Domain;
-using Domain.Entities;
 using Infrastructure.Database;
+using Infrastructure.FileManager;
 using Infrastructure.LLM;
 using Infrastructure.Outbox;
-using Microsoft.SemanticKernel;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +23,7 @@ string connectionString = builder.Configuration.GetConnectionString("Chat") ??
 builder.Services.AddDatabaseServices(connectionString);
 builder.Services.AddOutboxServices();
 builder.Services.AddLLMServices();
+builder.Services.AddFileManagerServices();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
