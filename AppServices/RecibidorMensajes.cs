@@ -20,7 +20,8 @@ namespace AppServices
         [FromKeyedServices(Contexts.Chat)] IUnitOfWork _unitOfWork,
         IChatRepository _chatRepository,
         IMensajeFactory _mensajeFactory,
-        IMensajeRepository _mensajeRepository) : IRecibidorMensajes
+        IMensajeRepository _mensajeRepository)
+        : IRecibidorMensajes
     {
         public async Task RecibirMensajeTextoAsync(
             MensajeTextoRecibidoDTO mensajeRecibido)
@@ -48,7 +49,7 @@ namespace AppServices
                 await _unitOfWork.SaveChangesAsync();
             }
 
-            var mensaje = _mensajeFactory.CreateMensajeTexto(
+            var mensaje = _mensajeFactory.CreateMensajeTextoRecibido(
                 chat.Id,
                 mensajeRecibido.DateTime,
                 TipoMensaje.Usuario,
