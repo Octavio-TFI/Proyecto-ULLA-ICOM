@@ -11,7 +11,7 @@ jobs:
     steps:
       # Checkout the code
       - name: Checkout repository 
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}   # checkout the correct branch name
           fetch-depth: 0                # fetch the whole repo history
@@ -21,7 +21,6 @@ jobs:
         uses: codacy/git-version@2.8.0
         with:
           release-branch: main
-          dev-branch: main
           minor-identifier: feat
           major-identifier: breaking
         
