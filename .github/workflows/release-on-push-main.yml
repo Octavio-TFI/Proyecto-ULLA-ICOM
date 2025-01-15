@@ -35,10 +35,10 @@ jobs:
       - name: Create GitHub release
         uses: actions/create-release@v1
         with:
-          tag_name: v${{ steps.gitversion.outputs.version }}
-          release_name: Release v${{ steps.gitversion.outputs.version }}
+          tag_name: v${{ env.fullSemVer }}
+          release_name: Release v${{ env.fullSemVer }}
           body: |
-            Release notes for version v${{ steps.gitversion.outputs.version }}
+            Release notes for version v${{ env.fullSemVer }}
           draft: false
           prerelease: false
         env:
