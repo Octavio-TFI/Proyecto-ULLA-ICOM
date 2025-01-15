@@ -25,9 +25,9 @@ jobs:
         uses: gittools/actions/gitversion/execute@v3.1.2
         with:
           overrideConfig: |
-            major-version-bump-message= \+semver:\s?(breaking|major)
-            minor-version-bump-message= \+semver:\s?(feat|minor)
-            patch-version-bump-message= \+semver:\s?(fix|patch)
+            major-version-bump-message=breaking
+            minor-version-bump-message=feat
+            patch-version-bump-message=fix
 
         
       - name: Create new Git tag
