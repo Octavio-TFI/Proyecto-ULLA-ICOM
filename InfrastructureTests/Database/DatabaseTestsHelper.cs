@@ -26,7 +26,7 @@ namespace InfrastructureTests.Database.Tests
             var connection = new SqliteConnection("Data Source=:memory:");
             connection.Open();
 
-            connection.LoadExtension("vec0");
+            connection.LoadExtension("vec0.dll");
 
             var options = new DbContextOptionsBuilder<EmbeddingContext>()
                 .UseSqlite(connection)
