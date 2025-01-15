@@ -11,24 +11,24 @@ jobs:
     steps:
       # Checkout the code
       - name: Checkout repository 
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}   # checkout the correct branch name
           fetch-depth: 0                # fetch the whole repo history
 
-      - name: Git Version
-        id: gitversion
-        uses: codacy/git-version@2.7.1
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v3.1.2
         with:
-          release-branch: main
-          minor-identifier: feat
-          major-identifier: breaking
+          versionSpec: '6.0.x'
+
+      - name: Determine Version
+        id: version_step # step id used as reference for output values
+        uses: gittools/actions/gitversion/execute@v3.1.2
         
       - name: Create new Git tag
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          NEW_TAG="v${{ steps.gitversion.outputs.version }}"
+          NEW_TAG="v${{ env.fullSemVer }}"
           git tag $NEW_TAG
           git push origin $NEW_TAG
 
