@@ -23,6 +23,12 @@ jobs:
       - name: Determine Version
         id: version_step # step id used as reference for output values
         uses: gittools/actions/gitversion/execute@v3.1.2
+        with:
+          overrideConfig: |
+            major-version-bump-message= \+semver:\s?(breaking|major)
+            minor-version-bump-message= \+semver:\s?(feat|minor)
+            patch-version-bump-message= \+semver:\s?(fix|patch)
+
         
       - name: Create new Git tag
         run: |
