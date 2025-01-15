@@ -7,7 +7,7 @@ on:
 
 jobs:
   create_release:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       # Checkout the code
       - name: Checkout repository 
