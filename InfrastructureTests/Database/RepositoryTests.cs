@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.ValueObjects;
+using Infrastructure.Database.Chats;
 using InfrastructureTests.Database.Tests;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,7 +17,7 @@ namespace Infrastructure.Database.Tests
         public async Task InsertAsync_ShouldInsertEntity()
         {
             // Arrange
-            var context = DatabaseTestsHelper.CreateInMemoryContext();
+            var context = DatabaseTestsHelper.CreateInMemoryChatContext();
             var repository = new MensajeRepository(context);
 
             var mensaje = new MensajeTexto
