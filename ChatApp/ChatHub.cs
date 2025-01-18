@@ -21,7 +21,7 @@ namespace ChatApp
             var messageToSend = new MessageToSend
             {
                 ChatId = chatId,
-                Text = message,
+                Texto = message,
                 DateTime = DateTime.Now
             };
 
