@@ -1,18 +1,22 @@
 ﻿using ChatApp.DTOs;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ChatApp.Controllers
 {
-    public class ChatController(ChatHub chatHub)
+    [ApiController]
+    [Route("[controller]")]
+    public class ChatController(IHubContext<ChatHub> _chatHubContext)
         : ControllerBase
     {
         // Endpoint para recibir mensajes de la LLM API
-        [HttpPost("ReceiveMessage")]
+        [HttpPost]
         public async Task<IActionResult> ReceiveMessage(
             [FromBody] MessageReceived message)
         {
-            await chatHub.SendMessageAsync(message.ChatId, message.Text);
+            await _chatHubContext.Clients.All
+                .SendAsync("ReceiveMessage", message.ChatId, message.Texto);
 
             return Ok();
         }

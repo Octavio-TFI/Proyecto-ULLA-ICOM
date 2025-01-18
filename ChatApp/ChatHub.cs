@@ -6,11 +6,6 @@ namespace ChatApp
     public class ChatHub(ILogger<ChatHub> _logger)
         : Hub
     {
-        public async Task ReceiveMessageAsync(Guid chatId, string message)
-        {
-            await Clients.All.SendAsync("ReceiveMessage", chatId, message);
-        }
-
         public async Task SendMessageAsync(Guid chatId, string message)
         {
             HttpClient client = new()
@@ -25,7 +20,12 @@ namespace ChatApp
                 DateTime = DateTime.Now
             };
 
-            _logger.LogInformation("Sending message to API: {0}", message);
+            _logger.LogInformation(
+                @"
+Chat: {}
+Sending message to API: {}",
+                chatId,
+                message);
 
             try
             {
