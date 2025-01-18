@@ -1,6 +1,6 @@
 ﻿namespace ChatApp.DTOs
 {
-    public class MessageRecieved
+    public class MessageReceived
     {
         public required Guid ChatId { get; init; }
 
