@@ -7,7 +7,7 @@ namespace ChatApp.Controllers
     public class ChatController(ChatHub chatHub)
         : ControllerBase
     {
-        // Endpoint to receive message from the LLM API
+        // Endpoint para recibir mensajes de la LLM API
         [HttpPost("ReceiveMessage")]
         public async Task<IActionResult> ReceiveMessage(
             [FromBody] MessageReceived message)

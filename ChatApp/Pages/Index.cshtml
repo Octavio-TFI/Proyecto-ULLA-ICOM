@@ -1,10 +1,42 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Chat";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<div id="chat-window"></div>
+<input type="text" id="message-input" placeholder="Type a message..." />
+<button id="send-button">Send</button>
+
+@section Scripts {
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+<script>
+    
+    let chatId = null;
+
+    // Genera un nuevo chat cada vez que se carga la pagina
+    window.onload = function () {
+        chatId = crypto.randomUUID();
+     };
+
+    const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+    connection.on("ReceiveMessage", function(chatId, message) {
+        const chatWindow = document.getElementById("chat-window");
+        const newMessage = document.createElement("div");
+        newMessage.textContent = message;
+        chatWindow.appendChild(newMessage);
+    });
+
+    connection.start().catch(err => console.error(err.toString()));
+
+    document.getElementById("send-button").addEventListener("click", async () => {
+        const messageInput = document.getElementById("message-input");
+        const text = messageInput.value;
+
+        connection.invoke("SendMessageAsync", chatId, text);
+
+        messageInput.value = '';  // Clear input field after sending
+    });
+</script>
+}
