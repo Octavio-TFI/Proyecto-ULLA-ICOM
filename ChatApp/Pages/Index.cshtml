@@ -4,14 +4,119 @@
     ViewData["Title"] = "Chat";
 }
 
-<div id="chat-window"></div>
-<input type="text" id="message-input" placeholder="Type a message..." />
-<button id="send-button">Send</button>
+<div id="chat-window" class="chat-window"></div>
+<div class="message-input-container" >
+    <textarea type="text" id="message-input" class="message-input" rows="1" placeholder="Type a message..."></textarea>
+    <button id="send-button" class="send-button">Send</button>
+</div>
+
+@section Styles {
+    <style>
+        /* Ensure chat window takes available height */
+        body, html {
+            height: 100%; /* Ensure the full height of the page is used */
+            margin: 0; /* Remove default margin */
+        }
+
+        .chat-window {
+            padding: 10px;
+            width: 100%;
+            height: 100%;
+            flex-grow: 1; /* Allow chat window to expand to available space */
+            overflow-y: clip;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: #fafafa;
+        }
+
+        .message-input-container {
+            position: fixed;
+            bottom: 1%;
+            left: 10%;
+            width: 80%;
+            display: flex;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            transition: height 0.3s ease; /* Smooth height transition */
+        }
+
+        .message-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 0px;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+            margin-right: 10px;
+            transition: border-color 0.3s ease;
+            resize: none; /* Disable manual resize */
+            max-height: 150px; /* Maximum height */
+            height: auto;
+            line-height: 1.4;
+        }
+
+        .message-input:focus {
+            border-color: #007bff;
+        }
+
+        .send-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .send-button:hover {
+            background-color: #0056b3;
+        }
+
+        .chat-window div {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            max-width: 80%;
+            word-wrap: break-word;
+            align-self: flex-start;
+        }
+
+        /* Add styles for received vs sent messages */
+        .chat-window .my-message {
+            background-color: #28a745;
+            align-self: flex-end;
+        }
+
+    </style>
+}
 
 @section Scripts {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
 <script>
-    
+
+    const messageInput = document.getElementById("message-input");
+    const messageInputContainer = document.querySelector("message-input-container");
+
+    // Ajusta la altura del textarea dinámicamente
+    messageInput.addEventListener("input", function () {
+
+        // Reseta la altura a 'auto' para que pueda crecer
+        messageInput.style.height = 'auto';
+
+        // Setea la altura para matchear la altura del contenido
+        messageInput.style.height = messageInput.scrollHeight + 'px';
+
+        // Ajusta la altura del message-input-container 
+        messageInputContainer.style.height = messageInput.offsetHeight + 20 + 'px';
+    });
+
     let chatId = null;
 
     // Genera un nuevo chat cada vez que se carga la pagina
@@ -25,7 +130,12 @@
         const chatWindow = document.getElementById("chat-window");
         const newMessage = document.createElement("div");
         newMessage.textContent = message;
+        
+        // Add class for message styling
+        newMessage.classList.add('their-message');
         chatWindow.appendChild(newMessage);
+        // Auto-scroll to bottom
+        chatWindow.scrollTop = chatWindow.scrollHeight;
     });
 
     connection.start().catch(err => console.error(err.toString()));
@@ -34,9 +144,23 @@
         const messageInput = document.getElementById("message-input");
         const text = messageInput.value;
 
+        // Display message in chat window with styling for the user's message
+        const chatWindow = document.getElementById("chat-window");
+        const myMessage = document.createElement("div");
+        myMessage.textContent = text;
+        myMessage.classList.add('my-message');
+        chatWindow.appendChild(myMessage);
+
+        // Auto-scroll to bottom
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
         connection.invoke("SendMessageAsync", chatId, text);
 
-        messageInput.value = '';  // Clear input field after sending
+        // Clear input field after sending
+        messageInput.value = '';
+
+        // Reseta la altura a 'auto' para que pueda crecer
+        messageInput.style.height = 'auto';
     });
 </script>
 }
