@@ -17,6 +17,16 @@ html {
   min-height: 100%;
 }
 
+.navbar {
+    background-color: #232423;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.navbar a {
+    color: white;
+}
+
 body {
   margin-bottom: 60px;
 }
