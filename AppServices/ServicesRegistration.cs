@@ -22,6 +22,7 @@ namespace AppServices
             this IServiceCollection services)
         {
             services.AddSingleton<IRanker, Ranker>();
+            services.AddSingleton<IChatHistoryFactory, ChatHistoryFactory>();
             services.AddScoped<IGeneradorRespuesta, GeneradorRespuesta>();
 
             services.AddKeyedTransient(

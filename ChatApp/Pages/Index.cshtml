@@ -1,0 +1,212 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Chat";
+}
+
+<div class="chat-container">
+    <div id="chat-window" class="chat-window"></div>
+    <div class="message-input-container" >
+        <textarea type="text" id="message-input" class="message-input" rows="1" placeholder="Escribe un mensaje..."></textarea>
+        <button id="send-button" class="send-button">Enviar</button>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        header {
+            width: 100%;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #3b3b3b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            padding-bottom: 2%;
+            overflow: hidden;
+            background-color: #3b3b3b;
+        }
+
+        .chat-window {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+            padding: 20px;
+            padding-left: 10%;
+            padding-right: 10%;
+            overflow-y: auto;
+            scrollbar-color: dimgray #3b3b3b;
+        }
+
+        .message-input-container {
+            display: flex;
+            align-items: end;
+            padding: 10px;
+            background-color: dimgray;
+            border-radius: 20px;
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+
+        .message-input {
+            flex-grow: 1;
+            border: 0px;
+            outline: none;
+            resize: none;
+            max-height: 150px;
+            background-color: dimgray;
+            color: white;
+            scrollbar-color: #3b3b3b dimgray;
+            margin: 10px;
+        }
+
+        .message-input::placeholder {
+            color: lightgray;
+        }
+
+        .send-button {
+            background-color: white;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-self: center;
+        }
+
+        .send-button:hover {
+            background-color: lightgray;
+        }
+
+        .chat-window div {
+            display: flex;
+            color: white;
+            max-width: 100%;
+            word-wrap: break-word;
+            align-self: flex-start;
+            flex-direction: row;
+        }
+
+        .icon-border {
+            display: flex;
+            padding: 8px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid dimgray;
+            align-self: center;
+        }
+
+        .icon {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .chat-window .user-message {
+            padding: 8px 12px;
+            background-color: dimgray;
+            align-self: flex-end;
+            max-width: 70%;
+            border-radius: 20px;
+        }
+
+        .chat-window div .bot-message {
+            max-width: 100%;
+            align-self: center;
+            padding: 8px 12px;
+        }
+
+    </style>
+}
+
+@section Scripts {
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+<script>
+
+    const messageInput = document.getElementById("message-input");
+    const messageInputContainer = document.querySelector("message-input-container");
+
+    // Ajusta la altura del textarea dinámicamente
+    messageInput.addEventListener("input", function () {
+
+        // Reseta la altura a 'auto' para que pueda crecer
+        messageInput.style.height = 'auto';
+
+        // Setea la altura para matchear la altura del contenido
+        messageInput.style.height = messageInput.scrollHeight + 'px';
+    });
+
+    let chatId = null;
+
+    // Genera un nuevo chat cada vez que se carga la pagina
+    window.onload = function () {
+        chatId = crypto.randomUUID();
+     };
+
+    const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+    connection.on("ReceiveMessage", function(chatId, message) {
+        const chatWindow = document.getElementById("chat-window");
+        const newMessageContainer = document.createElement("div");
+        const newMessage = document.createElement("div");
+        const newMessageIconBorder = document.createElement("div");
+        const newMessageIcon = document.createElement("img");
+        
+        newMessage.textContent = message;
+        newMessage.classList.add('bot-message');
+
+        newMessageIcon.classList.add('icon');
+        newMessageIcon.src = "CZ.png";
+
+        newMessageIconBorder.classList.add('icon-border');
+        newMessageIconBorder.appendChild(newMessageIcon);
+
+        newMessageContainer.appendChild(newMessageIconBorder);
+        newMessageContainer.appendChild(newMessage);
+        
+        chatWindow.appendChild(newMessageContainer)
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    });
+
+    connection.start().catch(err => console.error(err.toString()));
+
+    document.getElementById("send-button").addEventListener("click", async () => {
+        const messageInput = document.getElementById("message-input");
+        const text = messageInput.value;
+
+        // Display message in chat window with styling for the user's message
+        const chatWindow = document.getElementById("chat-window");
+        const userMessage = document.createElement("div");
+        userMessage.textContent = text;
+        userMessage.classList.add('user-message');
+        chatWindow.appendChild(userMessage);
+
+        // Auto-scroll to bottom
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        connection.invoke("SendMessageAsync", chatId, text);
+
+        // Clear input field after sending
+        messageInput.value = '';
+
+        // Reseta la altura a 'auto' para que pueda crecer
+        messageInput.style.height = 'auto';
+    });
+</script>
+}
