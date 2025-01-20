@@ -85,6 +85,7 @@
             border-radius: 15px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            align-self: center;
         }
 
         .send-button:hover {
@@ -92,20 +93,43 @@
         }
 
         .chat-window div {
-            padding: 8px 12px;
+            display: flex;
             color: white;
-            border-radius: 5px;
             max-width: 100%;
             word-wrap: break-word;
             align-self: flex-start;
+            flex-direction: row;
         }
 
-        /* Add styles for received vs sent messages */
-        .chat-window .my-message {
+        .icon-border {
+            display: flex;
+            padding: 8px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid dimgray;
+            align-self: center;
+        }
+
+        .icon {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .chat-window .user-message {
+            padding: 8px 12px;
             background-color: dimgray;
             align-self: flex-end;
             max-width: 70%;
             border-radius: 20px;
+        }
+
+        .chat-window div .bot-message {
+            max-width: 100%;
+            align-self: center;
+            padding: 8px 12px;
         }
 
     </style>
@@ -126,9 +150,6 @@
 
         // Setea la altura para matchear la altura del contenido
         messageInput.style.height = messageInput.scrollHeight + 'px';
-
-        // Ajusta la altura del message-input-container 
-        //messageInputContainer.style.height = messageInput.offsetHeight + 20 + 'px';
     });
 
     let chatId = null;
@@ -142,13 +163,24 @@
 
     connection.on("ReceiveMessage", function(chatId, message) {
         const chatWindow = document.getElementById("chat-window");
+        const newMessageContainer = document.createElement("div");
         const newMessage = document.createElement("div");
-        newMessage.textContent = message;
+        const newMessageIconBorder = document.createElement("div");
+        const newMessageIcon = document.createElement("img");
         
-        // Add class for message styling
-        newMessage.classList.add('their-message');
-        chatWindow.appendChild(newMessage);
-        // Auto-scroll to bottom
+        newMessage.textContent = message;
+        newMessage.classList.add('bot-message');
+
+        newMessageIcon.classList.add('icon');
+        newMessageIcon.src = "CZ.png";
+
+        newMessageIconBorder.classList.add('icon-border');
+        newMessageIconBorder.appendChild(newMessageIcon);
+
+        newMessageContainer.appendChild(newMessageIconBorder);
+        newMessageContainer.appendChild(newMessage);
+        
+        chatWindow.appendChild(newMessageContainer)
         chatWindow.scrollTop = chatWindow.scrollHeight;
     });
 
@@ -160,10 +192,10 @@
 
         // Display message in chat window with styling for the user's message
         const chatWindow = document.getElementById("chat-window");
-        const myMessage = document.createElement("div");
-        myMessage.textContent = text;
-        myMessage.classList.add('my-message');
-        chatWindow.appendChild(myMessage);
+        const userMessage = document.createElement("div");
+        userMessage.textContent = text;
+        userMessage.classList.add('user-message');
+        chatWindow.appendChild(userMessage);
 
         // Auto-scroll to bottom
         chatWindow.scrollTop = chatWindow.scrollHeight;
