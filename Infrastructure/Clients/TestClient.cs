@@ -40,7 +40,7 @@ namespace Infrastructure.Clients
             }
         }
 
-        async Task<HttpResponseMessage> EnviarMensajeAsync(
+        static async Task<HttpResponseMessage> EnviarMensajeAsync(
             HttpClient client,
             string chatPlataformaId,
             Mensaje mensaje)
