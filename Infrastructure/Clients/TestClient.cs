@@ -11,7 +11,10 @@ namespace Infrastructure.Clients
     internal class TestClient
         : IClient
     {
-        public Task EnviarMensaje(Mensaje mensaje)
+        public Task EnviarMensaje(
+            string chatPlataformaId,
+            string usuarioId,
+            Mensaje mensaje)
         {
             throw new NotImplementedException();
         }

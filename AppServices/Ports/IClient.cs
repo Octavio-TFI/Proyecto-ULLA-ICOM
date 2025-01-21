@@ -13,9 +13,14 @@ namespace AppServices.Ports
     public interface IClient
     {
         /// <summary>
-        /// Envia un mensaje a un destinatario
+        /// Envia un mensaje a un chat de una plataforma
         /// </summary>
+        /// <param name="chatPlataformaId">Chat al cual enviar el mensaje</param>
+        /// <param name="usuarioId">Usuario al cual enviar el mensaje</param>
         /// <param name="mensaje">Mensaje a enviar</param>
-        Task EnviarMensaje(Mensaje mensaje);
+        Task EnviarMensaje(
+            string chatPlataformaId,
+            string usuarioId,
+            Mensaje mensaje);
     }
 }

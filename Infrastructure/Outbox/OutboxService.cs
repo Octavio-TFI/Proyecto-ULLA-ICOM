@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Outbox
 {
-    internal class OutboxService(IOutboxProcessor _outboxProcessor) : BackgroundService
+    internal class OutboxService(IOutboxProcessor _outboxProcessor)
+        : BackgroundService
     {
         protected override async Task ExecuteAsync(
             CancellationToken stoppingToken)
@@ -17,7 +18,7 @@ namespace Infrastructure.Outbox
             {
                 await _outboxProcessor.ProcessOutboxAsync(stoppingToken);
 
-                await Task.Delay(1000, stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
         }
     }
