@@ -1,5 +1,6 @@
 ﻿using AppServices.Abstractions;
 using AppServices.KernelPlugins;
+using AppServices.Ports;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using System;
@@ -21,9 +22,15 @@ namespace AppServices
         public static IServiceCollection AddAppServices(
             this IServiceCollection services)
         {
-            services.AddSingleton<IRanker, Ranker>();
-            services.AddSingleton<IChatHistoryFactory, ChatHistoryFactory>();
+            services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
             services.AddScoped<IGeneradorRespuesta, GeneradorRespuesta>();
+            services.AddSingleton<IChatHistoryFactory, ChatHistoryFactory>();
+            services.AddSingleton<IRanker, Ranker>();
+            services.AddSingleton<Func<string, IClient>>(
+                services => (string plataforma) =>
+                {
+                    return services.GetRequiredKeyedService<IClient>(plataforma);
+                });
 
             services.AddKeyedTransient(
                 TipoKernel.Ranker,
@@ -55,11 +62,9 @@ namespace AppServices
                     return kernel;
                 });
 
-            services.AddMediatR(
+            return services.AddMediatR(
                 c => c.RegisterServicesFromAssembly(
                     Assembly.GetExecutingAssembly()));
-
-            return services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
         }
     }
 }
