@@ -26,10 +26,5 @@ namespace Infrastructure.Database.Chats
                     .FirstOrDefaultAsync() ??
                 throw new NotFoundException();
         }
-
-        public Task<Chat> GetAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
