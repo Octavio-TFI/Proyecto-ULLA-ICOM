@@ -42,6 +42,7 @@ namespace Infrastructure.Outbox
 
             var outboxMessages = context.ChangeTracker
                 .Entries<Entity>()
+                .Where(entity => entity.State != EntityState.Unchanged)
                 .SelectMany(
                     entity =>
                     {
