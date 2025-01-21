@@ -10,8 +10,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database.Chats
 {
-    internal class ChatRepository(ChatContext _context) : Repository<Chat>(
-        _context), IChatRepository
+    internal class ChatRepository(ChatContext _context)
+        : Repository<Chat>(_context)
+        , IChatRepository
     {
         public async Task<Chat> GetAsync(
             string usuarioId,
@@ -24,6 +25,11 @@ namespace Infrastructure.Database.Chats
                     .Where(c => c.Plataforma == plataforma)
                     .FirstOrDefaultAsync() ??
                 throw new NotFoundException();
+        }
+
+        public Task<Chat> GetAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

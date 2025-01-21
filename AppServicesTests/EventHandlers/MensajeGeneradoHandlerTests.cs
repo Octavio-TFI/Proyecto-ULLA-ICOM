@@ -9,7 +9,7 @@ namespace AppServices.EventHandlers.Tests
     internal class MensajeGeneradoHandlerTests
     {
         [Test]
-        public async void HandleTest()
+        public async Task HandleTest()
         {
             // Arrange
             var msjGeneradoEvent = new MensajeGeneradoEvent
@@ -36,6 +36,10 @@ namespace AppServices.EventHandlers.Tests
             var clientFactoryMock = new Mock<Func<string, IClient>>();
             var clientMock = new Mock<IClient>();
 
+            chatRepositoryMock.Setup(x => x.GetAsync(1)).ReturnsAsync(chat);
+
+            clientFactoryMock.Setup(x => x.Invoke("Test"))
+                .Returns(clientMock.Object);
 
             var handler = new MensajeGeneradoHandler(
                 chatRepositoryMock.Object,

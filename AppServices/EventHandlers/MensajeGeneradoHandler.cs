@@ -15,11 +15,19 @@ namespace AppServices.EventHandlers
         Func<string, IClient> _clientFactory)
         : INotificationHandler<MensajeGeneradoEvent>
     {
-        public Task Handle(
-            MensajeGeneradoEvent notification,
+        public async Task Handle(
+            MensajeGeneradoEvent mensajeGeneradoEvent,
             CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var chat = await _chatRepository.GetAsync(
+                mensajeGeneradoEvent.Mensaje.ChatId);
+
+            var client = _clientFactory.Invoke(chat.Plataforma);
+
+            await client.EnviarMensaje(
+                chat.ChatPlataformaId,
+                chat.UsuarioId,
+                mensajeGeneradoEvent.Mensaje);
         }
     }
 }
