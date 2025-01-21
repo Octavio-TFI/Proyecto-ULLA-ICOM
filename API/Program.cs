@@ -1,6 +1,7 @@
 using AppServices;
 using Controllers;
 using Domain;
+using Infrastructure.Clients;
 using Infrastructure.Database;
 using Infrastructure.FileManager;
 using Infrastructure.LLM;
@@ -20,6 +21,7 @@ builder.Services.AddDomainServices();
 string connectionString = builder.Configuration.GetConnectionString("Chat") ??
     throw new Exception("Connection string no configurado");
 
+builder.Services.AddClientServices();
 builder.Services.AddDatabaseServices(connectionString);
 builder.Services.AddOutboxServices();
 builder.Services.AddLLMServices();
