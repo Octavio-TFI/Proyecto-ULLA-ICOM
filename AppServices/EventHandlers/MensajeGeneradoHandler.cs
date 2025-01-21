@@ -24,7 +24,7 @@ namespace AppServices.EventHandlers
 
             var client = _clientFactory.Invoke(chat.Plataforma);
 
-            await client.EnviarMensaje(
+            await client.EnviarMensajeAsync(
                 chat.ChatPlataformaId,
                 chat.UsuarioId,
                 mensajeGeneradoEvent.Mensaje);

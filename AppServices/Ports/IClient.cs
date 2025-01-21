@@ -18,7 +18,7 @@ namespace AppServices.Ports
         /// <param name="chatPlataformaId">Chat al cual enviar el mensaje</param>
         /// <param name="usuarioId">Usuario al cual enviar el mensaje</param>
         /// <param name="mensaje">Mensaje a enviar</param>
-        Task EnviarMensaje(
+        Task EnviarMensajeAsync(
             string chatPlataformaId,
             string usuarioId,
             Mensaje mensaje);

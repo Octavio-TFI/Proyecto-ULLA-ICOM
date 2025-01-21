@@ -50,7 +50,7 @@ namespace AppServices.EventHandlers.Tests
 
             // Assert
             clientMock.Verify(
-                x => x.EnviarMensaje(
+                x => x.EnviarMensajeAsync(
                     chat.ChatPlataformaId,
                     chat.UsuarioId,
                     msjGeneradoEvent.Mensaje),
