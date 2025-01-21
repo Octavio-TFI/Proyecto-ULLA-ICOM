@@ -15,7 +15,8 @@ namespace Domain.Repositories
         /// </summary>
         /// <param name="id">Id del chat</param>
         /// <returns>Chat con el id indicado</returns>
-        Task<Chat?> GetAsync(int id);
+        /// <exception cref="NotFoundException"/>
+        Task<Chat> GetAsync(int id);
 
         /// <summary>
         /// Obtiene un chat de la DB

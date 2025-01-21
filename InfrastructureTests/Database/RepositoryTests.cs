@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Exceptions;
 using Domain.ValueObjects;
 using Infrastructure.Database.Chats;
 using InfrastructureTests.Database.Tests;
@@ -14,7 +15,7 @@ namespace Infrastructure.Database.Tests
     internal class RepositoryTests
     {
         [Test]
-        public async Task GetAsyncTest()
+        public async Task GetAsync_Exists()
         {
             // Arrange
             var context = DatabaseTestsHelper.CreateInMemoryChatContext();
@@ -36,6 +37,18 @@ namespace Infrastructure.Database.Tests
 
             // Assert
             Assert.That(result, Is.EqualTo(mensaje));
+        }
+
+        [Test]
+        public void GetAsync_DoesNotExist()
+        {
+            // Arrange
+            var context = DatabaseTestsHelper.CreateInMemoryChatContext();
+            var repository = new MensajeRepository(context);
+
+            // Act and Assert
+            var result = Assert.ThrowsAsync<NotFoundException>(
+                async () => await repository.GetAsync(1));
         }
 
         [Test]
