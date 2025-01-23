@@ -3,6 +3,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
@@ -14,7 +15,10 @@ namespace Infrastructure.LLM
         HttpClient _httpClient)
         : ITextEmbeddingGenerationService
     {
-        public IReadOnlyDictionary<string, object?> Attributes { get; }
+        public IReadOnlyDictionary<string, object?> Attributes
+        {
+            get;
+        } = new Dictionary<string, object?>();
 
         public async Task<IList<ReadOnlyMemory<float>>> GenerateEmbeddingsAsync(
             IList<string> data,
@@ -32,7 +36,7 @@ namespace Infrastructure.LLM
                 request,
                 cancellationToken);
 
-            if(!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Error al obtener embeddings");
             }
