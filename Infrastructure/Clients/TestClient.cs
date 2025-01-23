@@ -29,12 +29,13 @@ namespace Infrastructure.Clients
                     chatPlataformaId,
                     mensaje);
 
-                if(!response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
                     throw new ErrorEnviandoMensajeException(
                         $"Status code no exitoso: {response.StatusCode}");
                 }
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new ErrorEnviandoMensajeException(innerException: ex);
             }
@@ -45,13 +46,18 @@ namespace Infrastructure.Clients
             string chatPlataformaId,
             Mensaje mensaje)
         {
-            if(mensaje is MensajeTexto mensajeTexto)
+            if (mensaje is MensajeTexto mensajeTexto)
             {
                 return await client.PostAsync(
                     "/Chat",
                     JsonContent.Create(
-                        new { ChatId = chatPlataformaId, mensajeTexto.Texto }));
-            } else
+                        new TestDTO
+                    {
+                        ChatId = chatPlataformaId,
+                        Texto = mensajeTexto.Texto
+                    }));
+            }
+            else
             {
                 throw new NotImplementedException();
             }
