@@ -13,32 +13,38 @@ jobs:
       - name: Checkout repository 
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}   # checkout the correct branch name
           fetch-depth: 0                # fetch the whole repo history
 
-      - name: Git Version
-        id: gitversion
-        uses: codacy/git-version@2.8.0
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v3.1.2
         with:
-          release-branch: main
-          minor-identifier: feat
-          major-identifier: breaking
+          versionSpec: '6.0.x'
+
+      - name: Determine Version
+        id: version_step # step id used as reference for output values
+        uses: gittools/actions/gitversion/execute@v3.1.2
+        with:
+          overrideConfig: |
+            major-version-bump-message=breaking
+            minor-version-bump-message=feat
+            patch-version-bump-message=fix
+
         
       - name: Create new Git tag
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          NEW_TAG="v${{ steps.gitversion.outputs.version }}"
+          NEW_TAG="v${{ env.majorMinorPatch }}"
           git tag $NEW_TAG
           git push origin $NEW_TAG
 
       - name: Create GitHub release
         uses: actions/create-release@v1
         with:
-          tag_name: v${{ steps.gitversion.outputs.version }}
-          release_name: Release v${{ steps.gitversion.outputs.version }}
+          tag_name: v${{ env.majorMinorPatch }}
+          release_name: Release v${{ env.majorMinorPatch }}
           body: |
-            Release notes for version v${{ steps.gitversion.outputs.version }}
+            Release notes for version v${{ env.majorMinorPatch }}
           draft: false
           prerelease: false
         env:

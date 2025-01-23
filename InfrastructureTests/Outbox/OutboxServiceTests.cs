@@ -22,7 +22,7 @@ namespace Infrastructure.Outbox.Tests
             // Act
             var task = outboxService.StartAsync(cts.Token);
 
-            await Task.Delay(2100);
+            await Task.Delay(5100);
 
             cts.Cancel();
             await task;
@@ -30,7 +30,7 @@ namespace Infrastructure.Outbox.Tests
             // Assert
             outboxProcessorMock.Verify(
                 x => x.ProcessOutboxAsync(It.IsAny<CancellationToken>()),
-                Times.Exactly(3));
+                Times.Exactly(2));
         }
     }
 }

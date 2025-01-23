@@ -65,8 +65,8 @@ namespace Domain.Factories.Tests
             Assert.That(
                 mensaje.Events,
                 Has.One.TypeOf<MensajeGeneradoEvent>().With
-                    .Property(nameof(MensajeGeneradoEvent.ChatId))
-                    .EqualTo(mensaje.ChatId));
+                    .Property(nameof(MensajeGeneradoEvent.Mensaje))
+                    .EqualTo(mensaje));
         }
     }
 }

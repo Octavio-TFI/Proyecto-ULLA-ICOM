@@ -11,11 +11,13 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Outbox
 {
-    internal class OutboxInterceptor : SaveChangesInterceptor
+    internal class OutboxInterceptor
+        : SaveChangesInterceptor
     {
         static readonly JsonSerializerSettings _jsonSettings = new()
         {
-            TypeNameHandling = TypeNameHandling.All
+            TypeNameHandling = TypeNameHandling.All,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
         };
 
         public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
@@ -40,6 +42,7 @@ namespace Infrastructure.Outbox
 
             var outboxMessages = context.ChangeTracker
                 .Entries<Entity>()
+                .Where(entity => entity.State != EntityState.Unchanged)
                 .SelectMany(
                     entity =>
                     {
