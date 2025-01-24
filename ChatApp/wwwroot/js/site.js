@@ -13,6 +13,7 @@ messageInput.addEventListener("input", function () {
     // Setea la altura para matchear la altura del contenido
     messageInput.style.height = messageInput.scrollHeight + 'px';
 
+    // Habilita el botón de enviar si hay texto en el input
     if (messageInput.value.length > 0) {
         sendButton.disabled = false;
     } else {
@@ -20,16 +21,10 @@ messageInput.addEventListener("input", function () {
     }
 });
 
-let chatId = null;
-
-// Genera un nuevo chat cada vez que se carga la pagina
-window.onload = function () {
-    chatId = crypto.randomUUID();
-};
-
 const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-connection.on("ReceiveMessage", function (chatId, text) {
+connection.on("ReceiveMessage", function (text) {
+    // Muestra el mensaje del bot en el chat
     const newMessageContainer = document.createElement("div");
     const newMessage = document.createElement("div");
     const newMessageIconBorder = document.createElement("div");
@@ -61,25 +56,27 @@ connection.start().catch(err => console.error(err.toString()));
 sendButton.addEventListener("click", async () => {
     const text = messageInput.value;
 
-    // Clear input field after sending
+    // Limpia el input al enviar mensaje
     messageInput.value = '';
 
     // Reseta la altura a 'auto' para que pueda crecer
     messageInput.style.height = 'auto';
 
+    // Oculta el input de mensaje mientras se envía el mensaje
     messageInputContainer.style.display = 'none';
 
-    // Display message in chat window with styling for the user's message
+    // Muestra el mensaje del usuario en el chat
     const userMessage = document.createElement("div");
     userMessage.textContent = text;
     userMessage.classList.add('user-message');
     userMessage.style = 'white-space: pre-line;'
     chatWindow.appendChild(userMessage);
 
-    // Auto-scroll to bottom
+    // Hace scroll al final del chat
     chatWindow.scrollTop = chatWindow.scrollHeight;
 
-    connection.invoke("SendMessageAsync", chatId, text);
+    // Envía el mensaje al servidor
+    connection.invoke("SendMessageAsync", text);
 
     // Indicador de carga
     const newMessageContainer = document.createElement("div");
