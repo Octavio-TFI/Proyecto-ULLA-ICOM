@@ -132,6 +132,59 @@
             padding: 8px 12px;
         }
 
+        .loader {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: block;
+            margin: 15px auto;
+            position: relative;
+            color: #FFF;
+            left: -100px;
+            margin-left: 100px;
+            box-sizing: border-box;
+            animation: shadowRolling 2s linear infinite;
+        }
+
+        @@keyframes shadowRolling {
+        0% {
+            box-shadow: 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+        }
+
+        12% {
+            box-shadow: 100px 0 white, 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+        }
+
+        25% {
+            box-shadow: 110px 0 white, 100px 0 white, 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+        }
+
+        36% {
+            box-shadow: 120px 0 white, 110px 0 white, 100px 0 white, 0px 0 rgba(255, 255, 255, 0);
+        }
+
+        50% {
+            box-shadow: 130px 0 white, 120px 0 white, 110px 0 white, 100px 0 white;
+        }
+
+        62% {
+            box-shadow: 200px 0 rgba(255, 255, 255, 0), 130px 0 white, 120px 0 white, 110px 0 white;
+        }
+
+        75% {
+            box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 130px 0 white, 120px 0 white;
+        }
+
+        87% {
+            box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 130px 0 white;
+        }
+
+        100% {
+            box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0);
+        }
+
+        }
+
     </style>
 }
 
@@ -167,6 +220,7 @@
         const newMessage = document.createElement("div");
         const newMessageIconBorder = document.createElement("div");
         const newMessageIcon = document.createElement("img");
+        const loadingIndicatorContainer = document.getElementById("loading-indicator-container");
         
         newMessage.textContent = message;
         newMessage.classList.add('bot-message');
@@ -180,6 +234,7 @@
         newMessageContainer.appendChild(newMessageIconBorder);
         newMessageContainer.appendChild(newMessage);
         
+        chatWindow.removeChild(loadingIndicatorContainer);
         chatWindow.appendChild(newMessageContainer)
         chatWindow.scrollTop = chatWindow.scrollHeight;
     });
@@ -207,6 +262,27 @@
 
         // Reseta la altura a 'auto' para que pueda crecer
         messageInput.style.height = 'auto';
+
+        // Indicador de carga
+        const newMessageContainer = document.createElement("div");
+        const loadingIndicator = document.createElement("div");
+        const newMessageIconBorder = document.createElement("div");
+        const newMessageIcon = document.createElement("img");
+
+        loadingIndicator.classList.add('loader');
+
+        newMessageIcon.classList.add('icon');
+        newMessageIcon.src = "CZ.png";
+
+        newMessageIconBorder.classList.add('icon-border');
+        newMessageIconBorder.appendChild(newMessageIcon);
+
+        newMessageContainer.appendChild(newMessageIconBorder);
+        newMessageContainer.appendChild(loadingIndicator);
+        newMessageContainer.id = "loading-indicator-container";
+
+        chatWindow.appendChild(newMessageContainer)
+        chatWindow.scrollTop = chatWindow.scrollHeight;
     });
 </script>
 }
