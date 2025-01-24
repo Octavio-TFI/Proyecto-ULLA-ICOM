@@ -29,14 +29,14 @@ window.onload = function () {
 
 const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-connection.on("ReceiveMessage", function (chatId, message) {
+connection.on("ReceiveMessage", function (chatId, text) {
     const newMessageContainer = document.createElement("div");
     const newMessage = document.createElement("div");
     const newMessageIconBorder = document.createElement("div");
     const newMessageIcon = document.createElement("img");
     const loadingIndicatorContainer = document.getElementById("loading-indicator-container");
 
-    newMessage.textContent = message;
+    newMessage.textContent = text;
     newMessage.classList.add('bot-message');
 
     newMessageIcon.classList.add('icon');
