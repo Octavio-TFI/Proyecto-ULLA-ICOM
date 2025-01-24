@@ -38,6 +38,7 @@ connection.on("ReceiveMessage", function (chatId, text) {
 
     newMessage.textContent = text;
     newMessage.classList.add('bot-message');
+    newMessage.style = 'white-space: pre-line;'
 
     newMessageIcon.classList.add('icon');
     newMessageIcon.src = "CZ.png";
@@ -72,6 +73,7 @@ sendButton.addEventListener("click", async () => {
     const userMessage = document.createElement("div");
     userMessage.textContent = text;
     userMessage.classList.add('user-message');
+    userMessage.style = 'white-space: pre-line;'
     chatWindow.appendChild(userMessage);
 
     // Auto-scroll to bottom
