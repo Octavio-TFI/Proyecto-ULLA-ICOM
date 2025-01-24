@@ -51,14 +51,22 @@ connection.on("ReceiveMessage", function (chatId, message) {
     chatWindow.removeChild(loadingIndicatorContainer);
     chatWindow.appendChild(newMessageContainer)
     chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    messageInputContainer.style.display = 'flex';
 });
 
 connection.start().catch(err => console.error(err.toString()));
 
 sendButton.addEventListener("click", async () => {
-
-
     const text = messageInput.value;
+
+    // Clear input field after sending
+    messageInput.value = '';
+
+    // Reseta la altura a 'auto' para que pueda crecer
+    messageInput.style.height = 'auto';
+
+    messageInputContainer.style.display = 'none';
 
     // Display message in chat window with styling for the user's message
     const userMessage = document.createElement("div");
@@ -70,12 +78,6 @@ sendButton.addEventListener("click", async () => {
     chatWindow.scrollTop = chatWindow.scrollHeight;
 
     connection.invoke("SendMessageAsync", chatId, text);
-
-    // Clear input field after sending
-    messageInput.value = '';
-
-    // Reseta la altura a 'auto' para que pueda crecer
-    messageInput.style.height = 'auto';
 
     // Indicador de carga
     const newMessageContainer = document.createElement("div");
