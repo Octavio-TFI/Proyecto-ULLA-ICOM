@@ -23,10 +23,16 @@ namespace Controllers
                     ChatPlataformaId = mensaje.ChatId.ToString(),
                     Texto = mensaje.Texto,
                     DateTime = mensaje.DateTime,
-                    Plataforma = "Test"
+                    Plataforma = Platforms.Test
                 });
 
-            _logger.LogInformation("Mensaje recibido: {Texto}", mensaje.Texto);
+            _logger.LogInformation(
+                @"
+MENSAJE RECIBIDO
+Texto: {Texto}
+Plataforma: {Plataforma}",
+                mensaje.Texto,
+                Platforms.Test);
         }
     }
 }

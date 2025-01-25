@@ -10,8 +10,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database.Chats
 {
-    internal class ChatRepository(ChatContext _context) : Repository<Chat>(
-        _context), IChatRepository
+    internal class ChatRepository(ChatContext _context)
+        : Repository<Chat>(_context)
+        , IChatRepository
     {
         public async Task<Chat> GetAsync(
             string usuarioId,

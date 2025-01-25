@@ -1,10 +1,12 @@
 ﻿using AppServices.Abstractions;
 using AppServices.Ports;
 using Domain;
+using Domain.Entities;
 using Domain.Events;
 using Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,8 @@ namespace AppServices.EventHandlers
     internal class MensajeRecibidoHandler(
         IMensajeRepository _mensajeRepository,
         IGeneradorRespuesta _generadorRespuesta,
-        [FromKeyedServices(Contexts.Chat)] IUnitOfWork _unitOfWork)
+        [FromKeyedServices(Contexts.Chat)] IUnitOfWork _unitOfWork,
+        ILogger<MensajeGeneradoHandler> _logger)
         : INotificationHandler<MensajeRecibidoEvent>
     {
         public async Task Handle(
@@ -34,6 +37,14 @@ namespace AppServices.EventHandlers
             // Almacenar respuesta
             await _mensajeRepository.InsertAsync(respuesta);
             await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogInformation(
+                @"
+MENSAJE GENERADO
+Texto: {Texto}
+ChatId: {ChatId}",
+                respuesta.ToString(),
+                respuesta.ChatId);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AppServices.Abstractions;
 using AppServices.KernelPlugins;
+using AppServices.Ports;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using System;
@@ -17,13 +18,22 @@ namespace AppServices
         /// Registra los servicios de la capa de aplicación
         /// </summary>
         /// <param name="services">Collección de servicios</param>
-        /// <returns>Collección de servicios que incluye los servicios de la capa de aplicación</returns>
+        /// <returns>
+        /// Collección de servicios que incluye los servicios de la capa de
+        /// aplicación
+        /// </returns>
         public static IServiceCollection AddAppServices(
             this IServiceCollection services)
         {
-            services.AddSingleton<IRanker, Ranker>();
-            services.AddSingleton<IChatHistoryFactory, ChatHistoryFactory>();
+            services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
             services.AddScoped<IGeneradorRespuesta, GeneradorRespuesta>();
+            services.AddSingleton<IChatHistoryFactory, ChatHistoryFactory>();
+            services.AddSingleton<IRanker, Ranker>();
+            services.AddSingleton<Func<string, IClient>>(
+                services => (string plataforma) =>
+                {
+                    return services.GetRequiredKeyedService<IClient>(plataforma);
+                });
 
             services.AddKeyedTransient(
                 TipoKernel.Ranker,
@@ -50,16 +60,15 @@ namespace AppServices
 
                     kernel.Plugins
                         .AddFromType<InformacionPlugin>(
+                            "buscar",
                             serviceProvider: services);
 
                     return kernel;
                 });
 
-            services.AddMediatR(
+            return services.AddMediatR(
                 c => c.RegisterServicesFromAssembly(
                     Assembly.GetExecutingAssembly()));
-
-            return services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
         }
     }
 }

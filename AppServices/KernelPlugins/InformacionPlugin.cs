@@ -19,27 +19,29 @@ namespace AppServices.KernelPlugins
         IDocumentRepository _documentRepository,
         IRanker _ranker)
     {
-        [KernelFunction("buscar_informacion")]
-        [Description("Busca información relevante a la consulta")]
-        public async Task<string> BuscarInformacionAsync(string consulta)
+        [KernelFunction("informacion")]
+        [Description(
+            "Busca documentación relacionada a la pregunta del usuario y soluciones a preguntas similares")]
+        public async Task<string> BuscarInformacionAsync(
+            [Description("Pregunta o problema que tiene el usuario")] string pregunta)
         {
             var embeddingConsulta = await _kernel
                 .GetRequiredService<ITextEmbeddingGenerationService>()
-                .GenerateEmbeddingAsync(consulta);
+                .GenerateEmbeddingAsync(pregunta);
 
             var consultas = await _consultaRepository
                 .GetConsultasSimilaresAsync(embeddingConsulta);
 
-            var rankedConsultas = await _ranker.RankAsync(consultas, consulta);
+            var rankedConsultas = await _ranker.RankAsync(consultas, pregunta);
 
             var documents = await _documentRepository
                 .GetDocumentosRelacionadosAsync(embeddingConsulta);
 
-            var rankedDocuments = await _ranker.RankAsync(documents, consulta);
+            var rankedDocuments = await _ranker.RankAsync(documents, pregunta);
 
             var stringBuilder = new StringBuilder();
 
-            if(rankedDocuments.Count > 0)
+            if (rankedDocuments.Count > 0)
             {
                 stringBuilder.Append("[Documentación]")
                     .AppendLine()
@@ -48,9 +50,9 @@ namespace AppServices.KernelPlugins
                         rankedDocuments.Select(d => d.ToString()));
             }
 
-            if(rankedConsultas.Count > 0)
+            if (rankedConsultas.Count > 0)
             {
-                if(stringBuilder.Length > 0)
+                if (stringBuilder.Length > 0)
                 {
                     stringBuilder.AppendLine();
                 }

@@ -42,7 +42,7 @@ namespace Domain.Factories
                 Texto = texto
             };
 
-            mensaje.Events.Add(new MensajeGeneradoEvent { ChatId = chatId });
+            mensaje.Events.Add(new MensajeGeneradoEvent { Mensaje = mensaje });
 
             return mensaje;
         }
