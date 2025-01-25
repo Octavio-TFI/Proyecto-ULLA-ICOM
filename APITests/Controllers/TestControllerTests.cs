@@ -30,7 +30,11 @@ namespace API.Controllers.Tests
             // Assert
             loggerMock.VerifyLog()
                 .InformationWasCalled()
-                .MessageEquals("Mensaje recibido: Test")
+                .MessageEquals(
+                    @"
+MENSAJE RECIBIDO
+Texto: Test
+Plataforma: Test")
                 .Times(1);
 
             recibidorMensajesMock.Verify(

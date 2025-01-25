@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Mock;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +17,7 @@ namespace AppServices.EventHandlers.Tests
             var mensajeRepositoryMock = new Mock<IMensajeRepository>();
             var generadorRespuestaMock = new Mock<IGeneradorRespuesta>();
             var unitOfWorkMock = new Mock<IUnitOfWork>();
+            var loggerMock = new Mock<ILogger<MensajeGeneradoHandler>>();
 
             var chatId = 1;
             var request = new MensajeRecibidoEvent { ChatId = chatId };
@@ -50,7 +53,8 @@ namespace AppServices.EventHandlers.Tests
             var handler = new MensajeRecibidoHandler(
                 mensajeRepositoryMock.Object,
                 generadorRespuestaMock.Object,
-                unitOfWorkMock.Object);
+                unitOfWorkMock.Object,
+                loggerMock.Object);
 
             // Act
             await handler.Handle(request, cancellationToken);
@@ -69,6 +73,15 @@ namespace AppServices.EventHandlers.Tests
                 Times.Once);
 
             unitOfWorkMock.Verify(x => x.SaveChangesAsync(), Times.Once);
+
+            loggerMock.VerifyLog()
+                .InformationWasCalled()
+                .MessageEquals(
+                    $@"
+MENSAJE GENERADO
+Texto: {respuesta}
+ChatId: {respuesta.ChatId}")
+                .Times(1);
         }
     }
 }
