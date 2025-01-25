@@ -18,7 +18,10 @@ namespace AppServices
         /// Registra los servicios de la capa de aplicación
         /// </summary>
         /// <param name="services">Collección de servicios</param>
-        /// <returns>Collección de servicios que incluye los servicios de la capa de aplicación</returns>
+        /// <returns>
+        /// Collección de servicios que incluye los servicios de la capa de
+        /// aplicación
+        /// </returns>
         public static IServiceCollection AddAppServices(
             this IServiceCollection services)
         {
@@ -57,6 +60,7 @@ namespace AppServices
 
                     kernel.Plugins
                         .AddFromType<InformacionPlugin>(
+                            "buscar",
                             serviceProvider: services);
 
                     return kernel;

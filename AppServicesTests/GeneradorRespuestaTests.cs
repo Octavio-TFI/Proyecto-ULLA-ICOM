@@ -50,7 +50,7 @@ namespace AppServices.Tests
                     x => x.GetChatMessageContentsAsync(
                         chatHistory,
                         It.Is<PromptExecutionSettings>(
-                            s => IsPromptExecutionSettings(s)),
+                            s => s.FunctionChoiceBehavior is AutoFunctionChoiceBehavior),
                         kernel,
                         It.IsAny<CancellationToken>()))
                 .ReturnsAsync(
@@ -71,14 +71,6 @@ namespace AppServices.Tests
 
             // Assert
             Assert.That(result, Is.EqualTo(mensajeGenerado));
-        }
-
-        static bool IsPromptExecutionSettings(PromptExecutionSettings settings)
-        {
-            return settings.FunctionChoiceBehavior is AutoFunctionChoiceBehavior autoFunctionChoiceBehavior &&
-                autoFunctionChoiceBehavior.Options?.AllowConcurrentInvocation ==
-                true &&
-                autoFunctionChoiceBehavior.Options.AllowParallelCalls == true;
         }
     }
 }

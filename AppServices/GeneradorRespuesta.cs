@@ -27,13 +27,7 @@ namespace AppServices
 
             var executionSettings = new PromptExecutionSettings()
             {
-                FunctionChoiceBehavior =
-                    FunctionChoiceBehavior.Auto(
-                        options: new FunctionChoiceBehaviorOptions
-                    {
-                        AllowParallelCalls = true,
-                        AllowConcurrentInvocation = true,
-                    }),
+                FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(),
             };
 
             var result = await _kernel
