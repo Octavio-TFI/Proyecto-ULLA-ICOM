@@ -2,6 +2,7 @@
 using Domain.Events;
 using Domain.Repositories;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,8 @@ namespace AppServices.EventHandlers
 {
     internal class MensajeGeneradoHandler(
         IChatRepository _chatRepository,
-        Func<string, IClient> _clientFactory)
+        Func<string, IClient> _clientFactory,
+        ILogger<MensajeGeneradoHandler> _logger)
         : INotificationHandler<MensajeGeneradoEvent>
     {
         public async Task Handle(
@@ -28,6 +30,14 @@ namespace AppServices.EventHandlers
                 chat.ChatPlataformaId,
                 chat.UsuarioId,
                 mensajeGeneradoEvent.Mensaje);
+
+            _logger.LogInformation(
+                @"
+MENSAJE ENVIADO
+Texto: {Texto}
+ChatId: {ChatId}",
+                mensajeGeneradoEvent.Mensaje.ToString(),
+                mensajeGeneradoEvent.Mensaje.ChatId);
         }
     }
 }

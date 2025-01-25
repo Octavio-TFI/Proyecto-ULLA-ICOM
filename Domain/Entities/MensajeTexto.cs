@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class MensajeTexto : Mensaje
+    public class MensajeTexto
+        : Mensaje
     {
         /// <summary>
         /// Texto del mensaje
         /// </summary>
         public required string Texto { get; init; }
+
+        public override string ToString()
+        {
+            return Texto;
+        }
     }
 }

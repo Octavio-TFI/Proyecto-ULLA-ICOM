@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Castle.Core.Logging;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Mock;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,6 +36,7 @@ namespace AppServices.EventHandlers.Tests
             };
 
             var chatRepositoryMock = new Mock<IChatRepository>();
+            var loggerMock = new Mock<ILogger<MensajeGeneradoHandler>>();
             var clientFactoryMock = new Mock<Func<string, IClient>>();
             var clientMock = new Mock<IClient>();
 
@@ -43,7 +47,8 @@ namespace AppServices.EventHandlers.Tests
 
             var handler = new MensajeGeneradoHandler(
                 chatRepositoryMock.Object,
-                clientFactoryMock.Object);
+                clientFactoryMock.Object,
+                loggerMock.Object);
 
             // Act
             await handler.Handle(msjGeneradoEvent, CancellationToken.None);
@@ -55,6 +60,15 @@ namespace AppServices.EventHandlers.Tests
                     chat.UsuarioId,
                     msjGeneradoEvent.Mensaje),
                 Times.Once);
+
+            loggerMock.VerifyLog()
+                .InformationWasCalled()
+                .MessageEquals(
+                    $@"
+MENSAJE ENVIADO
+Texto: {msjGeneradoEvent.Mensaje}
+ChatId: {msjGeneradoEvent.Mensaje.ChatId}")
+                .Times(1);
         }
     }
 }

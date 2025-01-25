@@ -17,9 +17,9 @@ namespace ChatApp.Controllers
         public async Task<IActionResult> ReceiveMessage(
             [FromBody] MessageReceived message)
         {
-            await _chatHubContext.Clients.All
-                .SendAsync("ReceiveMessage", message.ChatId, message.Texto);
-
+            await _chatHubContext.Clients
+                .User(message.ChatId.ToString())
+                .SendAsync("ReceiveMessage", message.Texto);
 
             _logger.LogInformation(
                 @"Chat: {}

@@ -26,7 +26,13 @@ namespace Controllers
                     Plataforma = Platforms.Test
                 });
 
-            _logger.LogInformation("Mensaje recibido: {Texto}", mensaje.Texto);
+            _logger.LogInformation(
+                @"
+MENSAJE RECIBIDO
+Texto: {Texto}
+Plataforma: {Plataforma}",
+                mensaje.Texto,
+                Platforms.Test);
         }
     }
 }

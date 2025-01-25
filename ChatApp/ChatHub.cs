@@ -6,12 +6,19 @@ namespace ChatApp
     public class ChatHub(ILogger<ChatHub> _logger)
         : Hub
     {
-        public async Task SendMessageAsync(Guid chatId, string text)
+        public async Task SendMessageAsync(string text)
         {
             HttpClient client = new()
             {
                 BaseAddress = new Uri("https://localhost:7160")
             };
+
+            if (!Guid.TryParse(Context.UserIdentifier, out Guid chatId))
+            {
+                _logger.LogError("Invalid chat ID: {}", chatId);
+
+                return;
+            }
 
             var messageToSend = new MessageToSend
             {
