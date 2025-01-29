@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 
 namespace AppServices
 {
-    internal class DocumentProcessorService(IFileManager _fileManager)
+    internal class DocumentProcessorService(IDirectoryManager _directoryManager)
         : BackgroundService
     {
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            throw new NotImplementedException();
+            var documentPaths = _directoryManager.GetFiles("./Documentacion");
+
+            return Task.CompletedTask;
         }
     }
 }
