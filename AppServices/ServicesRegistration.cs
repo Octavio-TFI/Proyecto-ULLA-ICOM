@@ -25,6 +25,8 @@ namespace AppServices
         public static IServiceCollection AddAppServices(
             this IServiceCollection services)
         {
+            services.AddHostedService<DocumentProcessorService>();
+
             services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
             services.AddScoped<IGeneradorRespuesta, GeneradorRespuesta>();
             services.AddSingleton<IChatHistoryFactory, ChatHistoryFactory>();
