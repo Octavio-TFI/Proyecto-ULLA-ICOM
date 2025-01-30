@@ -33,7 +33,7 @@ namespace AppServices.KernelPlugins.Tests
 
             var documentoRelacionado = new Document
             {
-                DocumentName = "fileName",
+                Filename = "fileName",
                 Texto = "Documento",
                 Embedding = [7, 8, 9]
             };

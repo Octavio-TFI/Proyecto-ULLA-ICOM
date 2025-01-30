@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,11 @@ namespace Infrastructure.Database.Embeddings
                         embedding.ToArray()))
                 .Take(5)
                 .ToListAsync();
+        }
+
+        public Task<bool> DocumentsWithFilenameAsync(string filename)
+        {
+            return _context.Documents.AnyAsync(d => d.Filename == filename);
         }
     }
 }

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Database.Embeddings.Migrations
 {
     [DbContext(typeof(EmbeddingContext))]
-    [Migration("20250130005658_DocumentName")]
-    partial class DocumentName
+    [Migration("20250130010531_Filename")]
+    partial class Filename
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,13 +60,13 @@ namespace Infrastructure.Database.Embeddings.Migrations
                     b.Property<int?>("DocumentId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("DocumentName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.PrimitiveCollection<string>("Embedding")
                         .IsRequired()
                         .HasColumnType("float[768]");
+
+                    b.Property<string>("Filename")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Texto")
                         .IsRequired()

@@ -20,37 +20,37 @@ namespace Infrastructure.Database.Embeddings.Tests
             {
                 new()
                 {
-                    DocumentName = "fileName",
+                    Filename = "fileName",
                     Texto = "Texto0",
                     Embedding = [0.1f, 0.2f, 0.3f],
                 },
                 new()
                 {
-                    DocumentName = "fileName",
+                    Filename = "fileName",
                     Texto = "Texto1",
                     Embedding = [0.4f, 0.5f, 0.6f],
                 },
                 new()
                 {
-                    DocumentName = "fileName",
+                    Filename = "fileName",
                     Texto = "Texto2",
                     Embedding = [0.7f, 0.8f, 0.9f],
                 },
                 new()
                 {
-                    DocumentName = "fileName",
+                    Filename = "fileName",
                     Texto = "Texto3",
                     Embedding = [-0.7f, -0.8f, -0.9f],
                 },
                 new()
                 {
-                    DocumentName = "fileName",
+                    Filename = "fileName",
                     Texto = "Texto4",
                     Embedding = [0.7f, 0.8f, 0.9f],
                 },
                 new()
                 {
-                    DocumentName = "fileName",
+                    Filename = "fileName",
                     Texto = "Texto5",
                     Embedding = [0.7f, 0.8f, 0.9f],
                 },
@@ -74,6 +74,41 @@ namespace Infrastructure.Database.Embeddings.Tests
                     Assert.That(result[0].Id, Is.EqualTo(1));
                     Assert.That(result, Has.No.Member(documentos[3]));
                 });
+        }
+
+        [TestCase("fileName0", ExpectedResult = true)]
+        [TestCase("fileName1", ExpectedResult = true)]
+        [TestCase("fileName2", ExpectedResult = false)]
+        public async Task<bool> DocumentsWithFilenameAsyncTest(string fileName)
+        {
+            // Arrange
+            // Arrange
+            var embedding = new float[] { 0.1f, 0.2f, 0.3f };
+
+            var documentos = new List<Document>
+            {
+                new()
+                {
+                    Filename = "fileName0",
+                    Texto = "Texto0",
+                    Embedding = [0.1f, 0.2f, 0.3f],
+                },
+                new()
+                {
+                    Filename = "fileName1",
+                    Texto = "Texto1",
+                    Embedding = [0.4f, 0.5f, 0.6f],
+                },
+            };
+
+            var context = DatabaseTestsHelper.CreateInMemoryEmbeddingContext();
+            await context.Documents.AddRangeAsync(documentos);
+            await context.SaveChangesAsync();
+
+            var repository = new DocumentRepository(context);
+
+            // Act
+            return await repository.DocumentsWithFilenameAsync(fileName);
         }
     }
 }

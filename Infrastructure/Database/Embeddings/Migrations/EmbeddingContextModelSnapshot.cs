@@ -57,13 +57,13 @@ namespace Infrastructure.Database.Embeddings.Migrations
                     b.Property<int?>("DocumentId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("DocumentName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.PrimitiveCollection<string>("Embedding")
                         .IsRequired()
                         .HasColumnType("float[768]");
+
+                    b.Property<string>("Filename")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Texto")
                         .IsRequired()

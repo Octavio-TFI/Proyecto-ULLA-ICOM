@@ -5,13 +5,13 @@
 namespace Infrastructure.Database.Embeddings.Migrations
 {
     /// <inheritdoc />
-    public partial class DocumentName : Migration
+    public partial class Filename : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "DocumentName",
+                name: "Filename",
                 table: "Documents",
                 type: "TEXT",
                 nullable: false,
@@ -22,7 +22,7 @@ namespace Infrastructure.Database.Embeddings.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "DocumentName",
+                name: "Filename",
                 table: "Documents");
         }
     }

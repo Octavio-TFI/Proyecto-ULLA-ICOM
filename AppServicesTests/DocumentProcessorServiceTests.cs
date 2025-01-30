@@ -17,18 +17,18 @@ namespace AppServices.Tests
             string[] files = ["file1", "file2"];
             List<Document> documentsFile1 = [ new Document
             {
-                DocumentName = "file1",
+                Filename = "file1",
                 Texto = "TituloFile1",
                 Embedding = [1,2,3]
             }, new Document
             {
-                DocumentName = "file1",
+                Filename = "file1",
                 Texto = "TextoFile1",
                 Embedding = [3,4,5]
             }];
             List<Document> documentsFile2 = [new Document()
             {
-                DocumentName = "file2",
+                Filename = "file2",
                 Texto = "TextoFile2",
                 Embedding = [6,7,8]
             }];
