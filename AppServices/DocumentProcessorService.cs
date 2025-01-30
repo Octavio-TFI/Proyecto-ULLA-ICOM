@@ -43,7 +43,7 @@ namespace AppServices
 
                 string extension = _pathManager.GetExtension(documentPath);
 
-                var documents = await _services
+                var documents = await scopeServices
                     .GetRequiredKeyedService<IDocumentProcessor>(extension)
                     .ProcessAsync(documentPath);
 
