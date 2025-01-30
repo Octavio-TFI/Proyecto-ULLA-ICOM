@@ -23,11 +23,14 @@ namespace AppServices.Tests
             var services = new ServiceCollection();
             var directoryManager = new Mock<IDirectoryManager>();
             var pdfProcessor = new Mock<IDocumentProcessor>();
+            var pathManager = new Mock<IPathManager>();
             var documentRepository = new Mock<IDocumentRepository>();
             var unitOfWork = new Mock<IUnitOfWork>();
 
             directoryManager.Setup(x => x.GetFiles("./Documentacion"))
                 .Returns(files);
+
+            pathManager.Setup(x => x.GetExtension("file1")).Returns("pdf");
 
             pdfProcessor.Setup(x => x.ProcessAsync("file1"))
                 .ReturnsAsync(documentsFile1);
@@ -37,6 +40,7 @@ namespace AppServices.Tests
             var documentProcessorService = new DocumentProcessorService(
                 services.BuildServiceProvider(),
                 directoryManager.Object,
+                pathManager.Object,
                 documentRepository.Object,
                 unitOfWork.Object);
 

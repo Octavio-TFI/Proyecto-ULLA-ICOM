@@ -14,6 +14,7 @@ namespace AppServices
     internal class DocumentProcessorService(
         IServiceProvider _services,
         IDirectoryManager _directoryManager,
+        IPathManager _pathManager,
         IDocumentRepository _documentRepository,
         IUnitOfWork _unitOfWork)
         : BackgroundService
@@ -25,8 +26,10 @@ namespace AppServices
 
             foreach (var documentPath in documentPaths)
             {
-                var documents = await _services.GetRequiredKeyedService<IDocumentProcessor>(
-                    "pdf")
+                string extension = _pathManager.GetExtension(documentPath);
+
+                var documents = await _services
+                    .GetRequiredKeyedService<IDocumentProcessor>(extension)
                     .ProcessAsync(documentPath);
 
                 await _documentRepository.InsertRangeAsync(documents);
