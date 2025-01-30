@@ -21,6 +21,6 @@ namespace Domain.Repositories
         /// Inserta una lista de documentos
         /// </summary>
         /// <param name="documents">Documentos a insertar</param>
-        Task InsertRangeAsync(List<Document> documents);
+        Task<List<Document>> InsertRangeAsync(List<Document> documents);
     }
 }

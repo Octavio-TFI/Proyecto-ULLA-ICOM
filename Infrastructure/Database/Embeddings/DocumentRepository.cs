@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 namespace Infrastructure.Database.Embeddings
 {
     internal class DocumentRepository(EmbeddingContext _context)
-        : IDocumentRepository
+        : Repository<Document>(_context)
+        , IDocumentRepository
     {
         public Task<List<Document>> GetDocumentosRelacionadosAsync(
             ReadOnlyMemory<float> embedding)
