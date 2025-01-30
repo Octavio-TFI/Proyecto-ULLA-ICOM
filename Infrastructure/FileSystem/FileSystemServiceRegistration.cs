@@ -15,6 +15,7 @@ namespace Infrastructure.FileSystem
         {
             return services
                 .AddSingleton<IDirectoryManager, DirectoryManager>()
+                .AddSingleton<IPathManager, PathManager>()
                 .AddSingleton<IFileManager, FileManager>();
         }
     }
