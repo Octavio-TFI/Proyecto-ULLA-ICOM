@@ -1,6 +1,8 @@
 ﻿using AppServices.Abstractions;
 using AppServices.Ports;
+using Domain;
 using Domain.Repositories;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -14,14 +16,20 @@ namespace AppServices
     internal class DocumentProcessorService(
         IServiceProvider _services,
         IDirectoryManager _directoryManager,
-        IPathManager _pathManager,
-        IDocumentRepository _documentRepository,
-        IUnitOfWork _unitOfWork)
+        IPathManager _pathManager)
         : BackgroundService
     {
         protected override async Task ExecuteAsync(
             CancellationToken stoppingToken)
         {
+            var scopeServices = _services.CreateScope().ServiceProvider;
+
+            var documentRepository = scopeServices
+                .GetRequiredService<IDocumentRepository>();
+
+            var unitOfWork = scopeServices
+                .GetRequiredKeyedService<IUnitOfWork>(Contexts.Embedding);
+
             var documentPaths = _directoryManager.GetFiles("./Documentacion");
 
             foreach (var documentPath in documentPaths)
@@ -32,8 +40,8 @@ namespace AppServices
                     .GetRequiredKeyedService<IDocumentProcessor>(extension)
                     .ProcessAsync(documentPath);
 
-                await _documentRepository.InsertRangeAsync(documents);
-                await _unitOfWork.SaveChangesAsync();
+                await documentRepository.InsertRangeAsync(documents);
+                await unitOfWork.SaveChangesAsync();
             }
         }
     }

@@ -18,12 +18,42 @@ namespace Infrastructure.Database.Embeddings.Tests
 
             var documentos = new List<Document>
             {
-                new() { Texto = "Texto0", Embedding = [0.1f, 0.2f, 0.3f], },
-                new() { Texto = "Texto1", Embedding = [0.4f, 0.5f, 0.6f], },
-                new() { Texto = "Texto2", Embedding = [0.7f, 0.8f, 0.9f], },
-                new() { Texto = "Texto3", Embedding = [-0.7f, -0.8f, -0.9f], },
-                new() { Texto = "Texto4", Embedding = [0.7f, 0.8f, 0.9f], },
-                new() { Texto = "Texto5", Embedding = [0.7f, 0.8f, 0.9f], },
+                new()
+                {
+                    DocumentName = "fileName",
+                    Texto = "Texto0",
+                    Embedding = [0.1f, 0.2f, 0.3f],
+                },
+                new()
+                {
+                    DocumentName = "fileName",
+                    Texto = "Texto1",
+                    Embedding = [0.4f, 0.5f, 0.6f],
+                },
+                new()
+                {
+                    DocumentName = "fileName",
+                    Texto = "Texto2",
+                    Embedding = [0.7f, 0.8f, 0.9f],
+                },
+                new()
+                {
+                    DocumentName = "fileName",
+                    Texto = "Texto3",
+                    Embedding = [-0.7f, -0.8f, -0.9f],
+                },
+                new()
+                {
+                    DocumentName = "fileName",
+                    Texto = "Texto4",
+                    Embedding = [0.7f, 0.8f, 0.9f],
+                },
+                new()
+                {
+                    DocumentName = "fileName",
+                    Texto = "Texto5",
+                    Embedding = [0.7f, 0.8f, 0.9f],
+                },
             };
 
             var context = DatabaseTestsHelper.CreateInMemoryEmbeddingContext();

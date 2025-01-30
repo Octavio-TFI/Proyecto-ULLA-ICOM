@@ -24,12 +24,13 @@ namespace AppServices.Tests
             // Arrange
             List<Document> datosRecuperados = [new()
             {
+                DocumentName = "fileName",
                 Texto = "0",
                 Embedding = [0]
             },
-            new() { Texto = "1", Embedding = [1] },
-            new() { Texto = "2", Embedding = [2] },
-            new() { Texto = "3", Embedding = [3] }];
+            new() { DocumentName = "fileName", Texto = "1", Embedding = [1] },
+            new() { DocumentName = "fileName", Texto = "2", Embedding = [2] },
+            new() { DocumentName = "fileName", Texto = "3", Embedding = [3] }];
 
             var consulta = "consulta";
             int i = -1;

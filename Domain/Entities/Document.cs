@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Document : Entity
+    public class Document
+        : Entity
     {
+        public required string DocumentName { get; set; }
+
         public required string Texto { get; set; }
 
         public required float[] Embedding { get; set; }
