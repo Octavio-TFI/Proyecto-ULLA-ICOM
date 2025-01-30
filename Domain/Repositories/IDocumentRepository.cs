@@ -16,5 +16,11 @@ namespace Domain.Repositories
         /// <returns>Documentos similares al embedding</returns>
         Task<List<Document>> GetDocumentosRelacionadosAsync(
             ReadOnlyMemory<float> embedding);
+
+        /// <summary>
+        /// Inserta una lista de documentos
+        /// </summary>
+        /// <param name="documents">Documentos a insertar</param>
+        Task InsertRangeAsync(List<Document> documents);
     }
 }

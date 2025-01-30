@@ -1,4 +1,7 @@
-﻿using AppServices.Ports;
+﻿using AppServices.Abstractions;
+using AppServices.Ports;
+using Domain.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -8,14 +11,27 @@ using System.Threading.Tasks;
 
 namespace AppServices
 {
-    internal class DocumentProcessorService(IDirectoryManager _directoryManager)
+    internal class DocumentProcessorService(
+        IServiceProvider _services,
+        IDirectoryManager _directoryManager,
+        IDocumentRepository _documentRepository,
+        IUnitOfWork _unitOfWork)
         : BackgroundService
     {
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(
+            CancellationToken stoppingToken)
         {
             var documentPaths = _directoryManager.GetFiles("./Documentacion");
 
-            return Task.CompletedTask;
+            foreach (var documentPath in documentPaths)
+            {
+                var documents = await _services.GetRequiredKeyedService<IDocumentProcessor>(
+                    "pdf")
+                    .ProcessAsync(documentPath);
+
+                await _documentRepository.InsertRangeAsync(documents);
+                await _unitOfWork.SaveChangesAsync();
+            }
         }
     }
 }
