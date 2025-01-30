@@ -34,6 +34,13 @@ namespace AppServices
 
             foreach (var documentPath in documentPaths)
             {
+                // Si el documento ya fue procesado, se saltea
+                if (await documentRepository.DocumentsWithFilenameAsync(
+                    documentPath))
+                {
+                    continue;
+                }
+
                 string extension = _pathManager.GetExtension(documentPath);
 
                 var documents = await _services

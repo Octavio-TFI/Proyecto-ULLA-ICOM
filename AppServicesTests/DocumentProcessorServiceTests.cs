@@ -14,7 +14,7 @@ namespace AppServices.Tests
         public async Task ExecuteAsyncTest()
         {
             // Arrange
-            string[] files = ["file1", "file2"];
+            string[] files = ["file1", "file2", "file3"];
             List<Document> documentsFile1 = [ new Document
             {
                 Filename = "file1",
@@ -44,6 +44,9 @@ namespace AppServices.Tests
             directoryManager.Setup(x => x.GetFiles("./Documentacion"))
                 .Returns(files);
 
+            documentRepository.Setup(x => x.DocumentsWithFilenameAsync("file3"))
+                .ReturnsAsync(true);
+
             pathManager.Setup(x => x.GetExtension("file1")).Returns("pdf");
             pathManager.Setup(x => x.GetExtension("file2")).Returns("txt");
 
@@ -66,9 +69,15 @@ namespace AppServices.Tests
             await documentProcessorService.StartAsync(CancellationToken.None);
 
             // Assert
+            pathManager.Verify(x => x.GetExtension("file3"), Times.Never);
+
             documentRepository.Verify(
                 x => x.InsertRangeAsync(documentsFile1),
                 Times.Once);
+            documentRepository.Verify(
+                x => x.InsertRangeAsync(documentsFile2),
+                Times.Once);
+
             unitOfWork.Verify(x => x.SaveChangesAsync(), Times.Exactly(2));
 
             await documentProcessorService.StopAsync(CancellationToken.None);
