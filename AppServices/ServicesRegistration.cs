@@ -1,5 +1,6 @@
 ﻿using AppServices.Abstractions;
 using AppServices.DocumentProcessors;
+using AppServices.Factories;
 using AppServices.KernelPlugins;
 using AppServices.Ports;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,9 +27,10 @@ namespace AppServices
         public static IServiceCollection AddAppServices(
             this IServiceCollection services)
         {
+            services.AddHostedService<DocumentProcessorService>();
             services.AddKeyedScoped<IDocumentProcessor, ChmDocumentProcessor>(
                 ".chm");
-            services.AddHostedService<DocumentProcessorService>();
+            services.AddSingleton<IDocumentFactory, DocumentFactory>();
 
             services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
             services.AddScoped<IGeneradorRespuesta, GeneradorRespuesta>();
