@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,7 +27,10 @@ namespace AppServices.Factories.Tests
                         default))
                 .ReturnsAsync([new ReadOnlyMemory<float>(embedding)]);
 
-            var factory = new DocumentFactory(embeddingGenerator.Object);
+            var kernelBuilder = Kernel.CreateBuilder();
+            kernelBuilder.Services.AddSingleton(embeddingGenerator.Object);
+
+            var factory = new DocumentFactory(kernelBuilder.Build());
 
             // Act
             var result = await factory.CreateAsync(filename, text, childs);
