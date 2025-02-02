@@ -19,7 +19,6 @@ namespace Infrastructure.Database.Embeddings
         {
             var documents = await _context.Documents
                 .Include(d => d.Parent)
-                .Include(d => d.Childs)
                 .OrderBy(
                     d => _context.CosineSimilarity(
                         d.Embedding,
@@ -28,7 +27,12 @@ namespace Infrastructure.Database.Embeddings
                 .Take(5)
                 .ToListAsync();
 
-            return documents.Distinct().ToList();
+            documents = documents.Distinct().ToList();
+
+            documents.ForEach(
+                d => _context.Entry(d).Collection(d => d.Childs).Load());
+
+            return documents;
         }
 
         static Document GetTopParent(Document document)
