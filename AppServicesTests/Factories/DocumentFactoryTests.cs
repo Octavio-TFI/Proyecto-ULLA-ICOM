@@ -33,7 +33,7 @@ namespace AppServices.Factories.Tests
             var factory = new DocumentFactory(kernelBuilder.Build());
 
             // Act
-            var result = await factory.CreateAsync(filename, text, childs);
+            var result = await factory.CreateAsync(filename, text, null);
 
             // Assert
             Assert.That(filename, Is.EqualTo(result.Filename));

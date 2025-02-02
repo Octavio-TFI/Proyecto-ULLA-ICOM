@@ -14,11 +14,11 @@ namespace AppServices.Abstractions
         /// </summary>
         /// <param name="filename">Nombre del archivo</param>
         /// <param name="text">Texto del documento</param>
-        /// <param name="childs">Documentos hijos</param>
+        /// <param name="parentDocument">Documento padre</param>
         /// <returns>Documento</returns>
         Task<Document> CreateAsync(
             string filename,
             string text,
-            IEnumerable<Document> childs);
+            Document? parentDocument = null);
     }
 }

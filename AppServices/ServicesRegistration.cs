@@ -27,6 +27,9 @@ namespace AppServices
         public static IServiceCollection AddAppServices(
             this IServiceCollection services)
         {
+            // Register the code pages encoding provider to support Windows-1252 and other encodings
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             services.AddHostedService<DocumentProcessorService>();
             services.AddKeyedScoped<IDocumentProcessor, ChmDocumentProcessor>(
                 ".chm");

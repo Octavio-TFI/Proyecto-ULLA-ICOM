@@ -43,7 +43,7 @@ namespace AppServices.Tests
             var documentRepository = new Mock<IDocumentRepository>();
             var unitOfWork = new Mock<IUnitOfWork>();
 
-            directoryManager.Setup(x => x.GetFiles("./Documentacion"))
+            directoryManager.Setup(x => x.GetFiles("Documentacion"))
                 .Returns(files);
 
             documentRepository.Setup(x => x.DocumentsWithFilenameAsync("file3"))

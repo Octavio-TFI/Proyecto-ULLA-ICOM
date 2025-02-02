@@ -15,7 +15,9 @@ namespace Domain.Entities
 
         public required float[] Embedding { get; set; }
 
-        public IEnumerable<Document> Childs { get; set; } = [];
+        public Document? Parent { get; set; }
+
+        public ICollection<Document> Childs { get; set; } = [];
 
         public override string ToString()
         {

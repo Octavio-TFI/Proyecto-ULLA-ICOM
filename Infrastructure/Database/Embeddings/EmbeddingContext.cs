@@ -43,7 +43,9 @@ namespace Infrastructure.Database.Embeddings
         {
             modelBuilder.Entity<Document>().HasKey(e => e.Id);
 
-            modelBuilder.Entity<Document>().HasMany(x => x.Childs);
+            modelBuilder.Entity<Document>()
+                .HasMany(x => x.Childs)
+                .WithOne(x => x.Parent);
 
             modelBuilder.Entity<Document>()
                 .Property(e => e.Embedding)

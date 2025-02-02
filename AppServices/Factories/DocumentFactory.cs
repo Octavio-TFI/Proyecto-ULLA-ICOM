@@ -19,7 +19,7 @@ namespace AppServices.Factories
         public async Task<Document> CreateAsync(
             string filename,
             string text,
-            IEnumerable<Document> childs)
+            Document? parentDocument = null)
         {
             var embedding = await _emmbeddingGenerator.GenerateEmbeddingAsync(
                 text);
@@ -29,7 +29,7 @@ namespace AppServices.Factories
                 Filename = filename,
                 Texto = text,
                 Embedding = embedding.ToArray(),
-                Childs = childs.ToList()
+                Parent = parentDocument
             };
         }
     }

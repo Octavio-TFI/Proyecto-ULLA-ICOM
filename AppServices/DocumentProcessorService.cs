@@ -32,7 +32,7 @@ namespace AppServices
             var unitOfWork = scopeServices
                 .GetRequiredKeyedService<IUnitOfWork>(Contexts.Embedding);
 
-            var documentPaths = _directoryManager.GetFiles("./Documentacion");
+            var documentPaths = _directoryManager.GetFiles("Documentacion");
 
             foreach (var documentPath in documentPaths)
             {
@@ -41,25 +41,37 @@ namespace AppServices
                     documentPath))
                 {
                     _logger.LogInformation(
-                        "Documento {documentPath} ya procesado",
+                        "{documentPath} ya procesado",
                         documentPath);
 
                     continue;
                 }
 
                 _logger.LogInformation(
-                    "Procesando documento {documentPath}",
+                    "Procesando {documentPath}",
                     documentPath);
 
-                string extension = _pathManager.GetExtension(documentPath);
+                try
+                {
+                    string extension = _pathManager.GetExtension(documentPath);
 
-                var documents = await scopeServices
-                    .GetRequiredKeyedService<IDocumentProcessor>(extension)
-                    .ProcessAsync(documentPath);
+                    var documents = await scopeServices
+                        .GetRequiredKeyedService<IDocumentProcessor>(extension)
+                        .ProcessAsync(documentPath);
 
-                await documentRepository.InsertRangeAsync(documents);
-                await unitOfWork.SaveChangesAsync();
+                    await documentRepository.InsertRangeAsync(documents);
+                    await unitOfWork.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(
+                        ex,
+                        "Error al procesar {documentPath}",
+                        documentPath);
+                }
             }
+
+            _logger.LogInformation("Procesamiento de documentos finalizado");
         }
     }
 }
