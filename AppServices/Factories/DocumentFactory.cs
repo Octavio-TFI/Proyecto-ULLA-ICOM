@@ -24,13 +24,17 @@ namespace AppServices.Factories
             var embedding = await _emmbeddingGenerator.GenerateEmbeddingAsync(
                 text);
 
-            return new Document
+            var document = new Document
             {
                 Filename = filename,
                 Texto = text,
                 Embedding = embedding.ToArray(),
                 Parent = parentDocument
             };
+
+            parentDocument?.Childs.Add(document);
+
+            return document;
         }
     }
 }

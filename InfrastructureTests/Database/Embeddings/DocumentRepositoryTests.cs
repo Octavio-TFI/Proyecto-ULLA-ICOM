@@ -52,9 +52,17 @@ namespace Infrastructure.Database.Embeddings.Tests
                 {
                     Filename = "fileName",
                     Texto = "Texto5",
-                    Embedding = [0.7f, 0.8f, 0.9f],
+                    Embedding = [0.4f, 0.5f, 0.6f],
+                },
+                new()
+                {
+                    Filename = "fileName",
+                    Texto = "Texto6",
+                    Embedding = [0.1f, 0.2f, 0.3f],
                 },
             };
+
+            documentos[1].Parent = documentos[0];
 
             var context = DatabaseTestsHelper.CreateInMemoryEmbeddingContext();
             await context.Documents.AddRangeAsync(documentos);
@@ -67,12 +75,20 @@ namespace Infrastructure.Database.Embeddings.Tests
                 embedding);
 
             // Assert
-            Assert.That(result, Has.Count.EqualTo(5));
             Assert.Multiple(
                 () =>
                 {
-                    Assert.That(result[0].Id, Is.EqualTo(1));
+                    Assert.That(result, Has.Count.EqualTo(5));
+                    Assert.That(result[0].Childs, Is.Not.Empty);
+                    Assert.That(result[3].Parent, Is.Not.Null);
+
+                    Assert.That(result, Has.Member(documentos[0]));
+                    Assert.That(result, Has.Member(documentos[1]));
+                    Assert.That(result, Has.Member(documentos[2]));
                     Assert.That(result, Has.No.Member(documentos[3]));
+                    Assert.That(result, Has.No.Member(documentos[4]));
+                    Assert.That(result, Has.Member(documentos[5]));
+                    Assert.That(result, Has.Member(documentos[6]));
                 });
         }
 

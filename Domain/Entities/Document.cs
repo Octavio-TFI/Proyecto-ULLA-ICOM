@@ -21,7 +21,18 @@ namespace Domain.Entities
 
         public override string ToString()
         {
-            return base.ToString()!;
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.Append(Texto);
+
+            if (Parent is null)
+            {
+                stringBuilder.AppendLine();
+            }
+
+            stringBuilder.AppendJoin("\r\n", Childs);
+
+            return stringBuilder.ToString();
         }
     }
 }

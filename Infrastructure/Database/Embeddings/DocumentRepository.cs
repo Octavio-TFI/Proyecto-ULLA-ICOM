@@ -18,6 +18,8 @@ namespace Infrastructure.Database.Embeddings
             ReadOnlyMemory<float> embedding)
         {
             return _context.Documents
+                .Include(x => x.Parent)
+                .Include(x => x.Childs)
                 .OrderBy(
                     x => _context.CosineSimilarity(
                         x.Embedding,
