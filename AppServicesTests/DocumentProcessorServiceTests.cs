@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,7 @@ namespace AppServices.Tests
             var pdfProcessor = new Mock<IDocumentProcessor>();
             var txtProcessor = new Mock<IDocumentProcessor>();
             var pathManager = new Mock<IPathManager>();
+            var logger = new Mock<ILogger<DocumentProcessorService>>();
             var documentRepository = new Mock<IDocumentRepository>();
             var unitOfWork = new Mock<IUnitOfWork>();
 
@@ -63,7 +65,8 @@ namespace AppServices.Tests
             var documentProcessorService = new DocumentProcessorService(
                 services.BuildServiceProvider(),
                 directoryManager.Object,
-                pathManager.Object);
+                pathManager.Object,
+                logger.Object);
 
             // Act
             await documentProcessorService.StartAsync(CancellationToken.None);

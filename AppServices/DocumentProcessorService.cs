@@ -5,6 +5,7 @@ using Domain.Repositories;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,8 @@ namespace AppServices
     internal class DocumentProcessorService(
         IServiceProvider _services,
         IDirectoryManager _directoryManager,
-        IPathManager _pathManager)
+        IPathManager _pathManager,
+        ILogger<DocumentProcessorService> _logger)
         : BackgroundService
     {
         protected override async Task ExecuteAsync(
@@ -38,8 +40,16 @@ namespace AppServices
                 if (await documentRepository.DocumentsWithFilenameAsync(
                     documentPath))
                 {
+                    _logger.LogInformation(
+                        "Documento {documentPath} ya procesado",
+                        documentPath);
+
                     continue;
                 }
+
+                _logger.LogInformation(
+                    "Procesando documento {documentPath}",
+                    documentPath);
 
                 string extension = _pathManager.GetExtension(documentPath);
 
