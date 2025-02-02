@@ -38,6 +38,16 @@ namespace AppServices.DocumentProcessors
 
             chmFile.Close();
 
+            chmFileDatas = chmFileDatas.DistinctBy(
+                chmFileData =>
+                {
+                    return new StringBuilder()
+                        .Append(chmFileData.Titulo)
+                        .AppendJoin("\r\n", chmFileData.Parrafos)
+                        .ToString();
+                })
+                .ToList();
+
             List<Document> documents = [];
 
             foreach (var chmFileData in chmFileDatas)
@@ -59,7 +69,7 @@ namespace AppServices.DocumentProcessors
                 }
             }
 
-            return documents.DistinctBy(d => d.ToString()).ToList();
+            return documents;
         }
 
         EnumerateStatus EnumeratorCallback(
