@@ -92,8 +92,6 @@ namespace AppServices.DocumentProcessors
                     charsetDetector.Feed(buf, 0, buf.Length);
                     charsetDetector.DataEnd();
 
-                    var encoding = Encoding.GetEncoding(1252);
-
                     string html = Encoding
                         .GetEncoding(charsetDetector.Charset)
                         .GetString(buf);
@@ -118,7 +116,8 @@ namespace AppServices.DocumentProcessors
                     {
                         endOfPage = Array.IndexOf(parrafos, "Ver también");
                     }
-                    else if (endOfPage == -1)
+
+                    if (endOfPage == -1)
                     {
                         endOfPage = parrafos.Length;
                     }
