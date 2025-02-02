@@ -59,7 +59,7 @@ namespace AppServices.DocumentProcessors
                 }
             }
 
-            return documents;
+            return documents.DistinctBy(d => d.ToString()).ToList();
         }
 
         EnumerateStatus EnumeratorCallback(
