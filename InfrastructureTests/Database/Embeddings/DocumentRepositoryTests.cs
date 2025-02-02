@@ -78,12 +78,11 @@ namespace Infrastructure.Database.Embeddings.Tests
             Assert.Multiple(
                 () =>
                 {
-                    Assert.That(result, Has.Count.EqualTo(5));
+                    Assert.That(result, Has.Count.EqualTo(4));
                     Assert.That(result[0].Childs, Is.Not.Empty);
-                    Assert.That(result[3].Parent, Is.Not.Null);
 
                     Assert.That(result, Has.Member(documentos[0]));
-                    Assert.That(result, Has.Member(documentos[1]));
+                    Assert.That(result, Has.No.Member(documentos[1]));
                     Assert.That(result, Has.Member(documentos[2]));
                     Assert.That(result, Has.No.Member(documentos[3]));
                     Assert.That(result, Has.No.Member(documentos[4]));
@@ -97,7 +96,6 @@ namespace Infrastructure.Database.Embeddings.Tests
         [TestCase("fileName2", ExpectedResult = false)]
         public async Task<bool> DocumentsWithFilenameAsyncTest(string fileName)
         {
-            // Arrange
             // Arrange
             var embedding = new float[] { 0.1f, 0.2f, 0.3f };
 

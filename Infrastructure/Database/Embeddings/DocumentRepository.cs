@@ -14,18 +14,31 @@ namespace Infrastructure.Database.Embeddings
         : Repository<Document>(_context)
         , IDocumentRepository
     {
-        public Task<List<Document>> GetDocumentosRelacionadosAsync(
+        public async Task<List<Document>> GetDocumentosRelacionadosAsync(
             ReadOnlyMemory<float> embedding)
         {
-            return _context.Documents
-                .Include(x => x.Parent)
-                .Include(x => x.Childs)
+            var documents = await _context.Documents
+                .Include(d => d.Parent)
+                .Include(d => d.Childs)
                 .OrderBy(
-                    x => _context.CosineSimilarity(
-                        x.Embedding,
+                    d => _context.CosineSimilarity(
+                        d.Embedding,
                         embedding.ToArray()))
+                .Select(d => GetTopParent(d))
                 .Take(5)
                 .ToListAsync();
+
+            return documents.Distinct().ToList();
+        }
+
+        static Document GetTopParent(Document document)
+        {
+            if (document.Parent is null)
+            {
+                return document;
+            }
+
+            return GetTopParent(document.Parent);
         }
 
         public Task<bool> DocumentsWithFilenameAsync(string filename)
