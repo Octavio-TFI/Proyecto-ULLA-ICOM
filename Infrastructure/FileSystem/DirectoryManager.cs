@@ -12,7 +12,7 @@ namespace Infrastructure.FileSystem
     {
         public string[] GetFiles(string path)
         {
-            return Directory.GetFiles(path);
+            return Directory.GetFiles(path, "*", SearchOption.AllDirectories);
         }
     }
 }

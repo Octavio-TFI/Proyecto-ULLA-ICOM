@@ -17,5 +17,12 @@ namespace AppServices.Ports
         /// <param name="path">Path del archivo</param>
         /// <returns>Texto del archivo</returns>
         Task<string> ReadAllTextAsync(string path);
+
+        /// <summary>
+        /// Lee el contenido de un archivo en bytes
+        /// </summary>
+        /// <param name="path">Path del archivo</param>
+        /// <returns>Bytes del archivo</returns>
+        Task<byte[]> ReadAllBytesAsync(string path);
     }
 }

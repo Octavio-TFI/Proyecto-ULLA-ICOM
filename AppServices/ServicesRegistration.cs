@@ -33,6 +33,8 @@ namespace AppServices
             services.AddHostedService<DocumentProcessorService>();
             services.AddKeyedScoped<IDocumentProcessor, ChmDocumentProcessor>(
                 ".chm");
+            services.AddKeyedScoped<IDocumentProcessor, HtmlDocumentProcessor>(
+                ".htm");
             services.AddSingleton<IDocumentFactory, DocumentFactory>();
 
             services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
