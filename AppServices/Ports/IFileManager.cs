@@ -24,5 +24,11 @@ namespace AppServices.Ports
         /// <param name="path">Path del archivo</param>
         /// <returns>Bytes del archivo</returns>
         Task<byte[]> ReadAllBytesAsync(string path);
+
+        /// <summary>
+        /// Elimina un archivo
+        /// </summary>
+        /// <param name="path">Path del archivo</param>
+        void Delete(string path);
     }
 }

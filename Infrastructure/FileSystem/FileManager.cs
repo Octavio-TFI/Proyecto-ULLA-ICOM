@@ -19,5 +19,10 @@ namespace Infrastructure.FileSystem
         {
             return File.ReadAllTextAsync(path);
         }
+
+        public void Delete(string path)
+        {
+            File.Delete(path);
+        }
     }
 }

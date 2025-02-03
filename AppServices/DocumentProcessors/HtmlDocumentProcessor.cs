@@ -5,9 +5,11 @@ using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Xml.XPath;
 using Ude;
 
 namespace AppServices.DocumentProcessors
@@ -19,11 +21,6 @@ namespace AppServices.DocumentProcessors
     {
         public async Task<List<Document>> ProcessAsync(string path)
         {
-            if (path.Contains("(ext)"))
-            {
-                return [];
-            }
-
             var bytes = await _fileManager.ReadAllBytesAsync(path);
 
             var charsetDetector = new CharsetDetector();
@@ -37,15 +34,27 @@ namespace AppServices.DocumentProcessors
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(html);
 
-            var htmlBodyText = htmlDoc.DocumentNode.SelectSingleNode("//body")
-                .InnerText;
+            var htmlBody = htmlDoc.DocumentNode.SelectSingleNode("//body");
 
-            var parrafos = HttpUtility.HtmlDecode(htmlBodyText)
+            // Elimina tabla en el pie de la pagina
+            htmlBody.SelectNodes("//table")?.LastOrDefault()?.Remove();
+
+            var htmlBodyText = HttpUtility.HtmlDecode(htmlBody.InnerText);
+
+            var parrafos = htmlBodyText
                 .Split(
                     ['\r', '\n'],
                     StringSplitOptions.RemoveEmptyEntries |
                         StringSplitOptions.TrimEntries)
+                .Except(["Buscando módulos de Ayuda de CAPATAZ..."])
                 .ToArray();
+
+            if (parrafos.Length == 0)
+            {
+                _fileManager.Delete(path);
+
+                return [];
+            }
 
             int endOfPage = Array.IndexOf(parrafos, "Vea también");
 

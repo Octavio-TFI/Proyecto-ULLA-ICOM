@@ -45,9 +45,12 @@ namespace Infrastructure.Database.Embeddings
             return GetTopParent(document.Parent);
         }
 
-        public Task<bool> DocumentsWithFilenameAsync(string filename)
+        public Task<List<string>> GetAllFilenamesAsync()
         {
-            return _context.Documents.AnyAsync(d => d.Filename == filename);
+            return _context.Documents
+                .Select(d => d.Filename)
+                .Distinct()
+                .ToListAsync();
         }
     }
 }

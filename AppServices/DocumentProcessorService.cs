@@ -34,26 +34,24 @@ namespace AppServices
 
             var documentPaths = _directoryManager.GetFiles("Documentacion");
 
+            var dbDocumentsPaths = await documentRepository
+                .GetAllFilenamesAsync();
+
+            documentPaths = documentPaths.Except(dbDocumentsPaths).ToArray();
+            int i = 1;
+
             foreach (var documentPath in documentPaths)
             {
-                // Si el documento ya fue procesado, se saltea
-                if (await documentRepository.DocumentsWithFilenameAsync(
-                    documentPath))
-                {
-                    _logger.LogInformation(
-                        "{documentPath} ya procesado",
-                        documentPath);
-
-                    continue;
-                }
-
                 _logger.LogInformation(
-                    "Procesando {documentPath}",
-                    documentPath);
+                    "Procesando {documentPath} {i}/{count}",
+                    documentPath,
+                    i++,
+                    documentPaths.Length);
 
                 try
                 {
-                    string extension = _pathManager.GetExtension(documentPath);
+                    string extension = _pathManager.GetExtension(documentPath)
+                        .ToLower();
 
                     var documents = await scopeServices
                         .GetRequiredKeyedService<IDocumentProcessor>(extension)

@@ -10,11 +10,10 @@ namespace Domain.Repositories
     public interface IDocumentRepository
     {
         /// <summary>
-        /// Determina si existe un documento de un archivo
+        /// Obtiene todos los nombres de los documentos en la base de datos
         /// </summary>
-        /// <param name="filename">Nombre del archivo</param>
-        /// <returns>Si existe un documento de un archivo</returns>
-        Task<bool> DocumentsWithFilenameAsync(string filename);
+        /// <returns>Nombres de los archivos todos los documentos</returns>
+        Task<List<string>> GetAllFilenamesAsync();
 
         /// <summary>
         /// Obtiene documentos relacionados a un vector de embedding
