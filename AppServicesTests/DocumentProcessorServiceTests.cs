@@ -46,8 +46,8 @@ namespace AppServices.Tests
             directoryManager.Setup(x => x.GetFiles("Documentacion"))
                 .Returns(files);
 
-            documentRepository.Setup(x => x.DocumentsWithFilenameAsync("file3"))
-                .ReturnsAsync(true);
+            documentRepository.Setup(x => x.GetAllFilenamesAsync())
+                .ReturnsAsync(["file3"]);
 
             pathManager.Setup(x => x.GetExtension("file1")).Returns("pdf");
             pathManager.Setup(x => x.GetExtension("file2")).Returns("txt");

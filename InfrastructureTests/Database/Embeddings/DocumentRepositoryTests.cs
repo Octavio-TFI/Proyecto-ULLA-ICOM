@@ -91,14 +91,9 @@ namespace Infrastructure.Database.Embeddings.Tests
                 });
         }
 
-        [TestCase("fileName0", ExpectedResult = true)]
-        [TestCase("fileName1", ExpectedResult = true)]
-        [TestCase("fileName2", ExpectedResult = false)]
-        public async Task<bool> DocumentsWithFilenameAsyncTest(string fileName)
+        public async Task DocumentsWithFilenameAsyncTest()
         {
             // Arrange
-            var embedding = new float[] { 0.1f, 0.2f, 0.3f };
-
             var documentos = new List<Document>
             {
                 new()
@@ -122,7 +117,17 @@ namespace Infrastructure.Database.Embeddings.Tests
             var repository = new DocumentRepository(context);
 
             // Act
-            return await repository.DocumentsWithFilenameAsync(fileName);
+            var filenames = await repository.GetAllFilenamesAsync();
+
+
+            // Assert
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.That(filenames, Has.Count.EqualTo(2));
+                    Assert.That(filenames, Has.Member("fileName0"));
+                    Assert.That(filenames, Has.Member("fileName1"));
+                });
         }
     }
 }
