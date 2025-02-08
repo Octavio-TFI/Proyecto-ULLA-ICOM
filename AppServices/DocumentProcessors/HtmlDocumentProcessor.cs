@@ -1,4 +1,5 @@
 ﻿using AppServices.Abstractions;
+using AppServices.Helpers;
 using AppServices.Ports;
 using Domain.Entities;
 using HtmlAgilityPack;
@@ -216,6 +217,18 @@ namespace AppServices.DocumentProcessors
             List<string> currentChunkHeaders,
             StringBuilder currentChunkText)
         {
+            if (currentChunkHeaders.Any(
+                h =>
+                {
+                    string header = h.ToLower().EliminarAcentos();
+
+                    return header.Contains("ver tambien") ||
+                        header.Contains("vea tambien");
+                }))
+            {
+                return null;
+            }
+
             var chunk = new StringBuilder();
             chunk.AppendJoin("\r\n", currentChunkHeaders);
 
