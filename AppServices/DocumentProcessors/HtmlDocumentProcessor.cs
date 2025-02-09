@@ -196,6 +196,11 @@ namespace AppServices.DocumentProcessors
                         headingStack.Pop(); // Pop until we reach the current heading level
                     }
 
+                    while (headingStack.Count + 1 < heading.Level)
+                    {
+                        headingStack.Push(string.Empty);
+                    }
+
                     headingStack.Push(headingText);
 
                     // Add context (all headings in the stack) to the new chunk
