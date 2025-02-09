@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AppServices.Helpers
 {
-    internal static class StringHelper
+    internal static partial class StringHelper
     {
         internal static string EliminarAcentos(this string value)
         {
@@ -18,5 +19,15 @@ namespace AppServices.Helpers
                                 UnicodeCategory.NonSpacingMark)
                     .ToArray());
         }
+
+        internal static string EliminarEspaciosInnecesarios(this string value)
+        {
+            Regex regex = EspaciosInnecesariosRegex();
+
+            return regex.Replace(value, " ");
+        }
+
+        [GeneratedRegex("[ ]{2,}")]
+        private static partial Regex EspaciosInnecesariosRegex();
     }
 }

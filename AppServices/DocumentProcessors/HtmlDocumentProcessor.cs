@@ -105,6 +105,7 @@ namespace AppServices.DocumentProcessors
                         return line;
                     });
 
+            // Transforma el titulo de la tabla en un header 1
             var titleLines = mdLines
                 .Take(2)
                 .Select(
@@ -146,6 +147,7 @@ namespace AppServices.DocumentProcessors
             // Parse the markdown using Markdig
             var document = Markdown.Parse(markdown);
 
+            // Elimina el pie de pagina
             var thematicBreak = document.FirstOrDefault(
                 x => x is ThematicBreakBlock);
 
@@ -233,6 +235,91 @@ namespace AppServices.DocumentProcessors
         }
 
         /// <summary>
+        /// Función auxiliar para extraer texto de nodo
+        /// </summary>
+        /// <param name="node">Nodo</param>
+        /// <returns>Texto del nodo</returns>
+        static string GetNodeText(MarkdownObject node)
+        {
+            var content = new StringBuilder();
+
+            if (node is ParagraphBlock paragraph)
+            {
+                foreach (var inline in paragraph.Inline)
+                {
+                    content.Append(GetNodeText(inline));
+                    content.Append(' ');
+                }
+
+                content.AppendLine();
+            }
+            else if (node is ListBlock listBlock)
+            {
+                foreach (var listItem in listBlock)
+                {
+                    if (listItem is ListItemBlock listItemBlock)
+                    {
+                        foreach (var subNode in listItemBlock)
+                        {
+                            string subNodeText = GetNodeText(subNode);
+
+                            content.Append($"- {subNodeText}");
+                        }
+                    }
+                }
+
+                content.AppendLine();
+            }
+            else if (node is ContainerInline containerInline)
+            {
+                foreach (var inlineChild in containerInline)
+                {
+                    content.Append(GetNodeText(inlineChild));
+                }
+            }
+            else if (node is LiteralInline literal)
+            {
+                var text = literal.Content.Text
+                    .AsSpan(literal.Content.Start, literal.Content.Length)
+                    .Trim();
+
+                content.Append(text);
+            }
+            else if (node is CodeBlock codeBlock)
+            {
+                content.AppendLine(codeBlock.Lines.ToString());
+            }
+
+            return content.ToString();
+        }
+
+        /// <summary>
+        /// Función auxiliar para extraer texto de HeadingBlock
+        /// </summary>
+        /// <param name="heading">Encabezado</param>
+        /// <returns>Texto del encabezado</returns>
+        static string GetHeadingText(HeadingBlock heading)
+        {
+            StringBuilder headingText = new();
+
+            if (heading.Inline is null)
+            {
+                return string.Empty;
+            }
+
+            foreach (var inline in heading.Inline)
+            {
+                headingText.Append(inline.ToString());
+            }
+
+            return new StringBuilder()
+                .Append('#', heading.Level)
+                .Append(' ')
+                .Append(headingText.ToString().Trim())
+                .ToString();
+        }
+
+        /// <summary>
         /// Construye un chunck a partir de los headers y del texto del chunck
         /// actual
         /// </summary>
@@ -268,97 +355,7 @@ namespace AppServices.DocumentProcessors
                 return null;
             }
 
-            return chunk.ToString().Trim();
-        }
-
-        /// <summary>
-        /// Función auxiliar para extraer texto de nodo
-        /// </summary>
-        /// <param name="node">Nodo</param>
-        /// <returns>Texto del nodo</returns>
-        static string GetNodeText(MarkdownObject node)
-        {
-            var content = new StringBuilder();
-
-            if (node is ParagraphBlock paragraph)
-            {
-                foreach (var inline in paragraph.Inline)
-                {
-                    if (inline is LiteralInline literal)
-                    {
-                        content.Append(
-                            literal.Content.Text
-                                .AsSpan(
-                                    literal.Content.Start,
-                                    literal.Content.Length));
-                        content.Append(' ');
-                    }
-                    else if (inline is ContainerInline containerInline)
-                    {
-                        foreach (var inlineChild in containerInline)
-                        {
-                            if (inlineChild is LiteralInline literalChild)
-                            {
-                                content.Append(
-                                    literalChild.Content.Text
-                                        .AsSpan(
-                                            literalChild.Content.Start,
-                                            literalChild.Content.Length));
-                            }
-                        }
-                    }
-                }
-
-                // Add a new line at the end of the paragraph
-                content.AppendLine();
-            }
-            else if (node is ListBlock listBlock)
-            {
-                foreach (var listItem in listBlock)
-                {
-                    if (listItem is ListItemBlock listItemBlock)
-                    {
-                        foreach (var subNode in listItemBlock)
-                        {
-                            string subNodeText = GetNodeText(subNode);
-
-                            content.Append($"- {subNodeText}");
-                        }
-                    }
-                }
-            }
-            else if (node is CodeBlock codeBlock)
-            {
-                content.AppendLine(codeBlock.Lines.ToString());
-            }
-
-            return content.ToString();
-        }
-
-        /// <summary>
-        /// Función auxiliar para extraer texto de HeadingBlock
-        /// </summary>
-        /// <param name="heading">Encabezado</param>
-        /// <returns>Texto del encabezado</returns>
-        static string GetHeadingText(HeadingBlock heading)
-        {
-            StringBuilder headingText = new();
-
-            if (heading.Inline is null)
-            {
-                return string.Empty;
-            }
-
-            foreach (var inline in heading.Inline)
-            {
-                headingText.Append(inline.ToString());
-            }
-
-            return new StringBuilder()
-                .Append('#', heading.Level)
-                .Append(' ')
-                .Append(headingText.ToString().Trim())
-                .ToString();
+            return chunk.ToString().Trim().EliminarEspaciosInnecesarios();
         }
     }
 }

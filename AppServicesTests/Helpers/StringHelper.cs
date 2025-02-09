@@ -21,7 +21,24 @@ namespace AppServices.Helpers.Tests
             string result = value.EliminarAcentos();
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [Test]
+        [TestCase("  hello   world  ", " hello world ")]
+        [TestCase("   multiple   spaces   ", " multiple spaces ")]
+        [TestCase("no extra spaces", "no extra spaces")]
+        [TestCase(" leading and trailing ", " leading and trailing ")]
+        [TestCase("", "")]
+        public void EliminarEspaciosInnecesariosTest(
+            string value,
+            string expected)
+        {
+            // Act
+            string result = value.EliminarEspaciosInnecesarios();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 }
