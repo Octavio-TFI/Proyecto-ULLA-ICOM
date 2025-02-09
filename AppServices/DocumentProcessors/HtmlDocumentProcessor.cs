@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -245,16 +246,17 @@ namespace AppServices.DocumentProcessors
 
             if (node is ParagraphBlock paragraph)
             {
-                foreach (var inline in paragraph.Inline)
+                if (paragraph.Inline is not null)
                 {
-                    content.Append(GetNodeText(inline));
-                    content.Append(' ');
-                }
+                    content.Append(GetNodeText(paragraph.Inline));
 
-                content.AppendLine();
+                    content.AppendLine();
+                }
             }
             else if (node is ListBlock listBlock)
             {
+                int i = 1;
+
                 foreach (var listItem in listBlock)
                 {
                     if (listItem is ListItemBlock listItemBlock)
@@ -263,7 +265,9 @@ namespace AppServices.DocumentProcessors
                         {
                             string subNodeText = GetNodeText(subNode);
 
-                            content.Append($"- {subNodeText}");
+                            content.Append($"{i}. {subNodeText}");
+
+                            i++;
                         }
                     }
                 }
@@ -274,7 +278,21 @@ namespace AppServices.DocumentProcessors
             {
                 foreach (var inlineChild in containerInline)
                 {
-                    content.Append(GetNodeText(inlineChild));
+                    string text = GetNodeText(inlineChild);
+                    string trimmedText = text.Trim();
+
+                    // Si es tabla agregar new line en vez de espacio
+                    if (trimmedText.Length > 1 &&
+                        trimmedText.StartsWith('|') &&
+                        trimmedText.EndsWith('|'))
+                    {
+                        content.Append(trimmedText);
+                        content.AppendLine();
+                    }
+                    else
+                    {
+                        content.Append(text);
+                    }
                 }
             }
             else if (node is LiteralInline literal)
@@ -284,6 +302,7 @@ namespace AppServices.DocumentProcessors
                     .Trim();
 
                 content.Append(text);
+                content.Append(' ');
             }
             else if (node is CodeBlock codeBlock)
             {
