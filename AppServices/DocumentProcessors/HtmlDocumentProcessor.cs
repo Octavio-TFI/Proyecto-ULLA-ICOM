@@ -146,6 +146,19 @@ namespace AppServices.DocumentProcessors
             // Parse the markdown using Markdig
             var document = Markdown.Parse(markdown);
 
+            var thematicBreak = document.FirstOrDefault(
+                x => x is ThematicBreakBlock);
+
+            if (thematicBreak is not null)
+            {
+                int thematicBreakIndex = document.IndexOf(thematicBreak);
+
+                // Remove all items after thematicBreak
+                document.Skip(thematicBreakIndex)
+                    .ToList()
+                    .ForEach(x => document.Remove(x));
+            }
+
             List<string> chunks = [];
             List<string> currentChunkHeaders = [];
             StringBuilder currentChunkText = new();
@@ -279,6 +292,20 @@ namespace AppServices.DocumentProcessors
                                     literal.Content.Start,
                                     literal.Content.Length));
                         content.Append(' ');
+                    }
+                    else if (inline is ContainerInline containerInline)
+                    {
+                        foreach (var inlineChild in containerInline)
+                        {
+                            if (inlineChild is LiteralInline literalChild)
+                            {
+                                content.Append(
+                                    literalChild.Content.Text
+                                        .AsSpan(
+                                            literalChild.Content.Start,
+                                            literalChild.Content.Length));
+                            }
+                        }
                     }
                 }
 
