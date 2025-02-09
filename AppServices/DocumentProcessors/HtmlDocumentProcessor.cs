@@ -92,6 +92,19 @@ namespace AppServices.DocumentProcessors
 
             var mdLines = md.ReadLines();
 
+            // Elimina los bloques de citas
+            mdLines = mdLines
+                .Select(
+                    line =>
+                    {
+                        if (line.StartsWith('>'))
+                        {
+                            return line.Remove(0, 1).TrimStart();
+                        }
+
+                        return line;
+                    });
+
             var titleLines = mdLines
                 .Take(2)
                 .Select(
