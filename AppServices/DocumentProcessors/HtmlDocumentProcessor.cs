@@ -174,13 +174,6 @@ namespace AppServices.DocumentProcessors
                 {
                     string headingText = GetHeadingText(heading);
 
-                    // If the heading is empty, skip it
-                    if (string.IsNullOrWhiteSpace(
-                        headingText.Replace("#", string.Empty)))
-                    {
-                        continue;
-                    }
-
                     // When we hit a new heading, finalize the current chunk
                     if (currentChunkHeaders.Count > 0)
                     {
@@ -360,6 +353,21 @@ namespace AppServices.DocumentProcessors
             {
                 return null;
             }
+
+            // Elimina los headers vacios
+            currentChunkHeaders = currentChunkHeaders.Select(
+                h =>
+                {
+                    if (string.IsNullOrWhiteSpace(h.Replace("#", string.Empty)))
+                    {
+                        return null;
+                    }
+
+                    return h;
+                })
+                .Where(h => h is not null)
+                .Cast<string>()
+                .ToList();
 
             var chunk = new StringBuilder();
             chunk.AppendJoin("\r\n", currentChunkHeaders);
