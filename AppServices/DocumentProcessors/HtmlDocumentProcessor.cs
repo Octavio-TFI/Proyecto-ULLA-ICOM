@@ -62,22 +62,12 @@ namespace AppServices.DocumentProcessors
 
             List<Document> documents = [];
 
-            //// Primer parrafo es el titulo
-            //var parentDocument = await _documentFactory.CreateAsync(
-            //    path,
-            //    parrafos[0]);
+            foreach (var chunk in chunks)
+            {
+                var document = await _documentFactory.CreateAsync(path, chunk);
 
-            //documents.Add(parentDocument);
-
-            //foreach (string parrafo in parrafos[1..endOfPage])
-            //{
-            //    var child = await _documentFactory.CreateAsync(
-            //        path,
-            //        parrafo,
-            //        parentDocument);
-
-            //    documents.Add(child);
-            //}
+                documents.Add(document);
+            }
 
             return documents;
         }
@@ -313,7 +303,7 @@ namespace AppServices.DocumentProcessors
 
             foreach (var inline in heading.Inline)
             {
-                headingText.Append(inline.ToString());
+                headingText.Append(GetNodeText(inline));
             }
 
             return new StringBuilder()
