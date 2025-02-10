@@ -56,16 +56,9 @@ namespace AppServices.DocumentProcessors
             var converter = new ReverseMarkdown.Converter(mdConverterConfig);
             string md = converter.Convert(html);
 
-            md = CleanMarkdown(md);
+            string cleanMd = CleanMarkdown(md);
 
-            var chunks = ChunkMarkdown(md);
-
-            // Elimina el archivo si no se generaron chunks
-            // Esto es por archivos .htm que refieren a otros archivos
-            if (chunks.Count == 0)
-            {
-                _fileManager.Delete(path);
-            }
+            var chunks = ChunkMarkdown(cleanMd);
 
             List<Document> documents = [];
 
@@ -99,12 +92,14 @@ namespace AppServices.DocumentProcessors
                 .Select(
                     line =>
                     {
-                        if (line.StartsWith('>'))
+                        string tmp = line;
+
+                        while (tmp.StartsWith('>'))
                         {
-                            return line.Remove(0, 1).TrimStart();
+                            tmp = tmp.Remove(0, 1).TrimStart();
                         }
 
-                        return line;
+                        return tmp;
                     })
                 .ToList();
 
