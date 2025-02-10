@@ -41,7 +41,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Documentacion\" />
     <Folder Include="Prompts\GeneradorRespuesta\" />
     <Folder Include="Prompts\Ranker\Consulta\" />
   </ItemGroup>

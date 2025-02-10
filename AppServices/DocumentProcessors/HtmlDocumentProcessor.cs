@@ -60,6 +60,13 @@ namespace AppServices.DocumentProcessors
 
             var chunks = ChunkMarkdown(md);
 
+            // Elimina el archivo si no se generaron chunks
+            // Esto es por archivos .htm que refieren a otros archivos
+            if (chunks.Count == 0)
+            {
+                _fileManager.Delete(path);
+            }
+
             List<Document> documents = [];
 
             //// Primer parrafo es el titulo
@@ -87,14 +94,8 @@ namespace AppServices.DocumentProcessors
             // Para normalizar las listas
             md = md.Replace("§", "-");
 
-            // Cambia el titulo de tabla a header 1
-            bool tableFound = false;
-            string titlePattern = @"\|[^\|]+\|[^\|]+\|";
-
-            var mdLines = md.ReadLines();
-
             // Elimina los bloques de citas
-            mdLines = mdLines
+            var mdLines = md.ReadLines()
                 .Select(
                     line =>
                     {
@@ -104,41 +105,46 @@ namespace AppServices.DocumentProcessors
                         }
 
                         return line;
-                    });
+                    })
+                .ToList();
 
             // Transforma el titulo de la tabla en un header 1
-            var titleLines = mdLines
-                .Take(2)
-                .Select(
-                    line =>
-                    {
-                        // Check if we found the table with a title
-                        if (!tableFound && Regex.IsMatch(line, titlePattern))
-                        {
-                            // Extract the title from the table (removing the '|')
-                            string title = line.Replace("|", string.Empty)
-                                .Trim();
+            if (mdLines.First().StartsWith("|  |"))
+            {
+                int endTableIndex = mdLines.FindIndex(
+                    line => line.Contains("| --- |"));
 
-                            tableFound = true;
+                StringBuilder titleBuilder = new();
+                titleBuilder.Append("# ");
 
-                            return $"# {title}";
-                        }
-                        // Skip the next line if the table was found and contains the separator
-                        else if (tableFound && line.Contains("| --- |"))
+                mdLines.Take(endTableIndex)
+                    .ToList()
+                    .ForEach(
+                        line =>
                         {
-                            tableFound = false;  // Reset after skipping
-                            return null;
-                        }
-                        else
-                        {
-                            return line;
-                        }
-                    })
-                .Where(line => line is not null);
+                            titleBuilder.Append(
+                                line.Replace("|", string.Empty).Trim());
+                        });
+
+                mdLines.RemoveRange(1, endTableIndex);
+
+                mdLines[0] = titleBuilder.ToString()
+                    .Replace("\r\n", string.Empty)
+                    .Replace("\t", string.Empty)
+                    .Trim();
+            }
+
+            // Elimina pie de pagina de contacto
+            int footerIndex = mdLines.FindIndex(
+                line => line.Contains("|  | CAPATAZ en YouTube | |"));
+
+            if (footerIndex != -1)
+            {
+                mdLines.RemoveRange(footerIndex, mdLines.Count - footerIndex);
+            }
 
             StringBuilder stringBuilder = new();
-            stringBuilder.AppendJoin("\r\n", titleLines);
-            stringBuilder.AppendJoin("\r\n", mdLines.Skip(2));
+            stringBuilder.AppendJoin("\r\n", mdLines);
 
             return stringBuilder.ToString();
         }
@@ -147,20 +153,6 @@ namespace AppServices.DocumentProcessors
         {
             // Parse the markdown using Markdig
             var document = Markdown.Parse(markdown);
-
-            // Elimina el pie de pagina
-            var thematicBreak = document.FirstOrDefault(
-                x => x is ThematicBreakBlock);
-
-            if (thematicBreak is not null)
-            {
-                int thematicBreakIndex = document.IndexOf(thematicBreak);
-
-                // Remove all items after thematicBreak
-                document.Skip(thematicBreakIndex)
-                    .ToList()
-                    .ForEach(x => document.Remove(x));
-            }
 
             List<string> chunks = [];
             List<string> currentChunkHeaders = [];
@@ -279,7 +271,7 @@ namespace AppServices.DocumentProcessors
                     string text = GetNodeText(inlineChild);
                     string trimmedText = text.Trim();
 
-                    // Si es tabla agregar new line en vez de espacio
+                    // Si es fila de tabla agregar new line en vez de espacio
                     if (trimmedText.Length > 1 &&
                         trimmedText.StartsWith('|') &&
                         trimmedText.EndsWith('|'))
