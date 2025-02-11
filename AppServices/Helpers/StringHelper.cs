@@ -32,11 +32,13 @@ namespace AppServices.Helpers
 
         internal static string EliminarNewLinesInnecesarias(this string value)
         {
-            Regex regex = NewLinesInnecesariosRegex();
-            return regex.Replace(value, Environment.NewLine);
+            Regex regex = NewLinesInnecesariasRegex();
+            return regex.Replace(
+                value,
+                Environment.NewLine + Environment.NewLine);
         }
 
         [GeneratedRegex("(\r?\n){3,}")]
-        private static partial Regex NewLinesInnecesariosRegex();
+        private static partial Regex NewLinesInnecesariasRegex();
     }
 }

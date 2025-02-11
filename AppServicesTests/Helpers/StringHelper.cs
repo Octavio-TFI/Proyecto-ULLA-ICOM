@@ -40,5 +40,22 @@ namespace AppServices.Helpers.Tests
             // Assert
             Assert.That(result, Is.EqualTo(expected));
         }
+
+        [Test]
+        [TestCase("line1\nline2\nline3", "line1\nline2\nline3")]
+        [TestCase("line1\n\nline2\n\n\nline3", "line1\n\nline2\r\n\r\nline3")]
+        [TestCase("\n\nline1\n\n", "\n\nline1\n\n")]
+        [TestCase("no new lines", "no new lines")]
+        [TestCase("", "")]
+        public void EliminarNewLinesInnecesariasTest(
+            string value,
+            string expected)
+        {
+            // Act
+            string result = value.EliminarNewLinesInnecesarias();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expected));
+        }
     }
 }

@@ -169,6 +169,15 @@ namespace AppServices.DocumentProcessors
                         bl.Remove();
                     });
 
+            // Elimina los tematic breaks
+            document.Descendants<ThematicBreakBlock>()
+                .ToList()
+                .ForEach(
+                    tb =>
+                    {
+                        document.Remove(tb);
+                    });
+
             List<string> chunks = [];
             List<string> currentChunkHeaders = [];
             StringBuilder currentChunkText = new();
@@ -213,7 +222,7 @@ namespace AppServices.DocumentProcessors
                     // Add context (all headings in the stack) to the new chunk
                     foreach (var header in headingStack.Reverse())
                     {
-                        currentChunkHeaders.Add($"{header}");
+                        currentChunkHeaders.Add(header);
                     }
                 }
                 else
@@ -311,10 +320,12 @@ namespace AppServices.DocumentProcessors
             var chunk = new StringBuilder();
             chunk.AppendJoin("\r\n", currentChunkHeaders);
 
-            if (currentChunkText.Length > 0)
+            var currentChunkTextString = currentChunkText.ToString().Trim();
+
+            if (currentChunkTextString.Length > 0)
             {
                 chunk.AppendLine();
-                chunk.Append(currentChunkText.ToString().Trim());
+                chunk.Append(currentChunkTextString);
             }
             else
             {
