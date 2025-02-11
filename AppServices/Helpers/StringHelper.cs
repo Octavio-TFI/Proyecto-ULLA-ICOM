@@ -29,5 +29,14 @@ namespace AppServices.Helpers
 
         [GeneratedRegex("[ ]{2,}")]
         private static partial Regex EspaciosInnecesariosRegex();
+
+        internal static string EliminarNewLinesInnecesarias(this string value)
+        {
+            Regex regex = NewLinesInnecesariosRegex();
+            return regex.Replace(value, Environment.NewLine);
+        }
+
+        [GeneratedRegex("(\r?\n){3,}")]
+        private static partial Regex NewLinesInnecesariosRegex();
     }
 }

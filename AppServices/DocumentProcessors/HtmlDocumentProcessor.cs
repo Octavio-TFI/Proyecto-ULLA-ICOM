@@ -5,6 +5,8 @@ using Domain.Entities;
 using HtmlAgilityPack;
 using Markdig;
 using Markdig.Extensions.CustomContainers;
+using Markdig.Extensions.Tables;
+using Markdig.Renderers;
 using Markdig.Renderers.Normalize;
 using Markdig.Renderers.Roundtrip;
 using Markdig.Syntax;
@@ -14,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -137,7 +140,34 @@ namespace AppServices.DocumentProcessors
         public static List<string> ChunkMarkdown(string markdown)
         {
             // Parse the markdown using Markdig
-            var document = Markdown.Parse(markdown);
+            var document = Markdown.Parse(markdown, trackTrivia: true);
+
+            // Elimina los saltos de linea que no son parte de una tabla
+            // Asi se evitan parrafos con saltos de linea en medio
+            document.Where(x => x is LeafBlock)
+                .Cast<LeafBlock>()
+                .SelectMany(x => x.Inline?.Descendants<LineBreakInline>() ?? [])
+                .ToList()
+                .ForEach(
+                    bl =>
+                    {
+                        var parent = bl.Parent;
+
+                        if (bl.NextSibling is LiteralInline sibiling)
+                        {
+                            string text = sibiling.Content.ToString();
+
+                            // Si es new line de una tabla, no lo elimina
+                            if (text.StartsWith('|') && text.EndsWith('|'))
+                            {
+                                return;
+                            }
+                        }
+
+                        bl.ReplaceBy(new LiteralInline(" "));
+
+                        bl.Remove();
+                    });
 
             List<string> chunks = [];
             List<string> currentChunkHeaders = [];
@@ -217,74 +247,13 @@ namespace AppServices.DocumentProcessors
         /// <returns>Texto del nodo</returns>
         static string GetNodeText(MarkdownObject node)
         {
-            var content = new StringBuilder();
+            var writer = new StringWriter();
 
-            if (node is ParagraphBlock paragraph)
-            {
-                if (paragraph.Inline is not null)
-                {
-                    content.Append(GetNodeText(paragraph.Inline));
+            var renderer = new NormalizeRenderer(writer);
 
-                    content.AppendLine();
-                }
-            }
-            else if (node is ListBlock listBlock)
-            {
-                int i = 1;
+            renderer.Write(node);
 
-                foreach (var listItem in listBlock)
-                {
-                    if (listItem is ListItemBlock listItemBlock)
-                    {
-                        foreach (var subNode in listItemBlock)
-                        {
-                            string subNodeText = GetNodeText(subNode);
-
-                            content.Append($"{i}. {subNodeText}");
-
-                            i++;
-                        }
-                    }
-                }
-
-                content.AppendLine();
-            }
-            else if (node is ContainerInline containerInline)
-            {
-                foreach (var inlineChild in containerInline)
-                {
-                    string text = GetNodeText(inlineChild);
-                    string trimmedText = text.Trim();
-
-                    // Si es fila de tabla agregar new line en vez de espacio
-                    if (trimmedText.Length > 1 &&
-                        trimmedText.StartsWith('|') &&
-                        trimmedText.EndsWith('|'))
-                    {
-                        content.Append(trimmedText);
-                        content.AppendLine();
-                    }
-                    else
-                    {
-                        content.Append(text);
-                    }
-                }
-            }
-            else if (node is LiteralInline literal)
-            {
-                var text = literal.Content.Text
-                    .AsSpan(literal.Content.Start, literal.Content.Length)
-                    .Trim();
-
-                content.Append(text);
-                content.Append(' ');
-            }
-            else if (node is CodeBlock codeBlock)
-            {
-                content.AppendLine(codeBlock.Lines.ToString());
-            }
-
-            return content.ToString();
+            return writer.ToString().Replace("\t\t", "\t");
         }
 
         /// <summary>
@@ -294,23 +263,11 @@ namespace AppServices.DocumentProcessors
         /// <returns>Texto del encabezado</returns>
         static string GetHeadingText(HeadingBlock heading)
         {
-            StringBuilder headingText = new();
+            var writer = new StringWriter();
 
-            if (heading.Inline is null)
-            {
-                return string.Empty;
-            }
+            new NormalizeRenderer(writer).Render(heading);
 
-            foreach (var inline in heading.Inline)
-            {
-                headingText.Append(GetNodeText(inline));
-            }
-
-            return new StringBuilder()
-                .Append('#', heading.Level)
-                .Append(' ')
-                .Append(headingText.ToString().Trim())
-                .ToString();
+            return writer.ToString();
         }
 
         /// <summary>
@@ -364,7 +321,11 @@ namespace AppServices.DocumentProcessors
                 return null;
             }
 
-            return chunk.ToString().Trim().EliminarEspaciosInnecesarios();
+            return chunk.ToString()
+                .Trim()
+                .Replace("\t", string.Empty)
+                .EliminarEspaciosInnecesarios()
+                .EliminarNewLinesInnecesarias();
         }
     }
 }
