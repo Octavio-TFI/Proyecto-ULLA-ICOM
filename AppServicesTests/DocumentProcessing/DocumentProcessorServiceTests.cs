@@ -17,6 +17,7 @@ namespace AppServices.DocumentProcessing.Tests
         {
             // Arrange
             string[] files = ["file1", "file2", "file3"];
+            byte[][] bytes = [new byte[1], new byte[2], new byte[3]];
             List<Document> documentsFile1 = [ new Document
             {
                 Filename = "file1",
@@ -40,6 +41,7 @@ namespace AppServices.DocumentProcessing.Tests
             var pdfProcessor = new Mock<IDocumentProcessor>();
             var txtProcessor = new Mock<IDocumentProcessor>();
             var pathManager = new Mock<IPathManager>();
+            var fileManager = new Mock<IFileManager>();
             var logger = new Mock<ILogger<DocumentProcessorService>>();
             var documentRepository = new Mock<IDocumentRepository>();
             var unitOfWork = new Mock<IUnitOfWork>();
@@ -53,9 +55,14 @@ namespace AppServices.DocumentProcessing.Tests
             pathManager.Setup(x => x.GetExtension("file1")).Returns("pdf");
             pathManager.Setup(x => x.GetExtension("file2")).Returns("txt");
 
-            pdfProcessor.Setup(x => x.ProcessAsync("file1"))
+            fileManager.Setup(x => x.ReadAllBytesAsync("file1"))
+                .ReturnsAsync(bytes[0]);
+            fileManager.Setup(x => x.ReadAllBytesAsync("file2"))
+                .ReturnsAsync(bytes[1]);
+
+            pdfProcessor.Setup(x => x.ProcessAsync("file1", bytes[0]))
                 .ReturnsAsync(documentsFile1);
-            txtProcessor.Setup(x => x.ProcessAsync("file2"))
+            txtProcessor.Setup(x => x.ProcessAsync("file2", bytes[1]))
                 .ReturnsAsync(documentsFile2);
 
             services.AddKeyedSingleton("pdf", pdfProcessor.Object);
@@ -67,6 +74,7 @@ namespace AppServices.DocumentProcessing.Tests
                 services.BuildServiceProvider(),
                 directoryManager.Object,
                 pathManager.Object,
+                fileManager.Object,
                 logger.Object);
 
             // Act

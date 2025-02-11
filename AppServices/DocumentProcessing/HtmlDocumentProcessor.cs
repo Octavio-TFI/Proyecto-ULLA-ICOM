@@ -27,22 +27,20 @@ using Ude;
 
 namespace AppServices.DocumentProcessing
 {
-    internal class HtmlDocumentProcessor(
-        IFileManager _fileManager,
-        IDocumentFactory _documentFactory)
+    internal class HtmlDocumentProcessor(IDocumentFactory _documentFactory)
         : IDocumentProcessor
     {
-        public async Task<List<Document>> ProcessAsync(string path)
+        public async Task<List<Document>> ProcessAsync(
+            string path,
+            byte[] documentData)
         {
-            var bytes = await _fileManager.ReadAllBytesAsync(path);
-
             var charsetDetector = new CharsetDetector();
-            charsetDetector.Feed(bytes, 0, bytes.Length);
+            charsetDetector.Feed(documentData, 0, documentData.Length);
             charsetDetector.DataEnd();
 
             string html = Encoding
                 .GetEncoding(charsetDetector.Charset)
-                .GetString(bytes)
+                .GetString(documentData)
                 .Replace("&nbsp;", string.Empty);
 
             var mdConverterConfig = new Config

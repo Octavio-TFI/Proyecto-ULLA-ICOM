@@ -18,6 +18,7 @@ namespace AppServices.DocumentProcessing
         IServiceProvider _services,
         IDirectoryManager _directoryManager,
         IPathManager _pathManager,
+        IFileManager _fileManager,
         ILogger<DocumentProcessorService> _logger)
         : BackgroundService
     {
@@ -53,9 +54,12 @@ namespace AppServices.DocumentProcessing
                     string extension = _pathManager.GetExtension(documentPath)
                         .ToLower();
 
+                    byte[] documentData = await _fileManager.ReadAllBytesAsync(
+                        documentPath);
+
                     var documents = await scopeServices
                         .GetRequiredKeyedService<IDocumentProcessor>(extension)
-                        .ProcessAsync(documentPath);
+                        .ProcessAsync(documentPath, documentData);
 
                     await documentRepository.InsertRangeAsync(documents);
                     await unitOfWork.SaveChangesAsync();
