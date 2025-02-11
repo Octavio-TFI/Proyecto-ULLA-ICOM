@@ -31,10 +31,10 @@ namespace AppServices
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             services.AddHostedService<DocumentProcessorService>();
-            services.AddKeyedScoped<IDocumentProcessor, HtmlDocumentProcessor>(
-                ".htm");
-            services.AddKeyedScoped<IDocumentProcessor, HtmlDocumentProcessor>(
-                ".html");
+            services.AddKeyedScoped<IDocumentProcessor, HtmlProcessor>(".htm");
+            services.AddKeyedScoped<IDocumentProcessor, HtmlProcessor>(".html");
+            services.AddKeyedScoped<IDocumentProcessor, MarkdownProcessor>(
+                ".md");
             services.AddSingleton<IDocumentFactory, DocumentFactory>();
 
             services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
