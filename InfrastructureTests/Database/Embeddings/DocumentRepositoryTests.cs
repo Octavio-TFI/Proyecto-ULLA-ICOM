@@ -62,8 +62,6 @@ namespace Infrastructure.Database.Embeddings.Tests
                 },
             };
 
-            documentos[1].Parent = documentos[0];
-
             var context = DatabaseTestsHelper.CreateInMemoryEmbeddingContext();
             await context.Documents.AddRangeAsync(documentos);
             await context.SaveChangesAsync();
@@ -78,11 +76,10 @@ namespace Infrastructure.Database.Embeddings.Tests
             Assert.Multiple(
                 () =>
                 {
-                    Assert.That(result, Has.Count.EqualTo(4));
-                    Assert.That(result[0].Childs, Is.Not.Empty);
+                    Assert.That(result, Has.Count.EqualTo(5));
 
                     Assert.That(result, Has.Member(documentos[0]));
-                    Assert.That(result, Has.No.Member(documentos[1]));
+                    Assert.That(result, Has.Member(documentos[1]));
                     Assert.That(result, Has.Member(documentos[2]));
                     Assert.That(result, Has.No.Member(documentos[3]));
                     Assert.That(result, Has.No.Member(documentos[4]));

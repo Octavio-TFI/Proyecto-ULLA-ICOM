@@ -29,10 +29,7 @@ namespace AppServices.Factories
                 Filename = filename,
                 Texto = text,
                 Embedding = embedding.ToArray(),
-                Parent = parentDocument
             };
-
-            parentDocument?.Childs.Add(document);
 
             return document;
         }

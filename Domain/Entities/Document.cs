@@ -15,24 +15,9 @@ namespace Domain.Entities
 
         public required float[] Embedding { get; set; }
 
-        public Document? Parent { get; set; }
-
-        public ICollection<Document> Childs { get; set; } = [];
-
         public override string ToString()
         {
-            var stringBuilder = new StringBuilder();
-
-            stringBuilder.Append(Texto);
-
-            if (Parent is null)
-            {
-                stringBuilder.AppendLine();
-            }
-
-            stringBuilder.AppendJoin("\r\n", Childs);
-
-            return stringBuilder.ToString();
+            return Texto;
         }
     }
 }

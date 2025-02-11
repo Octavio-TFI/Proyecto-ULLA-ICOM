@@ -18,31 +18,14 @@ namespace Infrastructure.Database.Embeddings
             ReadOnlyMemory<float> embedding)
         {
             var documents = await _context.Documents
-                .Include(d => d.Parent)
                 .OrderBy(
                     d => _context.CosineSimilarity(
                         d.Embedding,
                         embedding.ToArray()))
-                .Select(d => GetTopParent(d))
                 .Take(5)
                 .ToListAsync();
 
-            documents = documents.Distinct().ToList();
-
-            documents.ForEach(
-                d => _context.Entry(d).Collection(d => d.Childs).Load());
-
             return documents;
-        }
-
-        static Document GetTopParent(Document document)
-        {
-            if (document.Parent is null)
-            {
-                return document;
-            }
-
-            return GetTopParent(document.Parent);
         }
 
         public Task<List<string>> GetAllFilenamesAsync()

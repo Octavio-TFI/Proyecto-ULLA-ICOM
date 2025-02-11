@@ -44,9 +44,6 @@ namespace AppServices.Factories.Tests
             Assert.That(filename, Is.EqualTo(result.Filename));
             Assert.That(text, Is.EqualTo(result.Texto));
             Assert.That(embedding, Is.EqualTo(result.Embedding));
-            Assert.That(result.Childs, Is.Empty);
-            Assert.That(parent, Is.EqualTo(result.Parent));
-            Assert.That(parent.Childs, Has.Member(result));
         }
 
         [Test]
@@ -78,8 +75,6 @@ namespace AppServices.Factories.Tests
             Assert.That(filename, Is.EqualTo(result.Filename));
             Assert.That(text, Is.EqualTo(result.Texto));
             Assert.That(embedding, Is.EqualTo(result.Embedding));
-            Assert.That(result.Parent, Is.Null);
-            Assert.That(result.Childs, Is.Empty);
         }
     }
 }
