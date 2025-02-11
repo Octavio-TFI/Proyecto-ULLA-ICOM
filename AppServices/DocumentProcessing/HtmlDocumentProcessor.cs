@@ -25,7 +25,7 @@ using System.Web;
 using System.Xml.XPath;
 using Ude;
 
-namespace AppServices.DocumentProcessors
+namespace AppServices.DocumentProcessing
 {
     internal class HtmlDocumentProcessor(
         IFileManager _fileManager,
@@ -45,18 +45,18 @@ namespace AppServices.DocumentProcessors
                 .GetString(bytes)
                 .Replace("&nbsp;", string.Empty);
 
-            var mdConverterConfig = new ReverseMarkdown.Config
+            var mdConverterConfig = new Config
             {
                 CleanupUnnecessarySpaces = true,
                 RemoveComments = true,
-                UnknownTags = ReverseMarkdown.Config.UnknownTagsOption.Bypass,
+                UnknownTags = Config.UnknownTagsOption.Bypass,
                 SuppressDivNewlines = true,
                 SmartHrefHandling = true,
                 WhitelistUriSchemes = ["/", "../"],
                 TableHeaderColumnSpanHandling = false,
             };
 
-            var converter = new ReverseMarkdown.Converter(mdConverterConfig);
+            var converter = new Converter(mdConverterConfig);
             string md = converter.Convert(html);
 
             string cleanMd = CleanMarkdown(md);

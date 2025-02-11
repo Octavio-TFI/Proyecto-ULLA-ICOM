@@ -1,5 +1,5 @@
 ﻿using AppServices.Abstractions;
-using AppServices.DocumentProcessors;
+using AppServices.DocumentProcessing;
 using AppServices.Factories;
 using AppServices.KernelPlugins;
 using AppServices.Ports;
@@ -31,8 +31,6 @@ namespace AppServices
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             services.AddHostedService<DocumentProcessorService>();
-            services.AddKeyedScoped<IDocumentProcessor, ChmDocumentProcessor>(
-                ".chm");
             services.AddKeyedScoped<IDocumentProcessor, HtmlDocumentProcessor>(
                 ".htm");
             services.AddKeyedScoped<IDocumentProcessor, HtmlDocumentProcessor>(

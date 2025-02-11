@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using AppServices.DocumentProcessing;
+using Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.Tests
+namespace AppServices.DocumentProcessing.Tests
 {
     internal class DocumentProcessorServiceTests
     {
