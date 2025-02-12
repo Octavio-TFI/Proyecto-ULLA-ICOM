@@ -29,6 +29,7 @@ using Ude;
 namespace AppServices.DocumentProcessing
 {
     internal class HtmlProcessor(
+        Func<ICharsetDetector> charsetDetectorFactory,
         [FromKeyedServices(".md")]IDocumentProcessor _markdowProcessor)
         : IDocumentProcessor
     {
@@ -36,7 +37,7 @@ namespace AppServices.DocumentProcessing
             string path,
             byte[] documentData)
         {
-            var charsetDetector = new CharsetDetector();
+            var charsetDetector = charsetDetectorFactory.Invoke();
             charsetDetector.Feed(documentData, 0, documentData.Length);
             charsetDetector.DataEnd();
 

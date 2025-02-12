@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Ude;
 
 namespace AppServices
 {
@@ -27,6 +28,9 @@ namespace AppServices
         public static IServiceCollection AddAppServices(
             this IServiceCollection services)
         {
+            services.AddSingleton<Func<ICharsetDetector>>(
+                x => () => new CharsetDetector());
+
             // Register the code pages encoding provider to support Windows-1252 and other encodings
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
