@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Database.Embeddings.Migrations
 {
     [DbContext(typeof(EmbeddingContext))]
-    [Migration("20241230202143_InitialCreate")]
+    [Migration("20250211235358_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -57,20 +57,19 @@ namespace Infrastructure.Database.Embeddings.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("DocumentId")
-                        .HasColumnType("INTEGER");
-
                     b.PrimitiveCollection<string>("Embedding")
                         .IsRequired()
                         .HasColumnType("float[768]");
+
+                    b.Property<string>("Filename")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Texto")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DocumentId");
 
                     b.ToTable("Documents");
                 });
@@ -101,18 +100,6 @@ namespace Infrastructure.Database.Embeddings.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OutboxEvents");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Document", b =>
-                {
-                    b.HasOne("Domain.Entities.Document", null)
-                        .WithMany("Childs")
-                        .HasForeignKey("DocumentId");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Document", b =>
-                {
-                    b.Navigation("Childs");
                 });
 #pragma warning restore 612, 618
         }

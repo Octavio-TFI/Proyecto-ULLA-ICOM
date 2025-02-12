@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Infrastructure.Database.Embeddings.Migrations
+namespace Infrastructure.Migrations
 {
     [DbContext(typeof(EmbeddingContext))]
     partial class EmbeddingContextModelSnapshot : ModelSnapshot
@@ -62,16 +62,11 @@ namespace Infrastructure.Database.Embeddings.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Texto")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ParentId");
 
                     b.ToTable("Documents");
                 });
@@ -102,20 +97,6 @@ namespace Infrastructure.Database.Embeddings.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OutboxEvents");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Document", b =>
-                {
-                    b.HasOne("Domain.Entities.Document", "Parent")
-                        .WithMany("Childs")
-                        .HasForeignKey("ParentId");
-
-                    b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Document", b =>
-                {
-                    b.Navigation("Childs");
                 });
 #pragma warning restore 612, 618
         }

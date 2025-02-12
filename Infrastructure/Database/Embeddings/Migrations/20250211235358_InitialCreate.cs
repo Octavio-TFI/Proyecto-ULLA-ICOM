@@ -34,18 +34,13 @@ namespace Infrastructure.Database.Embeddings.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Filename = table.Column<string>(type: "TEXT", nullable: false),
                     Texto = table.Column<string>(type: "TEXT", nullable: false),
-                    Embedding = table.Column<string>(type: "float[768]", nullable: false),
-                    DocumentId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Embedding = table.Column<string>(type: "float[768]", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Documents", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Documents_Documents_DocumentId",
-                        column: x => x.DocumentId,
-                        principalTable: "Documents",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -64,11 +59,6 @@ namespace Infrastructure.Database.Embeddings.Migrations
                 {
                     table.PrimaryKey("PK_OutboxEvents", x => x.Id);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Documents_DocumentId",
-                table: "Documents",
-                column: "DocumentId");
         }
 
         /// <inheritdoc />
