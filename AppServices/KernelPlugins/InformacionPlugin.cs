@@ -44,8 +44,10 @@ BUSCANDO INFORMACION PARA QUERY:
 
             _logger.LogInformation(
                 @"
-SE ENCONTRARON {consultasCount} CONSULTAS PARA QUERY",
-                rankedConsultas.Count);
+SE ENCONTRARON {consultasCount} CONSULTAS PARA QUERY:
+{Query}",
+                rankedConsultas.Count,
+                pregunta);
 
             var documents = await _documentRepository
                 .GetDocumentosRelacionadosAsync(embeddingConsulta);
@@ -54,8 +56,10 @@ SE ENCONTRARON {consultasCount} CONSULTAS PARA QUERY",
 
             _logger.LogInformation(
                 @"
-SE ENCONTRARON {rankedDocuments} DOCUMENTOS PARA QUERY",
-                rankedDocuments.Count);
+SE ENCONTRARON {rankedDocuments} DOCUMENTOS PARA QUERY:
+{Query}",
+                rankedDocuments.Count,
+                pregunta);
 
             var stringBuilder = new StringBuilder();
 
