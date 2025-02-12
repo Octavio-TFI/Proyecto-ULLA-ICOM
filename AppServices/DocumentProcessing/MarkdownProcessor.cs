@@ -54,12 +54,27 @@ namespace AppServices.DocumentProcessing
                     {
                         var parent = bl.Parent;
 
-                        if (bl.NextSibling is LiteralInline sibiling)
+                        if (bl.NextSibling is LiteralInline nextSibling)
                         {
-                            string text = sibiling.Content.ToString();
+                            string nextSiblingText = nextSibling.Content
+                                .ToString();
 
                             // Si es new line de una tabla, no lo elimina
-                            if (text.StartsWith('|') && text.EndsWith('|'))
+                            if (nextSiblingText.StartsWith('|') &&
+                                nextSiblingText.EndsWith('|'))
+                            {
+                                return;
+                            }
+                        }
+
+                        if (bl.PreviousSibling is LiteralInline previousSibling)
+                        {
+                            string previousSiblingText = previousSibling.Content
+                                .ToString();
+
+                            // Si es new line de una tabla, no lo elimina
+                            if (previousSiblingText.StartsWith('|') &&
+                                previousSiblingText.EndsWith('|'))
                             {
                                 return;
                             }
