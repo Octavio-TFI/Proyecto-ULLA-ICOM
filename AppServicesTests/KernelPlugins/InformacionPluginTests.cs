@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel.Embeddings;
 using System;
 using System.Collections.Generic;
@@ -78,6 +79,7 @@ namespace AppServices.KernelPlugins.Tests
                 .AddSingleton(textEmbeddingGenerationService.Object);
 
             var consultasPlugin = new InformacionPlugin(
+                Mock.Of<ILogger<InformacionPlugin>>(),
                 kernelBuilder.Build(),
                 consultaRepository.Object,
                 documentRepository.Object,
