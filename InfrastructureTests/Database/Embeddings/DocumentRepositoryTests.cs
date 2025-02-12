@@ -62,6 +62,16 @@ namespace Infrastructure.Database.Embeddings.Tests
                 },
             };
 
+            documentos.AddRange(
+                Enumerable.Repeat(documentos.Last(), 20)
+                    .Select(
+                        x => new Document
+                            {
+                                Filename = x.Filename,
+                                Texto = x.Texto,
+                                Embedding = [24,4,5]
+                            }));
+
             var context = DatabaseTestsHelper.CreateInMemoryEmbeddingContext();
             await context.Documents.AddRangeAsync(documentos);
             await context.SaveChangesAsync();
@@ -76,13 +86,13 @@ namespace Infrastructure.Database.Embeddings.Tests
             Assert.Multiple(
                 () =>
                 {
-                    Assert.That(result, Has.Count.EqualTo(5));
+                    Assert.That(result, Has.Count.EqualTo(20));
 
                     Assert.That(result, Has.Member(documentos[0]));
                     Assert.That(result, Has.Member(documentos[1]));
                     Assert.That(result, Has.Member(documentos[2]));
                     Assert.That(result, Has.No.Member(documentos[3]));
-                    Assert.That(result, Has.No.Member(documentos[4]));
+                    Assert.That(result, Has.Member(documentos[4]));
                     Assert.That(result, Has.Member(documentos[5]));
                     Assert.That(result, Has.Member(documentos[6]));
                 });

@@ -22,7 +22,7 @@ namespace Infrastructure.Database.Embeddings
                     d => _context.CosineSimilarity(
                         d.Embedding,
                         embedding.ToArray()))
-                .Take(5)
+                .Take(20)
                 .ToListAsync();
 
             return documents;
