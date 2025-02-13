@@ -35,6 +35,7 @@ namespace AppServices
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             services.AddHostedService<DocumentProcessorService>();
+            services.AddKeyedScoped<IDocumentProcessor, PdfProcessor>(".pdf");
             services.AddKeyedScoped<IDocumentProcessor, HtmlProcessor>(".htm");
             services.AddKeyedScoped<IDocumentProcessor, HtmlProcessor>(".html");
             services.AddKeyedScoped<IDocumentProcessor, MarkdownProcessor>(
