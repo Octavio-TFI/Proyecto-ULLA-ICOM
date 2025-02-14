@@ -34,7 +34,7 @@ namespace Infrastructure.Database.Embeddings
 
             // modelBuilder.HasDefaultSchema("Embedding");
             modelBuilder.HasDbFunction(
-                typeof(EmbeddingContext).GetMethod(nameof(CosineSimilarity))!)
+                typeof(EmbeddingContext).GetMethod(nameof(CosineDistance))!)
                 .HasName("vec_distance_cosine");
 
             ConfigureDocumentModel(modelBuilder);
@@ -74,7 +74,7 @@ namespace Infrastructure.Database.Embeddings
                 .HasColumnType("float[768]");
         }
 
-        public double CosineSimilarity(float[] vector1, float[] vector2)
+        public double CosineDistance(float[] vector1, float[] vector2)
         {
             throw new NotSupportedException();
         }

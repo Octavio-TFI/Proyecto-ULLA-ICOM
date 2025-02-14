@@ -23,7 +23,7 @@ namespace Infrastructure.Database.Embeddings
                     x => new VectorSearchResult<Consulta>
                     {
                         Distance =
-                            _context.CosineSimilarity(
+                            _context.CosineDistance(
                                     x.EmbeddingTitulo,
                                     embeddingArray),
                         Entity = x
@@ -38,7 +38,7 @@ namespace Infrastructure.Database.Embeddings
                     x => new VectorSearchResult<Consulta>
                     {
                         Distance =
-                            _context.CosineSimilarity(
+                            _context.CosineDistance(
                                     x.EmbeddingDescripcion,
                                     embeddingArray),
                         Entity = x

@@ -17,17 +17,17 @@ namespace Infrastructure.Database.Embeddings
         public async Task<List<Document>> GetDocumentosRelacionadosAsync(
             ReadOnlyMemory<float> embedding)
         {
-            var chunks = await _context.DocumentChunks
+            var chunks = await _context.Documents
                 .OrderBy(
-                    p => _context.CosineSimilarity(
-                        p.Embedding,
-                        embedding.ToArray()))
-                .Take(20)
+                    d => d.Chunks
+                        .Min(
+                            c => _context.CosineDistance(
+                                    c.Embedding,
+                                    embedding.ToArray())))
+                .Take(15)
                 .ToListAsync();
 
-            return await _context.Documents
-                .Where(d => d.Chunks.Any(c => chunks.Contains(c)))
-                .ToListAsync();
+            return chunks;
         }
 
         public Task<List<string>> GetAllFilenamesAsync()

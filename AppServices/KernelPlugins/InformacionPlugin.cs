@@ -99,7 +99,7 @@ SE ENCONTRARON {rankedDocuments} DOCUMENTOS PARA QUERY:
 
             string info = stringBuilder.ToString();
 
-            _logger.LogDebug(
+            _logger.LogInformation(
                 @"
 INFORMACION PARA QUERY: {query}
 
