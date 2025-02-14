@@ -19,17 +19,23 @@ namespace AppServices.Factories
         public async Task<Document> CreateAsync(
             string filename,
             string text,
-            Document? parentDocument = null)
+            IList<string> textChunks)
         {
-            var embedding = await _emmbeddingGenerator.GenerateEmbeddingAsync(
-                text);
+            var document = new Document { Filename = filename, Texto = text, };
 
-            var document = new Document
+            var chunkEmbeddings = await _emmbeddingGenerator.GenerateEmbeddingsAsync(
+                textChunks.ToList());
+
+            for (int i = 0; i < textChunks.Count; i++)
             {
-                Filename = filename,
-                Texto = text,
-                Embedding = embedding.ToArray(),
-            };
+                var chunk = new DocumentChunk
+                {
+                    Texto = textChunks[i],
+                    Embedding = chunkEmbeddings[i].ToArray(),
+                };
+
+                document.Chunks.Add(chunk);
+            }
 
             return document;
         }

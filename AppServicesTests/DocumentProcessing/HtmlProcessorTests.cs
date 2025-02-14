@@ -53,12 +53,11 @@ namespace AppServices.DocumentProcessing.Tests
                 .ReturnsAsync(
                     (string mdPath, byte[] data) =>
                     {
-                        return [new Document()
+                        return new Document()
                         {
                             Filename = mdPath,
-                            Texto = Encoding.UTF8.GetString(data),
-                            Embedding = [1,2,3]
-                        }];
+                            Texto = Encoding.UTF8.GetString(data)
+                        };
                     });
 
             var htmlProcessor = new HtmlProcessor(
@@ -66,14 +65,12 @@ namespace AppServices.DocumentProcessing.Tests
                 markdownProcessor.Object);
 
             // Act
-            var result = await htmlProcessor.ProcessAsync(path, documentData);
+            var document = await htmlProcessor.ProcessAsync(path, documentData);
 
             // Assert
-            var firstDocument = result.First();
-
-            Assert.That(firstDocument.Filename, Is.EqualTo(path));
+            Assert.That(document.Filename, Is.EqualTo(path));
             Assert.That(
-                firstDocument.Texto,
+                document.Texto,
                 Is.EqualTo(
                     @"# Test table title
 
@@ -90,9 +87,6 @@ Test blockquote
     URL Test
     URL Test 2
 "));
-            Assert.That(
-                firstDocument.Embedding,
-                Is.EqualTo(new float[] { 1, 2, 3 }));
         }
     }
 }

@@ -30,7 +30,8 @@ namespace AppServices.KernelPlugins
             _logger.LogInformation(
                 @"
 BUSCANDO INFORMACION PARA QUERY:
-{Query}",
+{Query}
+",
                 pregunta);
 
             var embeddingConsulta = await _kernel
@@ -45,7 +46,8 @@ BUSCANDO INFORMACION PARA QUERY:
             _logger.LogInformation(
                 @"
 SE ENCONTRARON {consultasCount} CONSULTAS PARA QUERY:
-{Query}",
+{Query}
+",
                 rankedConsultas.Count,
                 pregunta);
 
@@ -57,36 +59,56 @@ SE ENCONTRARON {consultasCount} CONSULTAS PARA QUERY:
             _logger.LogInformation(
                 @"
 SE ENCONTRARON {rankedDocuments} DOCUMENTOS PARA QUERY:
-{Query}",
+{Query}
+",
                 rankedDocuments.Count,
                 pregunta);
 
             var stringBuilder = new StringBuilder();
 
+            stringBuilder.Append("[Documentación]").AppendLine();
+
             if (rankedDocuments.Count > 0)
             {
-                stringBuilder.Append("[Documentación]")
-                    .AppendLine()
+                stringBuilder
                     .AppendJoin(
                         "\r\n",
                         rankedDocuments.Select(d => d.ToString()));
             }
+            else
+            {
+                stringBuilder.AppendLine(
+                    "No se encontro documentación relacionada");
+            }
+
+            stringBuilder.AppendLine();
+            stringBuilder.Append("[Consultas Históricas]").AppendLine();
 
             if (rankedConsultas.Count > 0)
             {
-                if (stringBuilder.Length > 0)
-                {
-                    stringBuilder.AppendLine();
-                }
-
-                stringBuilder.Append("[Consultas Históricas]")
-                    .AppendLine()
+                stringBuilder
                     .AppendJoin(
                         "\r\n",
                         rankedConsultas.Select(c => c.ToString()));
             }
+            else
+            {
+                stringBuilder.AppendLine(
+                    "No se encontraron consultas históricas similares");
+            }
 
-            return stringBuilder.ToString();
+            string info = stringBuilder.ToString();
+
+            _logger.LogDebug(
+                @"
+INFORMACION PARA QUERY: {query}
+
+{info}
+",
+                pregunta,
+                info);
+
+            return info;
         }
     }
 }

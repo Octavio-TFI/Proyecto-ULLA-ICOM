@@ -2,6 +2,7 @@
 using AppServices.Factories;
 using AppServices.Helpers;
 using Domain.Entities;
+using iText.Forms.Xfdf;
 using Markdig;
 using Markdig.Renderers.Normalize;
 using Markdig.Syntax;
@@ -18,24 +19,13 @@ namespace AppServices.DocumentProcessing
     internal class MarkdownProcessor(IDocumentFactory _documentFactory)
         : IDocumentProcessor
     {
-        public async Task<List<Document>> ProcessAsync(
-            string path,
-            byte[] documentData)
+        public Task<Document> ProcessAsync(string path, byte[] documentData)
         {
             string md = Encoding.UTF8.GetString(documentData);
 
             var chunks = ChunkMarkdown(md);
 
-            List<Document> documents = [];
-
-            foreach (var chunk in chunks)
-            {
-                var document = await _documentFactory.CreateAsync(path, chunk);
-
-                documents.Add(document);
-            }
-
-            return documents;
+            return _documentFactory.CreateAsync(path, md, chunks);
         }
 
         static List<string> ChunkMarkdown(string markdown)

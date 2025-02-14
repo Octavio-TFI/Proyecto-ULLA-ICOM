@@ -57,13 +57,26 @@ Texto del Test 3
                     x => x.CreateAsync(
                         It.IsAny<string>(),
                         It.IsAny<string>(),
-                        It.IsAny<Document?>()))
+                        It.IsAny<IList<string>>()))
                 .ReturnsAsync(
-                    (string filename, string texto, Document _) => new Document
+                    (string filename, string texto, IEnumerable<string> chunks) =>
                     {
-                        Filename = filename,
-                        Texto = texto,
-                        Embedding = [1,2,3]
+                        var doc = new Document
+                        {
+                            Filename = filename,
+                            Texto = texto,
+                            Chunks = []
+                        };
+
+                        doc.Chunks = chunks.Select(
+                            c => new DocumentChunk
+                            {
+                                Texto = c,
+                                Embedding = [1,2,3]
+                            })
+                            .ToList();
+
+                        return doc;
                     });
 
             var processor = new MarkdownProcessor(documentFactory.Object);
@@ -72,25 +85,23 @@ Texto del Test 3
             var documents = await processor.ProcessAsync(path, documentData);
 
             // Assert
-            Assert.That(documents, Has.Count.EqualTo(4));
+            Assert.That(documents.Filename, Is.EqualTo("path"));
+            Assert.That(documents.Chunks, Has.Count.EqualTo(4));
             Assert.That(
-                documents,
-                Has.All.With.Matches<Document>(d => d.Filename == "path"));
-            Assert.That(
-                documents,
+                documents.Chunks,
                 Has.All.With
-                    .Matches<Document>(
+                    .Matches<DocumentChunk>(
                         d => d.Embedding.SequenceEqual([1, 2, 3])));
 
             Assert.That(
-                documents[0].Texto,
+                documents.Chunks.First().Texto,
                 Is.EqualTo(
                     @"# Test 1
 
 Texto del Test 1"));
 
             Assert.That(
-                documents[1].Texto,
+                documents.Chunks.Skip(1).First().Texto,
                 Is.EqualTo(
                     @"# Test 1
 
@@ -99,7 +110,7 @@ Texto del Test 1"));
 Texto del Test 2"));
 
             Assert.That(
-                documents[2].Texto,
+                documents.Chunks.Skip(2).First().Texto,
                 Is.EqualTo(
                     @"# Test 1
 
@@ -108,7 +119,7 @@ Texto del Test 2"));
 Texto del Test 3"));
 
             Assert.That(
-                documents[3].Texto,
+                documents.Chunks.Skip(3).First().Texto,
                 Is.EqualTo(
                     @"# Test 1
 

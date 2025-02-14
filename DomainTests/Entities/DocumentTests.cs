@@ -12,12 +12,7 @@ namespace Domain.Entities.Tests
         public void ToStringTest()
         {
             // Arrange
-            var document = new Document
-            {
-                Filename = "file",
-                Embedding = [1, 2, 3],
-                Texto = "Texto",
-            };
+            var document = new Document { Filename = "file", Texto = "Texto", };
 
             // Act
             var result = document.ToString();

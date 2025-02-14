@@ -10,27 +10,22 @@ namespace AppServices.Factories.Tests
     internal class DocumentFactoryTests
     {
         [Test]
-        public async Task CreateAsync_WithParent()
+        public async Task CreateAsyncTest()
         {
             // Arrange
-            var filename = "filename";
-            var text = "text";
-            var parent = new Document
-            {
-                Texto = "Parent",
-                Embedding = [4,5,6],
-                Filename = "Filename"
-            };
-            var embedding = new float[] { 1, 2, 3 };
+            var filename = "testfile";
+            var text = "sample text";
+            List<string> textChunks = ["sample1", "sample2"];
+            List<float[]> embeddings = [[1, 2, 3],[4, 5, 6],];
+
             var embeddingGenerator = new Mock<ITextEmbeddingGenerationService>();
 
             embeddingGenerator
                 .Setup(
-                    x => x.GenerateEmbeddingsAsync(
-                        It.Is<IList<string>>(x => x.Contains(text)),
-                        null,
-                        default))
-                .ReturnsAsync([new ReadOnlyMemory<float>(embedding)]);
+                    x => x.GenerateEmbeddingsAsync(textChunks, null, default))
+                .ReturnsAsync(
+                    [new ReadOnlyMemory<float>(embeddings[0]),
+                    new ReadOnlyMemory<float>(embeddings[1])]);
 
             var kernelBuilder = Kernel.CreateBuilder();
             kernelBuilder.Services.AddSingleton(embeddingGenerator.Object);
@@ -38,43 +33,28 @@ namespace AppServices.Factories.Tests
             var factory = new DocumentFactory(kernelBuilder.Build());
 
             // Act
-            var result = await factory.CreateAsync(filename, text, parent);
+            var result = await factory.CreateAsync(filename, text, textChunks);
 
             // Assert
-            Assert.That(filename, Is.EqualTo(result.Filename));
-            Assert.That(text, Is.EqualTo(result.Texto));
-            Assert.That(embedding, Is.EqualTo(result.Embedding));
-        }
-
-        [Test]
-        public async Task CreateAsync_WithoutParent()
-        {
-            // Arrange
-            var filename = "filename";
-            var text = "text";
-            var embedding = new float[] { 1, 2, 3 };
-            var embeddingGenerator = new Mock<ITextEmbeddingGenerationService>();
-
-            embeddingGenerator
-                .Setup(
-                    x => x.GenerateEmbeddingsAsync(
-                        It.Is<IList<string>>(x => x.Contains(text)),
-                        null,
-                        default))
-                .ReturnsAsync([new ReadOnlyMemory<float>(embedding)]);
-
-            var kernelBuilder = Kernel.CreateBuilder();
-            kernelBuilder.Services.AddSingleton(embeddingGenerator.Object);
-
-            var factory = new DocumentFactory(kernelBuilder.Build());
-
-            // Act
-            var result = await factory.CreateAsync(filename, text, null);
-
-            // Assert
-            Assert.That(filename, Is.EqualTo(result.Filename));
-            Assert.That(text, Is.EqualTo(result.Texto));
-            Assert.That(embedding, Is.EqualTo(result.Embedding));
+            Assert.That(result.Filename, Is.EqualTo(filename));
+            Assert.That(result.Texto, Is.EqualTo(text));
+            Assert.That(result.Chunks, Has.Count.EqualTo(2));
+            Assert.That(
+                result.Chunks,
+                Has.One.With.Matches<DocumentChunk>(c => c.Texto == "sample1"));
+            Assert.That(
+                result.Chunks,
+                Has.One.With.Matches<DocumentChunk>(c => c.Texto == "sample2"));
+            Assert.That(
+                result.Chunks,
+                Has.One.With
+                    .Matches<DocumentChunk>(
+                        c => c.Embedding.SequenceEqual(embeddings[0])));
+            Assert.That(
+                result.Chunks,
+                Has.One.With
+                    .Matches<DocumentChunk>(
+                        c => c.Embedding.SequenceEqual(embeddings[1])));
         }
     }
 }

@@ -35,8 +35,7 @@ namespace Infrastructure.Database.Embeddings.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Filename = table.Column<string>(type: "TEXT", nullable: false),
-                    Texto = table.Column<string>(type: "TEXT", nullable: false),
-                    Embedding = table.Column<string>(type: "float[768]", nullable: false)
+                    Texto = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,6 +58,38 @@ namespace Infrastructure.Database.Embeddings.Migrations
                 {
                     table.PrimaryKey("PK_OutboxEvents", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentChunks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Texto = table.Column<string>(type: "TEXT", nullable: false),
+                    Embedding = table.Column<string>(type: "TEXT", nullable: false),
+                    DocumentId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentChunks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DocumentChunks_Documents_DocumentId",
+                        column: x => x.DocumentId,
+                        principalTable: "Documents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DocumentChunks_DocumentId",
+                table: "DocumentChunks",
+                column: "DocumentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Documents_Filename",
+                table: "Documents",
+                column: "Filename",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -68,10 +99,13 @@ namespace Infrastructure.Database.Embeddings.Migrations
                 name: "Consultas");
 
             migrationBuilder.DropTable(
-                name: "Documents");
+                name: "DocumentChunks");
 
             migrationBuilder.DropTable(
                 name: "OutboxEvents");
+
+            migrationBuilder.DropTable(
+                name: "Documents");
         }
     }
 }

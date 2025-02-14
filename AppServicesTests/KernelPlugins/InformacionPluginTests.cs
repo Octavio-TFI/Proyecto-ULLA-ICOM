@@ -12,7 +12,7 @@ namespace AppServices.KernelPlugins.Tests
     internal class InformacionPluginTests
     {
         [Test]
-        public async Task BuscarConsultasAsyncTest()
+        public async Task BuscarInformacionAsyncTest()
         {
             // Arrange
             var textEmbeddingGenerationService
@@ -36,7 +36,6 @@ namespace AppServices.KernelPlugins.Tests
             {
                 Filename = "fileName",
                 Texto = "Documento",
-                Embedding = [7, 8, 9]
             };
 
             var consultas = new List<Consulta>

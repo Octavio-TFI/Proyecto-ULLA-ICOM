@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Infrastructure.Migrations
+namespace Infrastructure.Database.Embeddings.Migrations
 {
     [DbContext(typeof(EmbeddingContext))]
     partial class EmbeddingContextModelSnapshot : ModelSnapshot
@@ -54,10 +54,6 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.PrimitiveCollection<string>("Embedding")
-                        .IsRequired()
-                        .HasColumnType("float[768]");
-
                     b.Property<string>("Filename")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -68,7 +64,34 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Filename")
+                        .IsUnique();
+
                     b.ToTable("Documents");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DocumentChunk", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DocumentId")
+                        .HasColumnType("INTEGER");
+
+                    b.PrimitiveCollection<string>("Embedding")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Texto")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentId");
+
+                    b.ToTable("DocumentChunks");
                 });
 
             modelBuilder.Entity("Infrastructure.Outbox.OutboxEvent", b =>
@@ -97,6 +120,20 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OutboxEvents");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DocumentChunk", b =>
+                {
+                    b.HasOne("Domain.Entities.Document", null)
+                        .WithMany("Chunks")
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Document", b =>
+                {
+                    b.Navigation("Chunks");
                 });
 #pragma warning restore 612, 618
         }

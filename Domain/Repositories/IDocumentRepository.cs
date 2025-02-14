@@ -24,9 +24,9 @@ namespace Domain.Repositories
             ReadOnlyMemory<float> embedding);
 
         /// <summary>
-        /// Inserta una lista de documentos
+        /// Inserta un documento
         /// </summary>
-        /// <param name="documents">Documentos a insertar</param>
-        Task<List<Document>> InsertRangeAsync(List<Document> documents);
+        /// <param name="document">Documento a insertar</param>
+        Task<Document> InsertAsync(Document document);
     }
 }

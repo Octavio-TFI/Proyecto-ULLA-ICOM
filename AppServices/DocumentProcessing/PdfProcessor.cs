@@ -18,7 +18,7 @@ namespace AppServices.DocumentProcessing
         [FromKeyedServices(".md")] IDocumentProcessor _markdownProcessor)
         : IDocumentProcessor
     {
-        public async Task<List<Document>> ProcessAsync(
+        public async Task<Document> ProcessAsync(
             string path,
             byte[] documentData)
         {
@@ -39,6 +39,7 @@ namespace AppServices.DocumentProcessing
 
                 pdfStringBuilder.Append(text);
             }
+
             // TODO: Eliminar pie de pagina
             // TODO: Numeracion de imagenes a veces se toman como titulo
             // Para esto implementar un ITextExtractionStrategy para identificar los titulos con el formato del texto.
@@ -48,7 +49,7 @@ namespace AppServices.DocumentProcessing
                 path,
                 Encoding.UTF8.GetBytes(markdown));
 
-            return [];
+            return null!;
         }
 
         static string ConvertToMarkdown(string pdfText)

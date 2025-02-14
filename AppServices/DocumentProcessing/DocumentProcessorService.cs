@@ -57,11 +57,11 @@ namespace AppServices.DocumentProcessing
                     byte[] documentData = await _fileManager.ReadAllBytesAsync(
                         documentPath);
 
-                    var documents = await scopeServices
+                    var document = await scopeServices
                         .GetRequiredKeyedService<IDocumentProcessor>(extension)
                         .ProcessAsync(documentPath, documentData);
 
-                    await documentRepository.InsertRangeAsync(documents);
+                    await documentRepository.InsertAsync(document);
                     await unitOfWork.SaveChangesAsync();
                 }
                 catch (Exception ex)

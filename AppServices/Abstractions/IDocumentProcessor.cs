@@ -16,6 +16,6 @@ namespace AppServices.Abstractions
         /// <param name="path">Path del documento</param>
         /// <param name="documentData">Bytes del documento</param>
         /// <returns>Contenido del documento con embeddings generados</returns>
-        Task<List<Document>> ProcessAsync(string path, byte[] documentData);
+        Task<Document> ProcessAsync(string path, byte[] documentData);
     }
 }

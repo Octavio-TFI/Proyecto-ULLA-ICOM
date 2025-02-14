@@ -16,25 +16,18 @@ namespace AppServices.DocumentProcessing.Tests
         public async Task ExecuteAsyncTest()
         {
             // Arrange
-            string[] files = ["file1", "file2", "file3"];
+            string[] files = ["file1", "file2"];
             byte[][] bytes = [new byte[1], new byte[2], new byte[3]];
-            List<Document> documentsFile1 = [ new Document
+            Document document1 = new()
             {
                 Filename = "file1",
-                Texto = "TituloFile1",
-                Embedding = [1,2,3]
-            }, new Document
-            {
-                Filename = "file1",
-                Texto = "TextoFile1",
-                Embedding = [3,4,5]
-            }];
-            List<Document> documentsFile2 = [new Document()
+                Texto = "TituloFile1"
+            };
+            Document document2 = new()
             {
                 Filename = "file2",
-                Texto = "TextoFile2",
-                Embedding = [6,7,8]
-            }];
+                Texto = "TextoFile2"
+            };
 
             var services = new ServiceCollection();
             var directoryManager = new Mock<IDirectoryManager>();
@@ -50,7 +43,7 @@ namespace AppServices.DocumentProcessing.Tests
                 .Returns(files);
 
             documentRepository.Setup(x => x.GetAllFilenamesAsync())
-                .ReturnsAsync(["file3"]);
+                .ReturnsAsync(["file2"]);
 
             pathManager.Setup(x => x.GetExtension("file1")).Returns("pdf");
             pathManager.Setup(x => x.GetExtension("file2")).Returns("txt");
@@ -61,9 +54,9 @@ namespace AppServices.DocumentProcessing.Tests
                 .ReturnsAsync(bytes[1]);
 
             pdfProcessor.Setup(x => x.ProcessAsync("file1", bytes[0]))
-                .ReturnsAsync(documentsFile1);
+                .ReturnsAsync(document1);
             txtProcessor.Setup(x => x.ProcessAsync("file2", bytes[1]))
-                .ReturnsAsync(documentsFile2);
+                .ReturnsAsync(document2);
 
             services.AddKeyedSingleton("pdf", pdfProcessor.Object);
             services.AddKeyedSingleton("txt", txtProcessor.Object);
@@ -81,16 +74,12 @@ namespace AppServices.DocumentProcessing.Tests
             await documentProcessorService.StartAsync(CancellationToken.None);
 
             // Assert
-            pathManager.Verify(x => x.GetExtension("file3"), Times.Never);
-
+            documentRepository.Verify(x => x.InsertAsync(document1), Times.Once);
             documentRepository.Verify(
-                x => x.InsertRangeAsync(documentsFile1),
-                Times.Once);
-            documentRepository.Verify(
-                x => x.InsertRangeAsync(documentsFile2),
-                Times.Once);
+                x => x.InsertAsync(document2),
+                Times.Never);
 
-            unitOfWork.Verify(x => x.SaveChangesAsync(), Times.Exactly(2));
+            unitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once);
 
             await documentProcessorService.StopAsync(CancellationToken.None);
         }

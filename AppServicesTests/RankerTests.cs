@@ -25,12 +25,11 @@ namespace AppServices.Tests
             List<Document> datosRecuperados = [new()
             {
                 Filename = "fileName",
-                Texto = "0",
-                Embedding = [0]
+                Texto = "0"
             },
-            new() { Filename = "fileName", Texto = "1", Embedding = [1] },
-            new() { Filename = "fileName", Texto = "2", Embedding = [2] },
-            new() { Filename = "fileName", Texto = "3", Embedding = [3] }];
+            new() { Filename = "fileName", Texto = "1" },
+            new() { Filename = "fileName", Texto = "2" },
+            new() { Filename = "fileName", Texto = "3" }];
 
             var consulta = "consulta";
             int i = -1;

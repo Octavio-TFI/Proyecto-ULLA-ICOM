@@ -15,6 +15,8 @@ namespace Infrastructure.Database.Embeddings
     {
         public DbSet<Document> Documents { get; set; }
 
+        public DbSet<DocumentChunk> DocumentChunks { get; set; }
+
         public DbSet<Consulta> Consultas { get; set; }
 
         public EmbeddingContext() : base()
@@ -43,7 +45,18 @@ namespace Infrastructure.Database.Embeddings
         {
             modelBuilder.Entity<Document>().HasKey(e => e.Id);
 
+            modelBuilder.Entity<Document>().HasIndex(e => e.Filename).IsUnique();
+
             modelBuilder.Entity<Document>()
+                .HasMany(c => c.Chunks)
+                .WithOne()
+                .IsRequired();
+        }
+
+        static void ConfigureDocumentChunkModel(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DocumentChunk>().HasKey(e => e.Id);
+            modelBuilder.Entity<DocumentChunk>()
                 .Property(e => e.Embedding)
                 .HasColumnType("float[768]");
         }

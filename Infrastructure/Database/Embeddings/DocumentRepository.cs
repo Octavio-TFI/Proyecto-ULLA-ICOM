@@ -14,15 +14,19 @@ namespace Infrastructure.Database.Embeddings
         : Repository<Document>(_context)
         , IDocumentRepository
     {
-        public Task<List<Document>> GetDocumentosRelacionadosAsync(
+        public async Task<List<Document>> GetDocumentosRelacionadosAsync(
             ReadOnlyMemory<float> embedding)
         {
-            return _context.Documents
+            var chunks = await _context.DocumentChunks
                 .OrderBy(
-                    d => _context.CosineSimilarity(
-                        d.Embedding,
+                    p => _context.CosineSimilarity(
+                        p.Embedding,
                         embedding.ToArray()))
                 .Take(20)
+                .ToListAsync();
+
+            return await _context.Documents
+                .Where(d => d.Chunks.Any(c => chunks.Contains(c)))
                 .ToListAsync();
         }
 

@@ -33,9 +33,7 @@ namespace AppServices.DocumentProcessing
         [FromKeyedServices(".md")]IDocumentProcessor _markdowProcessor)
         : IDocumentProcessor
     {
-        public Task<List<Document>> ProcessAsync(
-            string path,
-            byte[] documentData)
+        public Task<Document> ProcessAsync(string path, byte[] documentData)
         {
             var charsetDetector = charsetDetectorFactory.Invoke();
             charsetDetector.Feed(documentData, 0, documentData.Length);

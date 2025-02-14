@@ -13,7 +13,7 @@ namespace Domain.Entities
 
         public required string Texto { get; set; }
 
-        public required float[] Embedding { get; set; }
+        public ICollection<DocumentChunk> Chunks { get; set; } = [];
 
         public override string ToString()
         {

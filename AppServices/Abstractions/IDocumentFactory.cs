@@ -14,11 +14,11 @@ namespace AppServices.Abstractions
         /// </summary>
         /// <param name="filename">Nombre del archivo</param>
         /// <param name="text">Texto del documento</param>
-        /// <param name="parentDocument">Documento padre</param>
+        /// <param name="textChunks">Textos de los pedazos del documento</param>
         /// <returns>Documento</returns>
         Task<Document> CreateAsync(
             string filename,
             string text,
-            Document? parentDocument = null);
+            IList<string> textChunks);
     }
 }
