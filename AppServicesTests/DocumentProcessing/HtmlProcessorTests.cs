@@ -22,7 +22,7 @@ namespace AppServices.DocumentProcessing.Tests
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <p>§ Test item list</p>
 
-    <h2>Test h2</h1>
+    <h2>Test h2</h2>
 
     <blockquote>
         <p>Test blockquote</p>
@@ -30,6 +30,15 @@ namespace AppServices.DocumentProcessing.Tests
 
     <a href=""../a.htm"" >URL Test</a>
     <a href=""/a.htm"" >URL Test 2</a>
+
+    <h2>Ver también</h2>
+    <h2>Ver tambien</h2>
+    <h2>ver tambien</h2>
+    <h2>Vea también</h2>
+    <h2>Vea tambien</h2>
+    <h2>vea tambien</h2>
+
+    <p>Test ver tambien</p>
 
     <p>|  | CAPATAZ en YouTube | |</p>
     <p>|---|---|---|</p>

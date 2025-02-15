@@ -28,18 +28,6 @@ Texto del Test 3
 | Columna
 1 | Columna 2 |
 
-### Ver también
-
-### ver también
-
-### Ver tambien
-
-### Vea también
-
-### vea también
-
-### vea tambien
-
 ####    
 ";
 

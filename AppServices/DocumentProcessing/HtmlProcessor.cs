@@ -117,13 +117,33 @@ namespace AppServices.DocumentProcessing
                     .Trim();
             }
 
+            // Elimina pie de pagina ver tambien
+            int verTambienIndex = mdLines.FindIndex(
+                line =>
+                {
+                    string tmp = line.ToLower().EliminarAcentos().Trim();
+
+                    return tmp.StartsWith('#') &&
+                        (tmp.Contains("ver tambien") ||
+                                tmp.Contains("vea tambien"));
+                });
+
+            if (verTambienIndex != -1)
+            {
+                mdLines.RemoveRange(
+                    verTambienIndex,
+                    mdLines.Count - verTambienIndex);
+            }
+
             // Elimina pie de pagina de contacto
-            int footerIndex = mdLines.FindIndex(
+            int contactoIndex = mdLines.FindIndex(
                 line => line.Contains("|  | CAPATAZ en YouTube | |"));
 
-            if (footerIndex != -1)
+            if (contactoIndex != -1)
             {
-                mdLines.RemoveRange(footerIndex, mdLines.Count - footerIndex);
+                mdLines.RemoveRange(
+                    contactoIndex,
+                    mdLines.Count - contactoIndex);
             }
 
             StringBuilder stringBuilder = new();

@@ -21,7 +21,6 @@ namespace AppServices.DocumentProcessing
     {
         public Task<Document> ProcessAsync(string path, byte[] documentData)
         {
-            // TODO: Eliminar Ver tambien en el html processor
             string md = Encoding.UTF8.GetString(documentData);
 
             var chunks = ChunkMarkdown(md);
@@ -197,18 +196,6 @@ namespace AppServices.DocumentProcessing
             List<string> currentChunkHeaders,
             StringBuilder currentChunkText)
         {
-            if (currentChunkHeaders.Any(
-                h =>
-                {
-                    string header = h.ToLower().EliminarAcentos();
-
-                    return header.Contains("ver tambien") ||
-                        header.Contains("vea tambien");
-                }))
-            {
-                return null;
-            }
-
             // Elimina los headers vacios
             currentChunkHeaders = currentChunkHeaders.Select(
                 h =>
