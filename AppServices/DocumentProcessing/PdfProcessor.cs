@@ -31,8 +31,6 @@ namespace AppServices.DocumentProcessing
 
             var pdfStringBuilder = new StringBuilder();
 
-            List<string> posibleTitles = [];
-
             for (int i = 1; i <= pdf.GetNumberOfPages(); i++)
             {
                 var strategy = new PdfTextExtractionStrategy();
@@ -41,17 +39,12 @@ namespace AppServices.DocumentProcessing
                 var text = PdfTextExtractor.GetTextFromPage(page, strategy);
 
                 pdfStringBuilder.Append(text);
-                posibleTitles.AddRange(strategy.GetPosibleTitles());
             }
 
             // TODO: Eliminar pie de pagina
-            string markdown = ConvertToMarkdown(
-                pdfStringBuilder.ToString(),
-                posibleTitles);
-
             var documents = await _markdownProcessor.ProcessAsync(
                 path,
-                Encoding.UTF8.GetBytes(markdown));
+                Encoding.UTF8.GetBytes(pdfStringBuilder.ToString()));
 
             return null!;
         }
