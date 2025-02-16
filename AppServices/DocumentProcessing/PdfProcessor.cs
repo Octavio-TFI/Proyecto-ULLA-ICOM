@@ -31,19 +31,23 @@ namespace AppServices.DocumentProcessing
 
             var pdfStringBuilder = new StringBuilder();
 
+            List<string> posibleTitles = [];
+
             for (int i = 1; i <= pdf.GetNumberOfPages(); i++)
             {
+                var strategy = new PdfTextExtractionStrategy();
+
                 var page = pdf.GetPage(i);
-                var a = page.GetAnnotations();
-                var text = PdfTextExtractor.GetTextFromPage(page);
+                var text = PdfTextExtractor.GetTextFromPage(page, strategy);
 
                 pdfStringBuilder.Append(text);
+                posibleTitles.AddRange(strategy.GetPosibleTitles());
             }
 
             // TODO: Eliminar pie de pagina
-            // TODO: Numeracion de imagenes a veces se toman como titulo
-            // Para esto implementar un ITextExtractionStrategy para identificar los titulos con el formato del texto.
-            string markdown = ConvertToMarkdown(pdfStringBuilder.ToString());
+            string markdown = ConvertToMarkdown(
+                pdfStringBuilder.ToString(),
+                posibleTitles);
 
             var documents = await _markdownProcessor.ProcessAsync(
                 path,
@@ -52,7 +56,9 @@ namespace AppServices.DocumentProcessing
             return null!;
         }
 
-        static string ConvertToMarkdown(string pdfText)
+        static string ConvertToMarkdown(
+            string pdfText,
+            List<string> posibleTitles)
         {
             var lines = pdfText.Split(
                 "\n",
@@ -62,9 +68,12 @@ namespace AppServices.DocumentProcessing
             // Primera linea es el titulo
             var result = new StringBuilder();
 
+            // Se convierten titulos a titulos de md
             foreach (var line in lines)
             {
-                if (TitleRegex().IsMatch(line) && !IndexRegex().IsMatch(line))
+                if (TitleRegex().IsMatch(line) &&
+                    !IndexRegex().IsMatch(line) &&
+                    posibleTitles.Contains(line))
                 {
                     // Añade hashtags dependiendo de la cantidad de puntos
                     int puntos = line.Count(c => c == '.');
