@@ -57,19 +57,30 @@ namespace AppServices.DocumentProcessing
                 StringSplitOptions.TrimEntries |
                     StringSplitOptions.RemoveEmptyEntries);
 
-            // Primera linea es el titulo
             var result = new StringBuilder();
 
-            // Se convierten titulos a titulos de md
             for (int i = 0; i < lines.Length; i++)
             {
                 string line = lines[i];
 
-                if (result.Length == 0)
+                // Se convierte la primera linea en titulo
+                if (i == 0)
                 {
-                    result.AppendLine($"# {line}");
+                    line = $"# {line}";
                 }
 
+                // Se elimina indice
+                if (line == "Contenidos")
+                {
+                    continue;
+                }
+
+                if (line.Contains("..."))
+                {
+                    continue;
+                }
+
+                // Se elimina sección de contacto
                 if (line == "Contacto")
                 {
                     break;
