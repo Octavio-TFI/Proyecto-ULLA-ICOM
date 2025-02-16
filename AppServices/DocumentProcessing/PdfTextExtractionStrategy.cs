@@ -79,7 +79,8 @@ namespace AppServices.DocumentProcessing
                 }
                 // Si la linea actual tiene el mismo tamaño de fuente y fuente
                 // que la anterior, se agrega sin new lines
-                else
+                // Si la posicion no es mayor a 50 no es footer
+                else if (linePosition > 50)
                 {
                     resultantText.Append(lineText);
                 }

@@ -43,7 +43,6 @@ namespace AppServices.DocumentProcessing
 
             string md = SetDocumentTitle(pdfStringBuilder.ToString());
 
-            // TODO: Eliminar pie de pagina
             var documents = await _markdownProcessor.ProcessAsync(
                 path,
                 Encoding.UTF8.GetBytes(md));
@@ -55,18 +54,25 @@ namespace AppServices.DocumentProcessing
         {
             var lines = pdfText.Split(
                 "\n",
-                StringSplitOptions.RemoveEmptyEntries |
-                    StringSplitOptions.TrimEntries);
+                StringSplitOptions.TrimEntries |
+                    StringSplitOptions.RemoveEmptyEntries);
 
             // Primera linea es el titulo
             var result = new StringBuilder();
 
             // Se convierten titulos a titulos de md
-            foreach (var line in lines)
+            for (int i = 0; i < lines.Length; i++)
             {
+                string line = lines[i];
+
                 if (result.Length == 0)
                 {
                     result.AppendLine($"# {line}");
+                }
+
+                if (line == "Contacto")
+                {
+                    break;
                 }
 
                 result.AppendLine(line);

@@ -23,7 +23,6 @@ namespace AppServices.DocumentProcessing
         {
             string md = Encoding.UTF8.GetString(documentData);
 
-            // TODO: Texto sin titulo se pone adentro del primer chunk
             var chunks = ChunkMarkdown(md);
 
             return _documentFactory.CreateAsync(path, md, chunks);
