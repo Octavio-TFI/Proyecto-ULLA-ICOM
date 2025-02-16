@@ -52,6 +52,10 @@ namespace AppServices.DocumentProcessing
 
         static string CleanMd(string md)
         {
+            md = PaginaRegex().Replace(md, string.Empty);
+            md = UltimaActualizacionRegex().Replace(md, string.Empty);
+            md = UrlRegex().Replace(md, string.Empty);
+
             var lines = md.Split(
                 "\n",
                 StringSplitOptions.TrimEntries |
@@ -63,13 +67,7 @@ namespace AppServices.DocumentProcessing
             {
                 string line = lines[i];
 
-                // Se convierte la primera linea en titulo
-                if (i == 0)
-                {
-                    line = $"# {line}";
-                }
-
-                // Se elimina indice
+                // Elimina indice
                 if (line == "Contenidos")
                 {
                     continue;
@@ -80,10 +78,16 @@ namespace AppServices.DocumentProcessing
                     continue;
                 }
 
-                // Se elimina sección de contacto
+                // Elimina sección de contacto
                 if (line == "Contacto")
                 {
                     break;
+                }
+
+                // Se convierte la primera linea en titulo
+                if (result.Length == 0)
+                {
+                    line = $"# {line}";
                 }
 
                 result.AppendLine(line);
@@ -91,5 +95,15 @@ namespace AppServices.DocumentProcessing
 
             return result.ToString();
         }
+
+        [GeneratedRegex(@"Página\s+nº\s+(\d+)\s+de\s+(\d+)")]
+        private static partial Regex PaginaRegex();
+
+        [GeneratedRegex(
+            @"Última actualización \d{1,2}/\d{1,2}/(\d{2}(?:\d{2})?) \d{1,2}:\d{2}:\d{2}")]
+        private static partial Regex UltimaActualizacionRegex();
+
+        [GeneratedRegex(@"(?:www\.)?[a-zA-Z0-9-]+\.(com\.ar)")]
+        private static partial Regex UrlRegex();
     }
 }

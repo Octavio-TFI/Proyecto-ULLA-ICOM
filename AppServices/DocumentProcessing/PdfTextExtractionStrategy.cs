@@ -47,11 +47,11 @@ namespace AppServices.DocumentProcessing
             string font = textRenderInfo.GetFont().GetFontProgram().ToString();
 
             // Si la linea actual esta en otra posicion, es una linea nueva
-            if (currentLinePosition != linePosition)
+            if (linePosition != currentLinePosition)
             {
                 string lineText = currentLine.ToString();
 
-                // Si la linea actual tiene fuente distinta a la anterior o es un titulo
+                // Si la linea actual tiene fuente distinta a la anterior, es un titulo
                 if (fontSizeAdjusted != currentLineFontSize ||
                     font != currentLineFont ||
                     TitleRegex().IsMatch(lineText))
@@ -71,16 +71,15 @@ namespace AppServices.DocumentProcessing
 
                         resultantText.AppendLine(mdTitulo.Trim());
                     }
-                    // Si no es titulo se agrega el texto tal cuale en nueva linea
+                    // Si no es titulo se agrega el texto tal cual en nueva linea
                     else
                     {
-                        resultantText.AppendLine(lineText);
+                        resultantText.AppendLine(lineText.TrimStart());
                     }
                 }
                 // Si la linea actual tiene el mismo tamaño de fuente y fuente
-                // que la anterior, se agrega sin new lines
-                // Si la posicion no es mayor a 50 no es footer
-                else if (linePosition > 50)
+                // que la anterior son la misma
+                else
                 {
                     resultantText.Append(lineText);
                 }
