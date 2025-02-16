@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AppServices.DocumentProcessing
 {
-    internal partial class PdfTextExtractionStrategy()
+    internal partial class PdfToMdTextExtractionStrategy()
         : ITextExtractionStrategy
     {
         readonly StringBuilder resultantText = new();

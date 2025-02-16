@@ -33,7 +33,7 @@ namespace AppServices.DocumentProcessing
 
             for (int i = 1; i <= pdf.GetNumberOfPages(); i++)
             {
-                var strategy = new PdfTextExtractionStrategy();
+                var strategy = new PdfToMdTextExtractionStrategy();
 
                 var page = pdf.GetPage(i);
                 var text = PdfTextExtractor.GetTextFromPage(page, strategy);
@@ -41,7 +41,7 @@ namespace AppServices.DocumentProcessing
                 pdfStringBuilder.Append(text);
             }
 
-            string md = SetDocumentTitle(pdfStringBuilder.ToString());
+            string md = CleanMd(pdfStringBuilder.ToString());
 
             var documents = await _markdownProcessor.ProcessAsync(
                 path,
@@ -50,9 +50,9 @@ namespace AppServices.DocumentProcessing
             return null!;
         }
 
-        static string SetDocumentTitle(string pdfText)
+        static string CleanMd(string md)
         {
-            var lines = pdfText.Split(
+            var lines = md.Split(
                 "\n",
                 StringSplitOptions.TrimEntries |
                     StringSplitOptions.RemoveEmptyEntries);
