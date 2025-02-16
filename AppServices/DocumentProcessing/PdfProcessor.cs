@@ -41,17 +41,17 @@ namespace AppServices.DocumentProcessing
                 pdfStringBuilder.Append(text);
             }
 
+            string md = SetDocumentTitle(pdfStringBuilder.ToString());
+
             // TODO: Eliminar pie de pagina
             var documents = await _markdownProcessor.ProcessAsync(
                 path,
-                Encoding.UTF8.GetBytes(pdfStringBuilder.ToString()));
+                Encoding.UTF8.GetBytes(md));
 
             return null!;
         }
 
-        static string ConvertToMarkdown(
-            string pdfText,
-            List<string> posibleTitles)
+        static string SetDocumentTitle(string pdfText)
         {
             var lines = pdfText.Split(
                 "\n",
@@ -64,33 +64,15 @@ namespace AppServices.DocumentProcessing
             // Se convierten titulos a titulos de md
             foreach (var line in lines)
             {
-                if (TitleRegex().IsMatch(line) &&
-                    !IndexRegex().IsMatch(line) &&
-                    posibleTitles.Contains(line))
+                if (result.Length == 0)
                 {
-                    // Añade hashtags dependiendo de la cantidad de puntos
-                    int puntos = line.Count(c => c == '.');
-
-                    string mdTitulo = Enumerable.Range(0, puntos - 1)
-                        .Aggregate(
-                            $"# {TitleRegex().Replace(line, string.Empty)}",
-                            (acc, _) => $"#{acc}");
-
-                    result.AppendLine(mdTitulo);
+                    result.AppendLine($"# {line}");
                 }
-                else
-                {
-                    result.AppendLine(line);
-                }
+
+                result.AppendLine(line);
             }
 
             return result.ToString();
         }
-
-        [GeneratedRegex(@"^[1-9]\d*(\.\d+)*\.\s+")]
-        private static partial Regex TitleRegex();
-
-        [GeneratedRegex(@"\b\w+(\s*\.\s*)+\d+\b$")]
-        private static partial Regex IndexRegex();
     }
 }

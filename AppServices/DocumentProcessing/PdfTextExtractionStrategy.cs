@@ -51,6 +51,7 @@ namespace AppServices.DocumentProcessing
             {
                 string lineText = currentLine.ToString();
 
+                // Si la linea actual tiene fuente distinta a la anterior o es un titulo
                 if (fontSizeAdjusted != currentLineFontSize ||
                     font != currentLineFont ||
                     TitleRegex().IsMatch(lineText))
@@ -63,7 +64,7 @@ namespace AppServices.DocumentProcessing
                         // Se reemplaza por titulo de Markdown
                         int puntos = lineText.Count(c => c == '.');
 
-                        string mdTitulo = Enumerable.Range(0, puntos - 1)
+                        string mdTitulo = Enumerable.Range(0, puntos)
                             .Aggregate(
                                 $"# {TitleRegex().Replace(lineText, string.Empty)}",
                                 (acc, _) => $"#{acc}");
