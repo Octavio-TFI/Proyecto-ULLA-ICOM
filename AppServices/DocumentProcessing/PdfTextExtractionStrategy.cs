@@ -100,6 +100,28 @@ namespace AppServices.DocumentProcessing
 
         public string GetResultantText()
         {
+            if (currentLine.Length > 0)
+            {
+                string lineText = currentLine.ToString();
+
+                if (currentLineFontSize > 12 && TitleRegex().IsMatch(lineText))
+                {
+                    // Se reemplaza por titulo de Markdown
+                    int puntos = lineText.Count(c => c == '.');
+
+                    string mdTitulo = Enumerable.Range(0, puntos)
+                        .Aggregate(
+                            $"# {TitleRegex().Replace(lineText, string.Empty)}",
+                            (acc, _) => $"#{acc}");
+
+                    resultantText.AppendLine(mdTitulo.Trim());
+                }
+                else
+                {
+                    resultantText.Append(lineText);
+                }
+            }
+
             return resultantText.ToString();
         }
 
