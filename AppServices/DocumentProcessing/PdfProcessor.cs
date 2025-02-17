@@ -18,9 +18,7 @@ namespace AppServices.DocumentProcessing
         [FromKeyedServices(".md")] IDocumentProcessor _markdownProcessor)
         : IDocumentProcessor
     {
-        public async Task<Document> ProcessAsync(
-            string path,
-            byte[] documentData)
+        public Task<Document> ProcessAsync(string path, byte[] documentData)
         {
             using MemoryStream pdfStream = new(documentData);
 
@@ -43,11 +41,9 @@ namespace AppServices.DocumentProcessing
 
             string md = CleanMd(pdfStringBuilder.ToString());
 
-            var documents = await _markdownProcessor.ProcessAsync(
+            return _markdownProcessor.ProcessAsync(
                 path,
                 Encoding.UTF8.GetBytes(md));
-
-            return null!;
         }
 
         static string CleanMd(string md)
