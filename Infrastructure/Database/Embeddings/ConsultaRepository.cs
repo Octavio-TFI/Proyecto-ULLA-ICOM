@@ -9,12 +9,15 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database.Embeddings
 {
-    internal class ConsultaRepository(EmbeddingContext _context)
-        : IConsultaRepository
+    internal class ConsultaRepository(EmbeddingContext context)
+        : Repository<Consulta>(context)
+        , IConsultaRepository
     {
+        readonly EmbeddingContext _context = context;
+
         public Task<int[]> GetAllIdsAsync()
         {
-            throw new NotImplementedException();
+            return _context.Consultas.Select(c => c.Id).ToArrayAsync();
         }
 
         public async Task<List<Consulta>> GetConsultasSimilaresAsync(
@@ -61,11 +64,6 @@ namespace Infrastructure.Database.Embeddings
                 .Select(c => c.Entity)
                 .Take(5)
                 .ToList();
-        }
-
-        public Task<Consulta> InsertAsync(Consulta consulta)
-        {
-            throw new NotImplementedException();
         }
     }
 }
