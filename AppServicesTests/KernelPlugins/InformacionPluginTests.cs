@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel.Embeddings;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace AppServices.KernelPlugins.Tests
     internal class InformacionPluginTests
     {
         [Test]
-        public async Task BuscarConsultasAsyncTest()
+        public async Task BuscarInformacionAsyncTest()
         {
             // Arrange
             var textEmbeddingGenerationService
@@ -33,8 +34,8 @@ namespace AppServices.KernelPlugins.Tests
 
             var documentoRelacionado = new Document
             {
+                Filename = "fileName",
                 Texto = "Documento",
-                Embedding = [7, 8, 9]
             };
 
             var consultas = new List<Consulta>
@@ -77,6 +78,7 @@ namespace AppServices.KernelPlugins.Tests
                 .AddSingleton(textEmbeddingGenerationService.Object);
 
             var consultasPlugin = new InformacionPlugin(
+                Mock.Of<ILogger<InformacionPlugin>>(),
                 kernelBuilder.Build(),
                 consultaRepository.Object,
                 documentRepository.Object,

@@ -71,8 +71,50 @@ namespace Infrastructure.Database.Tests
             await context.SaveChangesAsync();
 
             // Assert
-            Assert.That(result, Is.EqualTo(mensaje));
-            Assert.That(context.Mensajes, Has.Member(result));
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.That(result, Is.EqualTo(mensaje));
+                    Assert.That(context.Mensajes, Has.Member(result));
+                });
+        }
+
+        [Test]
+        public async Task InsertRangeAsync_ShouldInsertEntities()
+        {
+            // Arrange
+            var context = DatabaseTestsHelper.CreateInMemoryChatContext();
+            var repository = new MensajeRepository(context);
+            var mensajes = new List<Mensaje>
+            {
+                new MensajeTexto
+                {
+                    ChatId = 1,
+                    DateTime = DateTime.Now,
+                    Tipo = TipoMensaje.Usuario,
+                    Texto = "Hola"
+                },
+                new MensajeTexto
+                {
+                    ChatId = 1,
+                    DateTime = DateTime.Now,
+                    Tipo = TipoMensaje.Usuario,
+                    Texto = "Chau"
+                }
+            };
+
+            // Act
+            var result = await repository.InsertRangeAsync(mensajes);
+            await context.SaveChangesAsync();
+
+            // Assert
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.That(result, Is.EqualTo(mensajes));
+                    Assert.That(context.Mensajes, Has.Member(result[0]));
+                    Assert.That(context.Mensajes, Has.Member(result[1]));
+                });
         }
     }
 }

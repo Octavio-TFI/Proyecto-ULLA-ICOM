@@ -24,5 +24,12 @@ namespace Infrastructure.Database
 
             return entity;
         }
+
+        public async Task<List<T>> InsertRangeAsync(List<T> entities)
+        {
+            await _context.AddRangeAsync(entities);
+
+            return entities;
+        }
     }
 }

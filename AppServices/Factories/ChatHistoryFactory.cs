@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices
+namespace AppServices.Factories
 {
     internal class ChatHistoryFactory(IFileManager _fileManager)
         : IChatHistoryFactory
@@ -23,14 +23,15 @@ namespace AppServices
 
             chatHistory.AddSystemMessage(systemPrompt);
 
-            foreach(Mensaje mensaje in mensajes)
+            foreach (Mensaje mensaje in mensajes)
             {
-                if(mensaje is MensajeTexto mensajeTexto)
+                if (mensaje is MensajeTexto mensajeTexto)
                 {
-                    if(mensaje.Tipo == TipoMensaje.Usuario)
+                    if (mensaje.Tipo == TipoMensaje.Usuario)
                     {
                         chatHistory.AddUserMessage(mensajeTexto.Texto);
-                    } else if(mensaje.Tipo == TipoMensaje.Asistente)
+                    }
+                    else if (mensaje.Tipo == TipoMensaje.Asistente)
                     {
                         chatHistory.AddAssistantMessage(mensajeTexto.Texto);
                     }

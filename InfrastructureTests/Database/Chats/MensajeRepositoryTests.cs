@@ -95,7 +95,7 @@ namespace Infrastructure.Database.Chats.Tests
                 result,
                 Is.EquivalentTo(_mensajes.TakeLast(10)).And.Ordered
                     .Using<MensajeTexto>(
-                        (x, y) => y.DateTime.CompareTo(x.DateTime)));
+                        (x, y) => x.DateTime.CompareTo(y.DateTime)));
         }
     }
 }

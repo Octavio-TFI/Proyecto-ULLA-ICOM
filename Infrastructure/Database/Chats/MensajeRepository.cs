@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database.Chats
 {
-    internal class MensajeRepository(ChatContext _context) : Repository<Mensaje>(
-        _context), IMensajeRepository
+    internal class MensajeRepository(ChatContext _context)
+        : Repository<Mensaje>(_context)
+        , IMensajeRepository
     {
         public Task<List<Mensaje>> GetUltimosMensajesChatAsync(int chatId)
         {
@@ -18,6 +19,7 @@ namespace Infrastructure.Database.Chats
                 .Where(m => m.ChatId == chatId)
                 .OrderByDescending(m => m.DateTime)
                 .Take(10)
+                .OrderBy(m => m.DateTime)
                 .ToListAsync();
         }
     }
