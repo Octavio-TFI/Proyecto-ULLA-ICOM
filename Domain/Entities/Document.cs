@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Document : Entity
+    public class Document
+        : Entity
     {
+        public required string Filename { get; set; }
+
         public required string Texto { get; set; }
 
-        public required float[] Embedding { get; set; }
-
-        public IEnumerable<Document> Childs { get; set; } = [];
+        public ICollection<DocumentChunk> Chunks { get; set; } = [];
 
         public override string ToString()
         {
-            return base.ToString()!;
+            return Texto;
         }
     }
 }

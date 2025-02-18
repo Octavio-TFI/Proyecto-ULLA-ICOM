@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Database.Embeddings.Migrations
 {
     [DbContext(typeof(EmbeddingContext))]
-    [Migration("20241230202143_InitialCreate")]
+    [Migration("20250214025329_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -57,12 +57,34 @@ namespace Infrastructure.Database.Embeddings.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("DocumentId")
+                    b.Property<string>("Filename")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Texto")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Filename")
+                        .IsUnique();
+
+                    b.ToTable("Documents");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DocumentChunk", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DocumentId")
                         .HasColumnType("INTEGER");
 
                     b.PrimitiveCollection<string>("Embedding")
                         .IsRequired()
-                        .HasColumnType("float[768]");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Texto")
                         .IsRequired()
@@ -72,7 +94,7 @@ namespace Infrastructure.Database.Embeddings.Migrations
 
                     b.HasIndex("DocumentId");
 
-                    b.ToTable("Documents");
+                    b.ToTable("DocumentChunks");
                 });
 
             modelBuilder.Entity("Infrastructure.Outbox.OutboxEvent", b =>
@@ -103,16 +125,18 @@ namespace Infrastructure.Database.Embeddings.Migrations
                     b.ToTable("OutboxEvents");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Document", b =>
+            modelBuilder.Entity("Domain.Entities.DocumentChunk", b =>
                 {
                     b.HasOne("Domain.Entities.Document", null)
-                        .WithMany("Childs")
-                        .HasForeignKey("DocumentId");
+                        .WithMany("Chunks")
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Document", b =>
                 {
-                    b.Navigation("Childs");
+                    b.Navigation("Chunks");
                 });
 #pragma warning restore 612, 618
         }

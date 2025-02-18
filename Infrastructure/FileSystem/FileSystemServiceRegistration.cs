@@ -6,14 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.FileManager
+namespace Infrastructure.FileSystem
 {
-    public static class FileManagerServiceRegistration
+    public static class FileSystemServiceRegistration
     {
         public static IServiceCollection AddFileManagerServices(
             this IServiceCollection services)
         {
-            return services.AddSingleton<IFileManager, FileManager>();
+            return services
+                .AddSingleton<IDirectoryManager, DirectoryManager>()
+                .AddSingleton<IPathManager, PathManager>()
+                .AddSingleton<IFileManager, FileManager>();
         }
     }
 }

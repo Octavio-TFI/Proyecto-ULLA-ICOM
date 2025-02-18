@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +11,30 @@ using System.Threading.Tasks;
 namespace Infrastructure.Database.Embeddings
 {
     internal class DocumentRepository(EmbeddingContext _context)
-        : IDocumentRepository
+        : Repository<Document>(_context)
+        , IDocumentRepository
     {
-        public Task<List<Document>> GetDocumentosRelacionadosAsync(
+        public async Task<List<Document>> GetDocumentosRelacionadosAsync(
             ReadOnlyMemory<float> embedding)
         {
-            return _context.Documents
+            var chunks = await _context.Documents
                 .OrderBy(
-                    x => _context.CosineSimilarity(
-                        x.Embedding,
-                        embedding.ToArray()))
-                .Take(5)
+                    d => d.Chunks
+                        .Min(
+                            c => _context.CosineDistance(
+                                    c.Embedding,
+                                    embedding.ToArray())))
+                .Take(15)
+                .ToListAsync();
+
+            return chunks;
+        }
+
+        public Task<List<string>> GetAllFilenamesAsync()
+        {
+            return _context.Documents
+                .Select(d => d.Filename)
+                .Distinct()
                 .ToListAsync();
         }
     }

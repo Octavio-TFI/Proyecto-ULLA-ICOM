@@ -30,7 +30,7 @@ namespace Infrastructure.LLM
                 {
                     var kernelBuilder = Kernel.CreateBuilder()
                         .AddOpenAIChatCompletion(
-                            "meta-llama-3.1-8b-instruct",
+                            "qwen2.5-14b-instruct",
                             openAiClient);
 
                     kernelBuilder.Services

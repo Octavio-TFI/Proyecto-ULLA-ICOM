@@ -1,4 +1,6 @@
 ﻿using AppServices.Abstractions;
+using AppServices.DocumentProcessing;
+using AppServices.Factories;
 using AppServices.KernelPlugins;
 using AppServices.Ports;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Ude;
 
 namespace AppServices
 {
@@ -25,6 +28,20 @@ namespace AppServices
         public static IServiceCollection AddAppServices(
             this IServiceCollection services)
         {
+            services.AddSingleton<Func<ICharsetDetector>>(
+                x => () => new CharsetDetector());
+
+            // Register the code pages encoding provider to support Windows-1252 and other encodings
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            services.AddHostedService<DocumentProcessorService>();
+            services.AddKeyedScoped<IDocumentProcessor, PdfProcessor>(".pdf");
+            services.AddKeyedScoped<IDocumentProcessor, HtmlProcessor>(".htm");
+            services.AddKeyedScoped<IDocumentProcessor, HtmlProcessor>(".html");
+            services.AddKeyedScoped<IDocumentProcessor, MarkdownProcessor>(
+                ".md");
+            services.AddSingleton<IDocumentFactory, DocumentFactory>();
+
             services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
             services.AddScoped<IGeneradorRespuesta, GeneradorRespuesta>();
             services.AddSingleton<IChatHistoryFactory, ChatHistoryFactory>();

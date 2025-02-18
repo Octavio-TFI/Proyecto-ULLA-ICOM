@@ -369,3 +369,4 @@ FodyWeavers.xsd
 /*.bat
 /API/Embeddings.db-shm
 /API/Embeddings.db-wal
+/API/Documentacion/*
