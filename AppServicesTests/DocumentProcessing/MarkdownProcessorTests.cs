@@ -21,7 +21,7 @@ Test 1
 ***
 Texto del Test 3
 
-### Test 4
+#### Test 4
 
 | | Tabla |
 | --- | --- |
@@ -29,6 +29,9 @@ Texto del Test 3
 1 | Columna 2 |
 
 ####    
+
+## Test 5
+asd
 ";
 
         [Test]
@@ -74,7 +77,7 @@ Texto del Test 3
 
             // Assert
             Assert.That(documents.Filename, Is.EqualTo("path"));
-            Assert.That(documents.Chunks, Has.Count.EqualTo(4));
+            Assert.That(documents.Chunks, Has.Count.EqualTo(5));
             Assert.That(
                 documents.Chunks,
                 Has.All.With
@@ -113,10 +116,19 @@ Texto del Test 3"));
 
 ## Test 3
 
-### Test 4
+#### Test 4
 
 " +
                         "| | Tabla |\n| --- | --- |\n| Columna 1 | Columna 2 |"));
+
+            Assert.That(
+                documents.Chunks.Skip(4).First().Texto,
+                Is.EqualTo(
+                    @"# Test 1
+
+## Test 5
+
+asd"));
         }
     }
 }

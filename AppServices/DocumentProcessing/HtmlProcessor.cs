@@ -117,6 +117,17 @@ namespace AppServices.DocumentProcessing
                     .Trim();
             }
 
+            // Elimina pie de pagina de contacto
+            int contactoIndex = mdLines.FindIndex(
+                line => line.Contains("|  | CAPATAZ en YouTube | |"));
+
+            if (contactoIndex != -1)
+            {
+                mdLines.RemoveRange(
+                    contactoIndex,
+                    mdLines.Count - contactoIndex);
+            }
+
             // Elimina pie de pagina ver tambien
             int verTambienIndex = mdLines.FindIndex(
                 line =>
@@ -133,17 +144,6 @@ namespace AppServices.DocumentProcessing
                 mdLines.RemoveRange(
                     verTambienIndex,
                     mdLines.Count - verTambienIndex);
-            }
-
-            // Elimina pie de pagina de contacto
-            int contactoIndex = mdLines.FindIndex(
-                line => line.Contains("|  | CAPATAZ en YouTube | |"));
-
-            if (contactoIndex != -1)
-            {
-                mdLines.RemoveRange(
-                    contactoIndex,
-                    mdLines.Count - contactoIndex);
             }
 
             StringBuilder stringBuilder = new();
