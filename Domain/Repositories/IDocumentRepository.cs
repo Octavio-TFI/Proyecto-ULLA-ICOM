@@ -27,6 +27,7 @@ namespace Domain.Repositories
         /// Inserta un documento
         /// </summary>
         /// <param name="document">Documento a insertar</param>
+        /// <returns>Documento insertado</returns>
         Task<Document> InsertAsync(Document document);
     }
 }

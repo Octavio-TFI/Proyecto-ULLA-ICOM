@@ -12,6 +12,11 @@ namespace Infrastructure.Database.Embeddings
     internal class ConsultaRepository(EmbeddingContext _context)
         : IConsultaRepository
     {
+        public Task<List<int>> GetAllIdsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<Consulta>> GetConsultasSimilaresAsync(
             ReadOnlyMemory<float> embedding)
         {
@@ -56,6 +61,11 @@ namespace Infrastructure.Database.Embeddings
                 .Select(c => c.Entity)
                 .Take(5)
                 .ToList();
+        }
+
+        public Task<Consulta> InsertAsync(Consulta consulta)
+        {
+            throw new NotImplementedException();
         }
     }
 }
