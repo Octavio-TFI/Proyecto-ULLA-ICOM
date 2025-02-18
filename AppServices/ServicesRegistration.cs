@@ -3,6 +3,7 @@ using AppServices.DocumentProcessing;
 using AppServices.Factories;
 using AppServices.KernelPlugins;
 using AppServices.Ports;
+using AppServices.ProcesamientoConsultas;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using System;
@@ -34,6 +35,7 @@ namespace AppServices
             // Register the code pages encoding provider to support Windows-1252 and other encodings
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
+            // Procesamiento documentos
             services.AddHostedService<DocumentProcessorService>();
             services.AddKeyedScoped<IDocumentProcessor, PdfProcessor>(".pdf");
             services.AddKeyedScoped<IDocumentProcessor, HtmlProcessor>(".htm");
@@ -41,6 +43,9 @@ namespace AppServices
             services.AddKeyedScoped<IDocumentProcessor, MarkdownProcessor>(
                 ".md");
             services.AddSingleton<IDocumentFactory, DocumentFactory>();
+
+            // Procesamiento de consultas
+            services.AddHostedService<ConsultasProcesorService>();
 
             services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
             services.AddScoped<IGeneradorRespuesta, GeneradorRespuesta>();
