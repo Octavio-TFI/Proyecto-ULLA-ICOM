@@ -29,7 +29,7 @@ namespace Domain.Entities
         /// <summary>
         /// Pre-fixes de la consulta
         /// </summary>
-        public required string[] PreFixes { get; init; }
+        public required string[] PreFixes { get; init; } = [];
 
         /// <summary>
         /// Fix de la consulta

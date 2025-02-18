@@ -1,9 +1,9 @@
 ﻿using AppServices.Abstractions;
+using AppServices.ConsultasProcessing;
 using AppServices.DocumentProcessing;
 using AppServices.Factories;
 using AppServices.KernelPlugins;
 using AppServices.Ports;
-using AppServices.ProcesamientoConsultas;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using System;
