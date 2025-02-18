@@ -38,4 +38,8 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Database\MesaDeAyuda\" />
+	</ItemGroup>
+
 </Project>

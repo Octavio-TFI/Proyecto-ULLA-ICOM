@@ -12,7 +12,7 @@ namespace Infrastructure.Database.Embeddings
     internal class ConsultaRepository(EmbeddingContext _context)
         : IConsultaRepository
     {
-        public Task<List<int>> GetAllIdsAsync()
+        public Task<int[]> GetAllIdsAsync()
         {
             throw new NotImplementedException();
         }

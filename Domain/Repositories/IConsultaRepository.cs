@@ -28,6 +28,6 @@ namespace Domain.Repositories
         /// Obtiene todos los ids de las consultas
         /// </summary>
         /// <returns>Ids de todas las consultas</returns>
-        Task<List<int>> GetAllIdsAsync();
+        Task<int[]> GetAllIdsAsync();
     }
 }
