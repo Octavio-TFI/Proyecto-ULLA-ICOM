@@ -26,11 +26,6 @@ namespace AppServices.DocumentProcessing
 
         public void EventOccurred(IEventData data, EventType type)
         {
-            if (!type.Equals(EventType.RENDER_TEXT))
-            {
-                return;
-            }
-
             TextRenderInfo textRenderInfo = (TextRenderInfo)data;
 
             // Obtiene posicion y de la linea actual
@@ -62,14 +57,9 @@ namespace AppServices.DocumentProcessing
                         TitleRegex().IsMatch(lineText))
                     {
                         // Se reemplaza por titulo de Markdown
-                        int puntos = lineText.Count(c => c == '.');
+                        string mdTitulo = TransformToMdTitle(lineText);
 
-                        string mdTitulo = Enumerable.Range(0, puntos)
-                            .Aggregate(
-                                $"# {TitleRegex().Replace(lineText, string.Empty)}",
-                                (acc, _) => $"#{acc}");
-
-                        resultantText.AppendLine(mdTitulo.Trim());
+                        resultantText.AppendLine(mdTitulo);
                     }
                     // Si no es titulo se agrega el texto tal cual en nueva linea
                     else
@@ -106,15 +96,9 @@ namespace AppServices.DocumentProcessing
 
                 if (currentLineFontSize > 12 && TitleRegex().IsMatch(lineText))
                 {
-                    // Se reemplaza por titulo de Markdown
-                    int puntos = lineText.Count(c => c == '.');
+                    string mdTitulo = TransformToMdTitle(lineText);
 
-                    string mdTitulo = Enumerable.Range(0, puntos)
-                        .Aggregate(
-                            $"# {TitleRegex().Replace(lineText, string.Empty)}",
-                            (acc, _) => $"#{acc}");
-
-                    resultantText.AppendLine(mdTitulo.Trim());
+                    resultantText.AppendLine(mdTitulo);
                 }
                 else
                 {
@@ -128,6 +112,18 @@ namespace AppServices.DocumentProcessing
         public ICollection<EventType> GetSupportedEvents()
         {
             return [EventType.RENDER_TEXT];
+        }
+
+        static string TransformToMdTitle(string lineText)
+        {
+            int puntos = TitleRegex().Match(lineText).Value.Count(c => c == '.');
+
+            string mdTitulo = Enumerable.Range(0, puntos)
+                .Aggregate(
+                    $"# {TitleRegex().Replace(lineText, string.Empty)}",
+                    (acc, _) => $"#{acc}");
+
+            return mdTitulo.Trim();
         }
     }
 }

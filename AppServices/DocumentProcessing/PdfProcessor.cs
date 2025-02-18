@@ -31,6 +31,7 @@ namespace AppServices.DocumentProcessing
 
             for (int i = 1; i <= pdf.GetNumberOfPages(); i++)
             {
+                // TODO: Mejorar extraccion de listas de items
                 var strategy = new PdfToMdTextExtractionStrategy();
 
                 var page = pdf.GetPage(i);
