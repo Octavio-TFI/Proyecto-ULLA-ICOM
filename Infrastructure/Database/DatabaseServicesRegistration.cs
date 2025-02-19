@@ -3,6 +3,7 @@ using Domain;
 using Domain.Repositories;
 using Infrastructure.Database.Chats;
 using Infrastructure.Database.Embeddings;
+using Infrastructure.Database.MesaDeAyuda;
 using Infrastructure.Outbox;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +54,10 @@ namespace Infrastructure.Database
             services.AddScoped<IDocumentRepository, DocumentRepository>();
             services.AddKeyedScoped<IUnitOfWork, UnitOfWork<EmbeddingContext>>(
                 Contexts.Embedding);
+
+            // Mesa de ayuda
+            services.AddSingleton<IConsultaDataRepository, ConsultaDataRepository>(
+                );
 
             return services;
         }
