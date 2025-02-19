@@ -9,7 +9,7 @@ namespace AppServices
     public enum TipoKernel
     {
         Indefinido,
-        Normal,
+        ConsultasProcessing,
         Ranker,
         GeneradorRepuestas
     }
