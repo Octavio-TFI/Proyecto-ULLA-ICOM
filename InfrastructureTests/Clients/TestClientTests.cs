@@ -94,7 +94,7 @@ namespace Infrastructure.Clients.Tests
         }
 
         [Test]
-        public async Task EnviarMensajeTextoAsync_ExceptionOccurredTest()
+        public void EnviarMensajeTextoAsync_ExceptionOccurredTest()
         {
             // Arrange
             string chatPlataformaId = "chatPlataformaId";

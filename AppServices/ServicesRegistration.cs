@@ -42,7 +42,6 @@ namespace AppServices
             services.AddKeyedScoped<IDocumentProcessor, HtmlProcessor>(".html");
             services.AddKeyedScoped<IDocumentProcessor, MarkdownProcessor>(
                 ".md");
-            services.AddSingleton<IDocumentFactory, DocumentFactory>();
 
             // Procesamiento de consultas
             services.AddHostedService<ConsultasProcesorService>();

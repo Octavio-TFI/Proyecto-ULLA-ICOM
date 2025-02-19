@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.Abstractions
+namespace Domain.Abstractions.Factories
 {
-    internal interface IDocumentFactory
+    public interface IDocumentFactory
     {
         /// <summary>
         /// Crea un documento.
