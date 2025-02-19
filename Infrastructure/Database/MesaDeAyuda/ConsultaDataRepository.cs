@@ -20,7 +20,7 @@ namespace Infrastructure.Database.MesaDeAyuda
             string mesaDeAyudaXml = await _fileManager.ReadAllTextAsync(
                 "MesaDeAyuda.xml");
 
-            using var xmlReader = new StreamReader(mesaDeAyudaXml);
+            using var xmlReader = new StringReader(mesaDeAyudaXml);
 
             var document = await XDocument.LoadAsync(
                 xmlReader,
