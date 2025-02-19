@@ -19,13 +19,14 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
                 .ReturnsAsync(string.Empty);
 
 
-            var consultaDataRepository = new ConsultaDataRepository();
+            var consultaDataRepository = new ConsultaDataRepository(
+                fileManagerMock.Object);
 
             // Act
             var consultaDatas = await consultaDataRepository.GetAllAsync();
 
             // Assert
-            Assert.That(consultaDataRepository, Is.Empty);
+            Assert.That(consultaDatas, Is.Empty);
         }
     }
 }

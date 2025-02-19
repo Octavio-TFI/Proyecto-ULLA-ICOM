@@ -24,7 +24,7 @@ namespace Domain.Entities
         /// <summary>
         /// Descripcion de la consulta
         /// </summary>
-        public required string Descripcion { get; init; }
+        public string? Descripcion { get; init; }
 
         /// <summary>
         /// Pre-fixes de la consulta
