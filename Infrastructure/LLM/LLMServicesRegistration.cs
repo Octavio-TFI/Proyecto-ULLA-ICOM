@@ -1,5 +1,6 @@
 ﻿using AppServices;
 using AppServices.Ports;
+using Infrastructure.LLM.ExecutionSettingsFactory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
@@ -48,6 +49,9 @@ namespace Infrastructure.LLM
                             services.GetRequiredService<ITextEmbeddingGenerationService>(
                                     ));
 
+                    kernelBuilder.Services
+                        .AddSingleton<IExecutionSettingsFactory, OpenAiExecutionSettingsFactory>(
+                            );
 
                     return kernelBuilder.Build();
                 });
@@ -65,6 +69,10 @@ namespace Infrastructure.LLM
                         .AddSingleton(
                             services.GetRequiredService<ITextEmbeddingGenerationService>(
                                     ));
+
+                    kernelBuilder.Services
+                        .AddSingleton<IExecutionSettingsFactory, OpenAiExecutionSettingsFactory>(
+                            );
 
                     return kernelBuilder.Build();
                 });

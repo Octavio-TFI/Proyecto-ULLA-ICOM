@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AppServices.Ports
 {
-    internal interface IExecutionSettingsFactory
+    public interface IExecutionSettingsFactory
     {
         PromptExecutionSettings Create(
             FunctionChoiceBehavior? functionChoiceBehavior,
