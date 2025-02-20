@@ -45,11 +45,6 @@ namespace Infrastructure.LLM
                             openAiClient);
 
                     kernelBuilder.Services
-                        .AddSingleton(
-                            services.GetRequiredService<ITextEmbeddingGenerationService>(
-                                    ));
-
-                    kernelBuilder.Services
                         .AddSingleton<IExecutionSettingsFactory, OpenAiExecutionSettingsFactory>(
                             );
 
@@ -64,11 +59,6 @@ namespace Infrastructure.LLM
                         .AddOpenAIChatCompletion(
                             "qwen2.5-14b-instruct",
                             openAiClient);
-
-                    kernelBuilder.Services
-                        .AddSingleton(
-                            services.GetRequiredService<ITextEmbeddingGenerationService>(
-                                    ));
 
                     kernelBuilder.Services
                         .AddSingleton<IExecutionSettingsFactory, OpenAiExecutionSettingsFactory>(

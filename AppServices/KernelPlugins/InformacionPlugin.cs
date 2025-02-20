@@ -16,7 +16,7 @@ namespace AppServices.KernelPlugins
 {
     internal class InformacionPlugin(
         ILogger<InformacionPlugin> _logger,
-        Kernel _kernel,
+        ITextEmbeddingGenerationService _embeddingService,
         IConsultaRepository _consultaRepository,
         IDocumentRepository _documentRepository,
         IRanker _ranker)
@@ -34,8 +34,7 @@ BUSCANDO INFORMACION PARA QUERY:
 ",
                 pregunta);
 
-            var embeddingConsulta = await _kernel
-                .GetRequiredService<ITextEmbeddingGenerationService>()
+            var embeddingConsulta = await _embeddingService
                 .GenerateEmbeddingAsync(pregunta);
 
             var consultas = await _consultaRepository

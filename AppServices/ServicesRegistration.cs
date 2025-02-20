@@ -46,8 +46,8 @@ namespace AppServices
                 ".md");
 
             // Procesamiento de consultas
-            services.AddHostedService<ConsultasProcesorService>();
-            services.AddSingleton<IConsultaProcessor, ConsultaProcessor>();
+            //services.AddHostedService<ConsultasProcesorService>();
+            //services.AddSingleton<IConsultaProcessor, ConsultaProcessor>();
 
             services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
             services.AddScoped<IGeneradorRespuesta, GeneradorRespuesta>();
@@ -85,7 +85,7 @@ namespace AppServices
                     return services.GetRequiredService<AgentFactory>()
                         .Create(
                             kernel,
-                            TipoAgent.Chat,
+                            TipoAgent.Ranker,
                             schema: typeof(RankerResult),
                             temperature: 0.2);
                 });

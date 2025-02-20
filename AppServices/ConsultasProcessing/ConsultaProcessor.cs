@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 namespace AppServices.ConsultasProcessing
 {
     internal class ConsultaProcessor(
-        [FromKeyedServices(TipoAgent.ProcesadorConsulta)] ChatCompletionAgent agent)
+        [FromKeyedServices(TipoAgent.ProcesadorConsulta)] ChatCompletionAgent agent,
+        ITextEmbeddingGenerationService embeddingService)
         : IConsultaProcessor
     {
         readonly ChatCompletionAgent _agent = agent;
-        readonly ITextEmbeddingGenerationService _embeddingService = agent.Kernel
-            .GetRequiredService<ITextEmbeddingGenerationService>();
+        readonly ITextEmbeddingGenerationService _embeddingService = embeddingService;
 
         public Task<Consulta> ProcessAsync(ConsultaData consultaData)
         {
