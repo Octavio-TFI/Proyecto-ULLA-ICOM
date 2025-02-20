@@ -1,9 +1,11 @@
 ﻿using AppServices.Abstractions;
+using AppServices.Agents;
 using AppServices.ConsultasProcessing;
 using AppServices.DocumentProcessing;
 using AppServices.Factories;
 using AppServices.KernelPlugins;
 using AppServices.Ports;
+using AppServices.Ranking;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using System;
@@ -45,6 +47,7 @@ namespace AppServices
 
             // Procesamiento de consultas
             services.AddHostedService<ConsultasProcesorService>();
+            services.AddSingleton<IConsultaProcessor, ConsultaProcessor>();
 
             services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
             services.AddScoped<IGeneradorRespuesta, GeneradorRespuesta>();
@@ -56,35 +59,55 @@ namespace AppServices
                     return services.GetRequiredKeyedService<IClient>(plataforma);
                 });
 
+            services.AddSingleton<AgentFactory>();
+
             services.AddKeyedTransient(
-                TipoKernel.Ranker,
+                TipoAgent.ProcesadorConsulta,
                 (services, key) =>
                 {
-                    var kernel = services.GetRequiredService<Kernel>();
+                    var kernel = services.GetRequiredKeyedService<Kernel>(
+                        TipoKernel.Grande);
 
-                    var rankerPromptsDirectory = Path.Combine(
-                        AppDomain.CurrentDomain.BaseDirectory,
-                        "Prompts",
-                        "Ranker");
+                    return services.GetRequiredService<AgentFactory>()
+                        .Create(
+                            kernel,
+                            TipoAgent.ProcesadorConsulta,
+                            temperature: 0.2);
+                });
 
-                    var rankerPlugin = kernel.ImportPluginFromPromptDirectory(
-                        rankerPromptsDirectory);
+            services.AddKeyedTransient(
+                TipoAgent.Ranker,
+                (services, key) =>
+                {
+                    var kernel = services.GetRequiredKeyedService<Kernel>(
+                        TipoKernel.Pequeño);
 
-                    return kernel;
+                    return services.GetRequiredService<AgentFactory>()
+                        .Create(
+                            kernel,
+                            TipoAgent.Chat,
+                            schema: typeof(RankerResult),
+                            temperature: 0.2);
                 });
 
             services.AddKeyedScoped(
-                TipoKernel.GeneradorRepuestas,
+                TipoAgent.Chat,
                 (services, key) =>
                 {
-                    var kernel = services.GetRequiredService<Kernel>();
+                    var kernel = services.GetRequiredKeyedService<Kernel>(
+                        TipoKernel.Grande);
 
                     kernel.Plugins
                         .AddFromType<InformacionPlugin>(
                             "buscar",
                             serviceProvider: services);
 
-                    return kernel;
+                    return services.GetRequiredService<AgentFactory>()
+                        .Create(
+                            kernel,
+                            TipoAgent.Chat,
+                            FunctionChoiceBehavior.Auto(),
+                            temperature: 0.2);
                 });
 
             return services.AddMediatR(

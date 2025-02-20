@@ -1,7 +1,9 @@
 ﻿using AppServices.Abstractions;
+using AppServices.Agents;
 using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Embeddings;
 using System;
 using System.Collections.Generic;
@@ -12,11 +14,11 @@ using System.Threading.Tasks;
 namespace AppServices.ConsultasProcessing
 {
     internal class ConsultaProcessor(
-        [FromKeyedServices(TipoKernel.ConsultasProcessing)] Kernel kernel)
+        [FromKeyedServices(TipoAgent.ProcesadorConsulta)] ChatCompletionAgent agent)
         : IConsultaProcessor
     {
-        readonly Kernel _kernel = kernel;
-        readonly ITextEmbeddingGenerationService _embeddingService = kernel
+        readonly ChatCompletionAgent _agent = agent;
+        readonly ITextEmbeddingGenerationService _embeddingService = agent.Kernel
             .GetRequiredService<ITextEmbeddingGenerationService>();
 
         public Task<Consulta> ProcessAsync(ConsultaData consultaData)

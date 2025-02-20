@@ -11,17 +11,12 @@ using System.Threading.Tasks;
 
 namespace AppServices.Factories
 {
-    internal class ChatHistoryFactory(IFileManager _fileManager)
+    internal class ChatHistoryFactory
         : IChatHistoryFactory
     {
-        public async Task<ChatHistory> CreateAsync(List<Mensaje> mensajes)
+        public ChatHistory Create(List<Mensaje> mensajes)
         {
             ChatHistory chatHistory = [];
-
-            string systemPrompt = await _fileManager.ReadAllTextAsync(
-                "Prompts/GeneradorRespuesta/SystemPrompt.txt");
-
-            chatHistory.AddSystemMessage(systemPrompt);
 
             foreach (Mensaje mensaje in mensajes)
             {

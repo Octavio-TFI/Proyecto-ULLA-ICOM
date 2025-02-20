@@ -42,7 +42,7 @@ namespace AppServices.Tests
             var kernel = kernelBuilder.Build();
 
             chatHistoryFactoryMock
-                .Setup(x => x.CreateAsync(mensajes))
+                .Setup(x => x.Create(mensajes))
                 .ReturnsAsync(chatHistory);
 
             chatCompletionMock

@@ -1,8 +1,10 @@
 ﻿using AppServices.Abstractions;
+using AppServices.Agents;
 using Domain.Entities;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.TextGeneration;
 using Newtonsoft.Json;
@@ -13,11 +15,14 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace AppServices
+namespace AppServices.Ranking
 {
-    internal class Ranker([FromKeyedServices(TipoKernel.Ranker)] Kernel _kernel)
+    internal class Ranker(
+        [FromKeyedServices(TipoAgent.Ranker)] ChatCompletionAgent rankingAgent)
         : IRanker
     {
+        readonly ChatCompletionAgent _rankingAgent = rankingAgent;
+
         public async Task<List<T>> RankAsync<T>(
             List<T> datosRecuperados,
             string consulta)
@@ -25,23 +30,24 @@ namespace AppServices
         {
             List<T> datosFiltrados = [];
 
-            foreach(T datosRecuperado in datosRecuperados)
+            foreach (T datosRecuperado in datosRecuperados)
             {
                 var arguments = new KernelArguments()
                 {
-                    ["document"] = datosRecuperado.ToString(),
-                    ["consulta"] = consulta
+                    ["document"] = datosRecuperado.ToString()
                 };
 
-                var functionResult = await _kernel.InvokeAsync(
-                    "Ranker",
-                    typeof(T).Name,
-                    arguments);
+                ChatHistory chat = new();
+                chat.AddUserMessage(consulta);
+
+                var functionResult = await _rankingAgent
+                    .InvokeAsync(chat, arguments)
+                    .FirstAsync();
 
                 var result = JsonConvert.DeserializeObject<RankerResult>(
                     functionResult.ToString());
 
-                if(result?.Score is true)
+                if (result?.Score is true)
                 {
                     datosFiltrados.Add(datosRecuperado);
                 }
@@ -49,11 +55,6 @@ namespace AppServices
 
 
             return datosFiltrados;
-        }
-
-        internal record RankerResult
-        {
-            public bool Score { get; set; }
         }
     }
 }

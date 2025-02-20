@@ -25,8 +25,18 @@ namespace Infrastructure.LLM
                     Endpoint = new Uri("http://ulaai.ulanet.local:1234/v1")
                 });
 
-            services.AddTransient(
-                services =>
+            services
+                .AddSingleton<ITextEmbeddingGenerationService, LMStudioTextEmbeddingGenerationService>(
+                    );
+
+            services
+                .AddHttpClient<ITextEmbeddingGenerationService, LMStudioTextEmbeddingGenerationService>(
+                    x => x.BaseAddress =
+                        new Uri("http://ulaai.ulanet.local:1234/v1/embeddings"));
+
+            services.AddKeyedTransient(
+                TipoKernel.Pequeño,
+                (services, key) =>
                 {
                     var kernelBuilder = Kernel.CreateBuilder()
                         .AddOpenAIChatCompletion(
@@ -34,15 +44,27 @@ namespace Infrastructure.LLM
                             openAiClient);
 
                     kernelBuilder.Services
-                        .AddSingleton<ITextEmbeddingGenerationService, LMStudioTextEmbeddingGenerationService>(
-                            );
+                        .AddSingleton(
+                            services.GetRequiredService<ITextEmbeddingGenerationService>(
+                                    ));
+
+
+                    return kernelBuilder.Build();
+                });
+
+            services.AddKeyedTransient(
+                TipoKernel.Grande,
+                (services, key) =>
+                {
+                    var kernelBuilder = Kernel.CreateBuilder()
+                        .AddOpenAIChatCompletion(
+                            "qwen2.5-14b-instruct",
+                            openAiClient);
 
                     kernelBuilder.Services
-                        .AddHttpClient<ITextEmbeddingGenerationService, LMStudioTextEmbeddingGenerationService>(
-                            x => x.BaseAddress =
-                                    new Uri(
-                                        "http://ulaai.ulanet.local:1234/v1/embeddings"));
-
+                        .AddSingleton(
+                            services.GetRequiredService<ITextEmbeddingGenerationService>(
+                                    ));
 
                     return kernelBuilder.Build();
                 });

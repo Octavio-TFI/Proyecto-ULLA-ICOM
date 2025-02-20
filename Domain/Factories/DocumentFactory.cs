@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Factories
 {
-    internal class DocumentFactory(Kernel _kernel)
+    internal class DocumentFactory(
+        ITextEmbeddingGenerationService embeddingService)
         : IDocumentFactory
     {
-        readonly ITextEmbeddingGenerationService _emmbeddingGenerator = _kernel
-            .GetRequiredService<ITextEmbeddingGenerationService>();
+        readonly ITextEmbeddingGenerationService _emmbeddingService = embeddingService;
 
         public async Task<Document> CreateAsync(
             string filename,
@@ -23,7 +23,7 @@ namespace Domain.Factories
         {
             var document = new Document { Filename = filename, Texto = text, };
 
-            var chunkEmbeddings = await _emmbeddingGenerator.GenerateEmbeddingsAsync(
+            var chunkEmbeddings = await _emmbeddingService.GenerateEmbeddingsAsync(
                 [.. textChunks]);
 
             for (int i = 0; i < textChunks.Count; i++)

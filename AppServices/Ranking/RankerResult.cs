@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices
+namespace AppServices.Ranking
 {
-    public enum TipoKernel
+    internal record RankerResult
     {
-        Indefinido,
-        Pequeño,
-        Grande
+        public bool Score { get; set; }
     }
 }

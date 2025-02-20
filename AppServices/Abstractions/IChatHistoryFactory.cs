@@ -15,6 +15,6 @@ namespace AppServices.Abstractions
         /// </summary>
         /// <param name="mensajes">Lista de mensajes</param>
         /// <returns>ChatHistory con mensajes</returns>
-        Task<ChatHistory> CreateAsync(List<Mensaje> mensajes);
+        ChatHistory Create(List<Mensaje> mensajes);
     }
 }

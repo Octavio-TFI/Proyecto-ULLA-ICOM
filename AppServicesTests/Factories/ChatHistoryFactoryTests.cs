@@ -34,7 +34,7 @@ namespace AppServices.Factories.Tests
             var chatHistoryFactory = new ChatHistoryFactory(fileManager.Object);
 
             // Act
-            var chatHistory = await chatHistoryFactory.CreateAsync(mensajes);
+            var chatHistory = await chatHistoryFactory.Create(mensajes);
 
             // Assert
             Assert.That(chatHistory.First().Role, Is.EqualTo(AuthorRole.System));
