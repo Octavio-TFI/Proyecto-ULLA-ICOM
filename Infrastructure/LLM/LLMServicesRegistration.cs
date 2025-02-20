@@ -1,6 +1,7 @@
 ﻿using AppServices;
 using AppServices.Ports;
 using Infrastructure.LLM.ExecutionSettingsFactory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
@@ -55,13 +56,18 @@ namespace Infrastructure.LLM
                 TipoKernel.Grande,
                 (services, key) =>
                 {
+                    string? apiKey = services
+                        .GetRequiredService<IConfiguration>()
+                                .GetValue<string>("GeminiApiKey") ??
+                        throw new Exception("GeminiApiKey no configurada");
+
                     var kernelBuilder = Kernel.CreateBuilder()
-                        .AddOpenAIChatCompletion(
-                            "qwen2.5-14b-instruct",
-                            openAiClient);
+                        .AddGoogleAIGeminiChatCompletion(
+                            "gemini-2.0-flash-lite-preview-02-05",
+                            apiKey);
 
                     kernelBuilder.Services
-                        .AddSingleton<IExecutionSettingsFactory, OpenAiExecutionSettingsFactory>(
+                        .AddSingleton<IExecutionSettingsFactory, GeminiExecutionSettingsFactory>(
                             );
 
                     return kernelBuilder.Build();

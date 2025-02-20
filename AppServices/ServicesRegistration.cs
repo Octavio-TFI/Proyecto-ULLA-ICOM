@@ -97,7 +97,7 @@ namespace AppServices
                     var kernel = services.GetRequiredKeyedService<Kernel>(
                         TipoKernel.Grande);
 
-                    kernel.Plugins
+                    var informacionPlugin = kernel.Plugins
                         .AddFromType<InformacionPlugin>(
                             "buscar",
                             serviceProvider: services);
@@ -106,7 +106,7 @@ namespace AppServices
                         .Create(
                             kernel,
                             TipoAgent.Chat,
-                            FunctionChoiceBehavior.Auto(),
+                            FunctionChoiceBehavior.Auto(informacionPlugin),
                             temperature: 0.2);
                 });
 
