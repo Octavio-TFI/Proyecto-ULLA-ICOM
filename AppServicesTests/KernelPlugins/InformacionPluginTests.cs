@@ -72,14 +72,9 @@ namespace AppServices.KernelPlugins.Tests
             rankerMock.Setup(x => x.RankAsync(documentos, consulta))
                 .ReturnsAsync(documentos);
 
-            var kernelBuilder = Kernel.CreateBuilder();
-
-            kernelBuilder.Services
-                .AddSingleton(textEmbeddingGenerationService.Object);
-
             var consultasPlugin = new InformacionPlugin(
                 Mock.Of<ILogger<InformacionPlugin>>(),
-                kernelBuilder.Build(),
+                textEmbeddingGenerationService.Object,
                 consultaRepository.Object,
                 documentRepository.Object,
                 rankerMock.Object);

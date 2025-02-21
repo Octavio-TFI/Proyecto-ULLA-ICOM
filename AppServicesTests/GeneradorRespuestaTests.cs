@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
 using System;
 using System.Collections.Generic;
@@ -41,27 +42,31 @@ namespace AppServices.Tests
 
             var kernel = kernelBuilder.Build();
 
+            var agent = new ChatCompletionAgent() { Kernel = kernel };
+
             chatHistoryFactoryMock
                 .Setup(x => x.Create(mensajes))
-                .ReturnsAsync(chatHistory);
+                .Returns(chatHistory);
 
             chatCompletionMock
                 .Setup(
                     x => x.GetChatMessageContentsAsync(
                         chatHistory,
-                        It.Is<PromptExecutionSettings>(
-                            s => s.FunctionChoiceBehavior is AutoFunctionChoiceBehavior),
+                        It.IsAny<PromptExecutionSettings>(),
                         kernel,
-                        It.IsAny<CancellationToken>()))
+                        default))
                 .ReturnsAsync(
-                    [new ChatMessageContent(AuthorRole.Assistant, "AI response")]);
+                    new List<ChatMessageContent>
+                    {
+                        new(AuthorRole.Assistant, "AI response")
+                    }.AsReadOnly());
 
             mensajeFactoryMock.Setup(
                 x => x.CreateMensajeTextoGenerado(1, "AI response"))
                 .Returns(mensajeGenerado);
 
             var generadorRespuesta = new GeneradorRespuesta(
-                kernel,
+                agent,
                 mensajeFactoryMock.Object,
                 chatHistoryFactoryMock.Object);
 

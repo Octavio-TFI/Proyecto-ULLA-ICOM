@@ -37,15 +37,15 @@ namespace AppServices.Ranking
                     ["document"] = datosRecuperado.ToString()
                 };
 
-                ChatHistory chat = new();
+                ChatHistory chat = [];
                 chat.AddUserMessage(consulta);
 
-                var functionResult = await _rankingAgent
+                var agentResult = await _rankingAgent
                     .InvokeAsync(chat, arguments)
                     .FirstAsync();
 
                 var result = JsonConvert.DeserializeObject<RankerResult>(
-                    functionResult.ToString());
+                    agentResult.ToString());
 
                 if (result?.Score is true)
                 {

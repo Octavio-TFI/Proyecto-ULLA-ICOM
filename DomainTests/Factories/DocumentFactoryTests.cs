@@ -21,19 +21,17 @@ namespace Domain.Factories.Tests
             List<string> textChunks = ["sample1", "sample2"];
             List<float[]> embeddings = [[1, 2, 3],[4, 5, 6],];
 
-            var embeddingGenerator = new Mock<ITextEmbeddingGenerationService>();
+            var embeddingGeneratorMock = new Mock<ITextEmbeddingGenerationService>(
+                );
 
-            embeddingGenerator
+            embeddingGeneratorMock
                 .Setup(
                     x => x.GenerateEmbeddingsAsync(textChunks, null, default))
                 .ReturnsAsync(
                     [new ReadOnlyMemory<float>(embeddings[0]),
                     new ReadOnlyMemory<float>(embeddings[1])]);
 
-            var kernelBuilder = Kernel.CreateBuilder();
-            kernelBuilder.Services.AddSingleton(embeddingGenerator.Object);
-
-            var factory = new DocumentFactory(kernelBuilder.Build());
+            var factory = new DocumentFactory(embeddingGeneratorMock.Object);
 
             // Act
             var result = await factory.CreateAsync(filename, text, textChunks);
