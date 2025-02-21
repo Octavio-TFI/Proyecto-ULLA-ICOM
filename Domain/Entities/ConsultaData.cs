@@ -35,5 +35,10 @@ namespace Domain.Entities
         /// Fix de la consulta
         /// </summary>
         public required string Fix { get; init; }
+
+        public override string ToString()
+        {
+            return @$"Titulo: {Titulo}";
+        }
     }
 }
