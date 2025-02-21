@@ -46,8 +46,8 @@ namespace AppServices
                 ".md");
 
             // Procesamiento de consultas
-            //services.AddHostedService<ConsultasProcesorService>();
-            //services.AddSingleton<IConsultaProcessor, ConsultaProcessor>();
+            services.AddHostedService<ConsultasProcesorService>();
+            services.AddSingleton<IConsultaProcessor, ConsultaProcessor>();
 
             services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
             services.AddScoped<IGeneradorRespuesta, GeneradorRespuesta>();
@@ -72,6 +72,7 @@ namespace AppServices
                         .Create(
                             kernel,
                             TipoAgent.ProcesadorConsulta,
+                            schema: typeof(ConsultaResumen),
                             temperature: 0.2);
                 });
 

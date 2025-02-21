@@ -19,6 +19,7 @@ namespace Infrastructure.LLM.ExecutionSettingsFactory
             double? temperature)
         {
             GeminiToolCallBehavior? geminiToolCallBehavior = null;
+            string? mimeType = null;
 
             if (functionChoiceBehavior is AutoFunctionChoiceBehavior)
             {
@@ -29,11 +30,17 @@ namespace Infrastructure.LLM.ExecutionSettingsFactory
                 geminiToolCallBehavior = GeminiToolCallBehavior.EnableKernelFunctions;
             }
 
+            if (schema is not null)
+            {
+                mimeType = "application/json";
+            }
+
             return new GeminiPromptExecutionSettings
             {
                 FunctionChoiceBehavior = functionChoiceBehavior,
                 ToolCallBehavior = geminiToolCallBehavior,
                 ResponseSchema = schema,
+                ResponseMimeType = mimeType,
                 Temperature = temperature
             };
         }
