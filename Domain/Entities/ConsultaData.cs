@@ -38,7 +38,28 @@ namespace Domain.Entities
 
         public override string ToString()
         {
-            return @$"Titulo: {Titulo}";
+            var sb = new StringBuilder();
+            sb.AppendLine($"# {Titulo}");
+
+            if (Descripcion is not null)
+            {
+                sb.AppendLine($"## Descripcion");
+                sb.AppendLine(Descripcion);
+            }
+
+            if (PreFixes.Length > 0)
+            {
+                sb.AppendLine($"## Pre-Fixes");
+                foreach (var preFix in PreFixes)
+                {
+                    sb.AppendLine($"- {preFix}");
+                }
+            }
+
+            sb.AppendLine($"## Fix");
+            sb.AppendLine(Fix);
+
+            return sb.ToString();
         }
     }
 }
