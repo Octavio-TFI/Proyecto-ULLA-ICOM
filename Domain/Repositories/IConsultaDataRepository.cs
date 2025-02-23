@@ -18,6 +18,6 @@ namespace Domain.Repositories
         /// Todas las consultas de la base de datos de mesa de ayuda excepto de las
         /// consultas con los ids especificados
         /// </returns>
-        Task<List<ConsultaData>> GetAllAsync(int[] existingIds);
+        Task<List<ConsultaData>> GetAllExceptExistingIdsAsync(int[] existingIds);
     }
 }

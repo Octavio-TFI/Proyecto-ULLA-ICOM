@@ -47,7 +47,7 @@ namespace AppServices.ConsultasProcessing
 
             // Se obtienen las consultas de la base de datos de mesa de ayuda
             var existingIds = await consultasRepository.GetAllIdsAsync();
-            var consultasDatas = await _consultaDataRepository.GetAllAsync(
+            var consultasDatas = await _consultaDataRepository.GetAllExceptExistingIdsAsync(
                 existingIds);
 
             int i = 1;

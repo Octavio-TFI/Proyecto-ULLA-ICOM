@@ -42,6 +42,7 @@ namespace AppServices.ConsultasProcessing
 
             return new Consulta
             {
+                Id = consultaData.Id,
                 Titulo = consultaData.Titulo,
                 Descripcion = consultaResumen.Descripcion,
                 Solucion = consultaResumen.Solucion,

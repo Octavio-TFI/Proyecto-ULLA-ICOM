@@ -120,7 +120,7 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
 </mesaDeAyuda>";
 
         [Test]
-        public async Task GetAllAsync()
+        public async Task GetAllExceptExistingIdsAsync()
         {
             // Arrange
             var fileManagerMock = new Mock<IFileManager>();
@@ -133,7 +133,8 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
                 fileManagerMock.Object);
 
             // Act
-            var consultaDatas = await consultaDataRepository.GetAllAsync([6]);
+            var consultaDatas = await consultaDataRepository.GetAllExceptExistingIdsAsync(
+                [6]);
 
             // Assert
             Assert.That(consultaDatas, Has.Count.EqualTo(3));

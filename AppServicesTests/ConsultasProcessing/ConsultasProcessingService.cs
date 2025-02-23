@@ -56,7 +56,8 @@ namespace AppServices.ConsultasProcessing.Tests
             consultaRepositoryMock.Setup(x => x.GetAllIdsAsync())
                 .ReturnsAsync(existingIds);
 
-            consultaDataRepositoryMock.Setup(x => x.GetAllAsync(existingIds))
+            consultaDataRepositoryMock.Setup(
+                x => x.GetAllExceptExistingIdsAsync(existingIds))
                 .ReturnsAsync(consultasDatas);
 
             consultaProcessorMock.Setup(x => x.ProcessAsync(consultasDatas[0]))
