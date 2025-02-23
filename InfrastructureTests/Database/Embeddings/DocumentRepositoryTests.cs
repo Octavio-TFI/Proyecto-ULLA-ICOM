@@ -119,6 +119,7 @@ namespace Infrastructure.Database.Embeddings.Tests
                 });
         }
 
+        [Test]
         public async Task DocumentsWithFilenameAsyncTest()
         {
             // Arrange

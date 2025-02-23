@@ -15,7 +15,8 @@ namespace Infrastructure.Database.MesaDeAyuda
     {
         readonly IFileManager _fileManager = fileManager;
 
-        public async Task<List<ConsultaData>> GetAllExceptExistingIdsAsync(int[] existingIds)
+        public async Task<List<ConsultaData>> GetAllExceptExistingIdsAsync(
+            int[] existingIds)
         {
             string mesaDeAyudaXml = await _fileManager.ReadAllTextAsync(
                 "MesaDeAyuda.xml");
@@ -46,11 +47,6 @@ namespace Infrastructure.Database.MesaDeAyuda
                 string? idString = defect
                     .Element("record-id")?
                     .Value;
-
-                if (!int.TryParse(idString, out int id))
-                {
-                    continue;
-                }
 
                 string? summary = defect
                     .Element("summary")?
@@ -87,7 +83,7 @@ namespace Infrastructure.Database.MesaDeAyuda
                 consultaDatas.Add(
                     new ConsultaData
                     {
-                        Id = id,
+                        Id = int.Parse(idString!),
                         Titulo = summary,
                         Descripcion =
                             description is null
