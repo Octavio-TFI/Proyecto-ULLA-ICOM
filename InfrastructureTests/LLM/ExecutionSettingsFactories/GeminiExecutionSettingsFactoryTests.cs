@@ -20,13 +20,13 @@ namespace Infrastructure.LLM.ExecutionSettingsFactories.Tests
                     FunctionChoiceBehavior.Auto(),
                     typeof(string),
                     0.7,
-                    GeminiToolCallBehavior.AutoInvokeKernelFunctions,
+                    128,
                     "application/json");
                 yield return new TestCaseData(
                     FunctionChoiceBehavior.Required(),
                     typeof(int),
                     0.5,
-                    GeminiToolCallBehavior.EnableKernelFunctions,
+                    0,
                     "application/json");
                 yield return new TestCaseData(
                     FunctionChoiceBehavior.None(),
@@ -40,11 +40,11 @@ namespace Infrastructure.LLM.ExecutionSettingsFactories.Tests
         [Test]
         [TestCaseSource(nameof(TestCases))]
         public void CreateTest(
-            FunctionChoiceBehavior functionChoiceBehavior,
-            Type schema,
-            double temperature,
-            GeminiToolCallBehavior expectedGeminiBehavior,
-            string expectedMimeType)
+            FunctionChoiceBehavior? functionChoiceBehavior,
+            Type? schema,
+            double? temperature,
+            int? expectedGeminiBehaviorAutoInvokeCount,
+            string? expectedMimeType)
         {
             // Arrange
             var openAiExecutionSettingsFactory = new GeminiExecutionSettingsFactory(
@@ -62,11 +62,8 @@ namespace Infrastructure.LLM.ExecutionSettingsFactories.Tests
                 () =>
                 {
                     Assert.That(
-                        executionSettings.FunctionChoiceBehavior,
-                        Is.EqualTo(functionChoiceBehavior));
-                    Assert.That(
-                        executionSettings.ToolCallBehavior,
-                        Is.EqualTo(expectedGeminiBehavior));
+                        executionSettings.ToolCallBehavior?.MaximumAutoInvokeAttempts,
+                        Is.EqualTo(expectedGeminiBehaviorAutoInvokeCount));
                     Assert.That(
                         executionSettings.ResponseSchema,
                         Is.EqualTo(schema));
