@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.LLM.ExecutionSettingsFactory
+namespace Infrastructure.LLM.ExecutionSettingsFactories
 {
     internal class GeminiExecutionSettingsFactory
         : IExecutionSettingsFactory

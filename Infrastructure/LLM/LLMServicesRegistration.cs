@@ -1,6 +1,6 @@
 ﻿using AppServices;
 using AppServices.Ports;
-using Infrastructure.LLM.ExecutionSettingsFactory;
+using Infrastructure.LLM.ExecutionSettingsFactories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;

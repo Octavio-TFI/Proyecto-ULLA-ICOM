@@ -10,7 +10,7 @@ using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace AppServices.Tests.Agents
+namespace AppServices.Agents.Tests
 {
     [TestFixture]
     public class AgentFactoryTests
