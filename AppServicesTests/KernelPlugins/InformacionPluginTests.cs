@@ -25,6 +25,7 @@ namespace AppServices.KernelPlugins.Tests
             var embeddingConsulta = new ReadOnlyMemory<float>([1, 2, 3]);
             var consultaSimilar = new Consulta
             {
+                Id = 1,
                 Titulo = "Consulta",
                 Descripcion = "Descripcion",
                 EmbeddingTitulo = [1, 2, 3],

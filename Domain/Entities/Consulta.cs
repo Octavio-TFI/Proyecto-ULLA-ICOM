@@ -9,6 +9,8 @@ namespace Domain.Entities
     public class Consulta
         : Entity
     {
+        public new required int Id { get; set; }
+
         public required string Titulo { get; set; }
 
         public required string Descripcion { get; set; }
