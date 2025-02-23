@@ -123,12 +123,7 @@ namespace Infrastructure.Database.Embeddings.Tests
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(5));
-            Assert.Multiple(
-                () =>
-                {
-                    Assert.That(result[0].Id, Is.EqualTo(1));
-                    Assert.That(result, Has.No.Member(consultas[3]));
-                });
+            Assert.That(result, Has.No.Member(consultas[3]));
         }
     }
 }

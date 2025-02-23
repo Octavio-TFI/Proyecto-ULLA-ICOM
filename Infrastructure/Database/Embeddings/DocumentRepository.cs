@@ -14,10 +14,10 @@ namespace Infrastructure.Database.Embeddings
         : Repository<Document>(_context)
         , IDocumentRepository
     {
-        public async Task<List<Document>> GetDocumentosRelacionadosAsync(
+        public Task<List<Document>> GetDocumentosRelacionadosAsync(
             ReadOnlyMemory<float> embedding)
         {
-            var chunks = await _context.Documents
+            return _context.Documents
                 .OrderBy(
                     d => d.Chunks
                         .Min(
@@ -26,8 +26,6 @@ namespace Infrastructure.Database.Embeddings
                                     embedding.ToArray())))
                 .Take(15)
                 .ToListAsync();
-
-            return chunks;
         }
 
         public Task<List<string>> GetAllFilenamesAsync()
