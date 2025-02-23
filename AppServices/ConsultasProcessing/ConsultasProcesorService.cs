@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -54,11 +55,13 @@ namespace AppServices.ConsultasProcessing
 
             foreach (var consultaData in consultasDatas)
             {
+                var stopwatch = Stopwatch.StartNew();
+
                 _logger.LogInformation(
                     @"Procesando consulta
-Id: {id}
-Titulo: {titulo}
-{i}/{count}",
+            Id: {id}
+            Titulo: {titulo}
+            {i}/{count}",
                     consultaData.Id,
                     consultaData.Titulo,
                     i++,
@@ -77,10 +80,21 @@ Titulo: {titulo}
                     _logger.LogError(
                         ex,
                         @"Error al procesar la consulta:
-Id: {id}
-Titulo: {titulo}",
+            Id: {id}
+            Titulo: {titulo}",
                         consultaData.Id,
                         consultaData.Titulo);
+                }
+
+                // Se espera 4 segundos entre cada consulta
+                // Esto es para no sobrecargar la API gratiuta de Gemini
+                stopwatch.Stop();
+                var elapsed = stopwatch.Elapsed;
+                var delay = TimeSpan.FromSeconds(4) - elapsed;
+
+                if (delay > TimeSpan.Zero)
+                {
+                    await Task.Delay(delay);
                 }
             }
         }

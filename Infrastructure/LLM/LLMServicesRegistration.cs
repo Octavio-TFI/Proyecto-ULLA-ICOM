@@ -63,7 +63,7 @@ namespace Infrastructure.LLM
 
                     var kernelBuilder = Kernel.CreateBuilder()
                         .AddGoogleAIGeminiChatCompletion(
-                            "gemini-2.0-flash-lite-preview-02-05",
+                            "gemini-2.0-flash",
                             apiKey);
 
                     kernelBuilder.Services
