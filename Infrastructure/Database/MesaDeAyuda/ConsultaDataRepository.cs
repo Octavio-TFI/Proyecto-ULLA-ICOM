@@ -15,7 +15,7 @@ namespace Infrastructure.Database.MesaDeAyuda
     {
         readonly IFileManager _fileManager = fileManager;
 
-        public async Task<List<ConsultaData>> GetAllAsync()
+        public async Task<List<ConsultaData>> GetAllAsync(int[] existingIds)
         {
             string mesaDeAyudaXml = await _fileManager.ReadAllTextAsync(
                 "MesaDeAyuda.xml");
@@ -37,7 +37,8 @@ namespace Infrastructure.Database.MesaDeAyuda
                     .Element("record-id")?
                     .Value;
 
-                if (!int.TryParse(idString, out int id))
+                if (!int.TryParse(idString, out int id) ||
+                    existingIds.Contains(id))
                 {
                     continue;
                 }

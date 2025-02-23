@@ -16,6 +16,8 @@ namespace AppServices.ConsultasProcessing.Tests
         public async Task ExecuteAsyncTest()
         {
             // Arrange
+            int[] existingIds = [3];
+
             List<ConsultaData> consultasDatas = [
             new()
             {
@@ -32,14 +34,6 @@ namespace AppServices.ConsultasProcessing.Tests
                 Descripcion = "Descripcion2",
                 PreFixes = [],
                 Fix = "Fix2"
-            },
-            new()
-            {
-                Id = 3,
-                Titulo = "Titulo3",
-                Descripcion = "Descripcion3",
-                PreFixes = [],
-                Fix = "Fix3"
             }];
 
             var consulta = new Consulta
@@ -59,16 +53,16 @@ namespace AppServices.ConsultasProcessing.Tests
             var consultaRepositoryMock = new Mock<IConsultaRepository>();
             var unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            consultaDataRepositoryMock.Setup(x => x.GetAllAsync())
+            consultaRepositoryMock.Setup(x => x.GetAllIdsAsync())
+                .ReturnsAsync(existingIds);
+
+            consultaDataRepositoryMock.Setup(x => x.GetAllAsync(existingIds))
                 .ReturnsAsync(consultasDatas);
 
-            consultaRepositoryMock.Setup(x => x.GetAllIdsAsync())
-                .ReturnsAsync([1]);
-
-            consultaProcessorMock.Setup(x => x.ProcessAsync(consultasDatas[1]))
+            consultaProcessorMock.Setup(x => x.ProcessAsync(consultasDatas[0]))
                 .ReturnsAsync(consulta);
 
-            consultaProcessorMock.Setup(x => x.ProcessAsync(consultasDatas[2]))
+            consultaProcessorMock.Setup(x => x.ProcessAsync(consultasDatas[1]))
                 .ThrowsAsync(new Exception());
 
             services.AddSingleton(consultaRepositoryMock.Object);

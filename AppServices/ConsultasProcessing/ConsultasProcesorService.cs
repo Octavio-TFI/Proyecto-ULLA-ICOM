@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AppServices.ConsultasProcessing
@@ -27,6 +28,15 @@ namespace AppServices.ConsultasProcessing
         protected override async Task ExecuteAsync(
             CancellationToken stoppingToken)
         {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                await ProcessConsultasAsync();
+                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+            }
+        }
+
+        async Task ProcessConsultasAsync()
+        {
             var scopeServices = _services.CreateScope().ServiceProvider;
 
             var consultasRepository = scopeServices
@@ -36,11 +46,9 @@ namespace AppServices.ConsultasProcessing
                 .GetRequiredKeyedService<IUnitOfWork>(Contexts.Embedding);
 
             // Se obtienen las consultas de la base de datos de mesa de ayuda
-            var consultasDatas = await _consultaDataRepository.GetAllAsync();
-
-            // Consultas ya procesadas se saltean
-            var ids = await consultasRepository.GetAllIdsAsync();
-            consultasDatas = consultasDatas.ExceptBy(ids, x => x.Id).ToList();
+            var existingIds = await consultasRepository.GetAllIdsAsync();
+            var consultasDatas = await _consultaDataRepository.GetAllAsync(
+                existingIds);
 
             int i = 1;
 

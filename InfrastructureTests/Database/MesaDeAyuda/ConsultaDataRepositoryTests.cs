@@ -89,6 +89,18 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
     </defect>
 
     <defect>
+      <record-id>6</record-id>
+      <summary>Issue with login functionality</summary>
+      <reported-by-record>
+        <description>User reported that they are unable to log in</description>
+      </reported-by-record>
+      <defect-event>
+        <event-name>Fix</event-name>
+        <notes>Adjusted session timeout settings, issue resolved</notes>
+      </defect-event>
+    </defect>
+
+    <defect>
       <record-id>sad</record-id>
       <summary>UI display bug</summary>
       <reported-by-record>
@@ -121,7 +133,7 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
                 fileManagerMock.Object);
 
             // Act
-            var consultaDatas = await consultaDataRepository.GetAllAsync();
+            var consultaDatas = await consultaDataRepository.GetAllAsync([6]);
 
             // Assert
             Assert.That(consultaDatas, Has.Count.EqualTo(3));
