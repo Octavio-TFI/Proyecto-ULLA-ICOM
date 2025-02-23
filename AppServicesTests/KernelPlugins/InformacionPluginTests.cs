@@ -99,5 +99,67 @@ namespace AppServices.KernelPlugins.Tests
 
             Assert.That(result, Is.EqualTo(expected));
         }
+
+        [Test]
+        public async Task BuscarInformacionAsync_NoDocumentsNoConsultasTest()
+        {
+            // Arrange
+            var textEmbeddingGenerationService
+                = new Mock<ITextEmbeddingGenerationService>();
+            var consultaRepository = new Mock<IConsultaRepository>();
+            var documentRepository = new Mock<IDocumentRepository>();
+            var rankerMock = new Mock<IRanker>();
+
+            var consulta = "consulta";
+            var embeddingConsulta = new ReadOnlyMemory<float>([1, 2, 3]);
+
+            textEmbeddingGenerationService
+                .Setup(
+                    x => x.GenerateEmbeddingsAsync(
+                        It.Is<IList<string>>(x => x.Contains(consulta)),
+                        null,
+                        default))
+                .ReturnsAsync([embeddingConsulta]);
+
+            consultaRepository
+                .Setup(x => x.GetConsultasSimilaresAsync(embeddingConsulta))
+                .ReturnsAsync(new List<Consulta>());
+
+            documentRepository.Setup(
+                x => x.GetDocumentosRelacionadosAsync(embeddingConsulta))
+                .ReturnsAsync(new List<Document>());
+
+            rankerMock.Setup(
+                x => x.RankAsync(It.IsAny<List<Consulta>>(), consulta))
+                .ReturnsAsync(new List<Consulta>());
+
+            rankerMock.Setup(
+                x => x.RankAsync(It.IsAny<List<Document>>(), consulta))
+                .ReturnsAsync(new List<Document>());
+
+            var consultasPlugin = new InformacionPlugin(
+                Mock.Of<ILogger<InformacionPlugin>>(),
+                textEmbeddingGenerationService.Object,
+                consultaRepository.Object,
+                documentRepository.Object,
+                rankerMock.Object);
+
+            // Act
+            string result = await consultasPlugin.BuscarInformacionAsync(
+                consulta);
+
+            // Assert
+            string expected = new StringBuilder()
+                .Append("[Documentación]")
+                .AppendLine()
+                .AppendLine("No se encontro documentación relacionada")
+                .AppendLine()
+                .Append("[Consultas Históricas]")
+                .AppendLine()
+                .AppendLine("No se encontraron consultas históricas similares")
+                .ToString();
+
+            Assert.That(result, Is.EqualTo(expected));
+        }
     }
 }
