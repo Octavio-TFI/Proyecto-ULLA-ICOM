@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AppServices.ConsultasProcessing.Tests
 {
-    internal class ConsultasProcessingService
+    internal class ConsultasProcessingServiceTests
     {
         [Test]
         public async Task ExecuteAsyncTest()
