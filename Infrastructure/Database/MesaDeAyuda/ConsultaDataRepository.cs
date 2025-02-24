@@ -44,6 +44,14 @@ namespace Infrastructure.Database.MesaDeAyuda
 
             foreach (var defect in defects)
             {
+                string? dateString = defect.Element("date-entered")?.Value;
+
+                if (!DateTime.TryParse(dateString, out DateTime date) ||
+                    date.Year < 2010)
+                {
+                    continue;
+                }
+
                 string? idString = defect
                     .Element("record-id")?
                     .Value;

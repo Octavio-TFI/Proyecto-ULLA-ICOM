@@ -23,6 +23,7 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
         <event-name>Fix</event-name>
         <notes>Adjusted session timeout settings, issue resolved</notes>
       </defect-event>
+      <date-entered>2011-05-01</date-entered>
     </defect>
 
     <defect>
@@ -43,6 +44,7 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
         <event-name>Fix</event-name>
         <notes>Applied patch to database driver</notes>
       </defect-event>
+      <date-entered>2012-07-15</date-entered>
     </defect>
 
     <defect>
@@ -59,10 +61,12 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
         <event-name>Fix</event-name>
         <notes>Adjusted CSS for responsive design</notes>
       </defect-event>
+      <date-entered>2010-11-20</date-entered>
     </defect>
 
     <defect>
       <record-id>4</record-id>
+      <summary>UI display bug</summary>
       <reported-by-record>
         <description>On smaller screens, the layout breaks</description>
       </reported-by-record>
@@ -74,6 +78,7 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
         <event-name>Fix</event-name>
         <notes>Adjusted CSS for responsive design</notes>
       </defect-event>
+      <date-entered>2009-11-20</date-entered>
     </defect>
 
     <defect>
@@ -86,6 +91,7 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
         <event-name>Pre-fix</event-name>
         <notes>Reproduced issue on mobile device</notes>
       </defect-event>
+      <date-entered>2014-08-25</date-entered>
     </defect>
 
     <defect>
@@ -98,6 +104,7 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
         <event-name>Fix</event-name>
         <notes>Adjusted session timeout settings, issue resolved</notes>
       </defect-event>
+      <date-entered>2015-01-30</date-entered>
     </defect>
 
     <defect>
@@ -114,6 +121,7 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
         <event-name>Fix</event-name>
         <notes>Adjusted CSS for responsive design</notes>
       </defect-event>
+      <date-entered>2008-12-05</date-entered>
     </defect>
 
   </defects>
