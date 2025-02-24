@@ -43,20 +43,23 @@ namespace Domain.Entities
 
             if (Descripcion is not null)
             {
-                sb.AppendLine($"## Descripcion");
+                sb.AppendLine("## Descripcion");
                 sb.AppendLine(Descripcion);
             }
 
             if (PreFixes.Length > 0)
             {
-                sb.AppendLine($"## Pre-Fixes");
+                int i = 1;
+
+                sb.AppendLine("## Pre-Fixes");
                 foreach (var preFix in PreFixes)
                 {
-                    sb.AppendLine($"- {preFix}");
+                    sb.AppendLine($"### Pre-Fix {i++}");
+                    sb.AppendLine(preFix);
                 }
             }
 
-            sb.AppendLine($"## Fix");
+            sb.AppendLine("## Fix");
             sb.AppendLine(Fix);
 
             return sb.ToString();

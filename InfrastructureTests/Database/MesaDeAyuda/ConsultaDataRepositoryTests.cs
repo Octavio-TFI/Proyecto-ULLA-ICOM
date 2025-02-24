@@ -23,7 +23,7 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
         <event-name>Fix</event-name>
         <notes>Adjusted session timeout settings, issue resolved</notes>
       </defect-event>
-      <date-entered>2011-05-01</date-entered>
+      <date-entered>2016-05-01</date-entered>
     </defect>
 
     <defect>
@@ -44,7 +44,7 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
         <event-name>Fix</event-name>
         <notes>Applied patch to database driver</notes>
       </defect-event>
-      <date-entered>2012-07-15</date-entered>
+      <date-entered>2017-07-15</date-entered>
     </defect>
 
     <defect>
@@ -61,7 +61,7 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
         <event-name>Fix</event-name>
         <notes>Adjusted CSS for responsive design</notes>
       </defect-event>
-      <date-entered>2010-11-20</date-entered>
+      <date-entered>2015-11-20</date-entered>
     </defect>
 
     <defect>
@@ -78,7 +78,7 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
         <event-name>Fix</event-name>
         <notes>Adjusted CSS for responsive design</notes>
       </defect-event>
-      <date-entered>2009-11-20</date-entered>
+      <date-entered>2014-11-20</date-entered>
     </defect>
 
     <defect>
@@ -91,7 +91,7 @@ namespace Infrastructure.Database.MesaDeAyuda.Tests
         <event-name>Pre-fix</event-name>
         <notes>Reproduced issue on mobile device</notes>
       </defect-event>
-      <date-entered>2014-08-25</date-entered>
+      <date-entered>2016-08-25</date-entered>
     </defect>
 
     <defect>

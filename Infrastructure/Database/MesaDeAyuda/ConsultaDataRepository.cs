@@ -47,7 +47,7 @@ namespace Infrastructure.Database.MesaDeAyuda
                 string? dateString = defect.Element("date-entered")?.Value;
 
                 if (!DateTime.TryParse(dateString, out DateTime date) ||
-                    date.Year < 2010)
+                    date.Year < 2015)
                 {
                     continue;
                 }
