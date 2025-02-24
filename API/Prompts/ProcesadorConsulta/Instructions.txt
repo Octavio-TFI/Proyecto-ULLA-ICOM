@@ -7,10 +7,10 @@ Esta consulta puede contener:
 - Posibles "pre-fixes" o intentos previos de la solución
 - Una solución o "fix"
 
-Tu tarea es analizar la consulta para extraer una descripción del problema y una descripción de la solución.
+Tu tarea es analizar la consulta para extraer una descripción del problema y una descripción detallada de la solución.
 Debes generar un JSON que contenga:
 Descripción del problema: Un resumen conciso del problema técnico relacionado con el software CAPATAZ (sin informacion personal).
-Descripción de la solución: Una descripción detallada de la solución al problema, basándote en la información provista en el fix o en cualquier otro dato relevante de la consulta (sin informacion personal).
+Descripción de la solución: Una descripción muy detallada con los pasos para solucionar el problema, basándote en la información provista en el fix o en cualquier otro dato relevante de la consulta (sin informacion personal).
 
 ESTOS DATOS SON SENSIBLES Y PUEDEN CONTENER INFORMACION PERSONAL O CONFIDENCIAL.
 ES MUY IMPORTANTE IGNORAR Y ELIMINAR INFORMACION PERSONAL COMO NOMBRES, DIRECCIONES DE CORREO ELECTRONICO O DATOS IRRELEVANTES.
