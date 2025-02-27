@@ -3,6 +3,7 @@ using Domain.Abstractions.Factories;
 using Domain.Entities;
 using Domain.Factories;
 using Domain.Repositories;
+using Domain.Services;
 using Domain.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -42,6 +43,18 @@ namespace Domain
                         .SetTemperature(0.2)
                         .SetResponseSchema(typeof(ConsultaResumen))
                         .Build(TipoAgent.ProcesadorConsulta, TipoLLM.Grande);
+                });
+
+            services.AddKeyedTransient(
+                TipoAgent.Chat,
+                (services, key) =>
+                {
+                    var builder = services.GetRequiredService<IAgentBuilder>();
+
+                    return builder
+                        .AddTool<InformacionTool>("buscar")
+                        .SetTemperature(0.2)
+                        .Build(TipoAgent.Chat, TipoLLM.Grande);
                 });
         }
     }

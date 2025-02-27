@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.LLM.Abstractions
 {
-    internal interface IChatHistoryFactory
+    internal interface IChatHistoryAdapter
     {
         /// <summary>
-        /// Crea un ChatHistory a partir de una lista de mensajes.
+        /// Adapta una lista de mensajes a un ChatHistory
         /// </summary>
         /// <param name="mensajes">Lista de mensajes</param>
         /// <returns>ChatHistory con mensajes</returns>
-        ChatHistory Create(List<Mensaje> mensajes);
+        ChatHistory Adapt(List<Mensaje> mensajes);
     }
 }

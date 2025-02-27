@@ -17,17 +17,17 @@ namespace Infrastructure.LLM
 {
     internal class Agent(
         ChatCompletionAgent agent,
-        IChatHistoryFactory chatHistoryFactory)
+        IChatHistoryAdapter chatHistoryFactory)
         : IAgent
     {
         readonly ChatCompletionAgent _agent = agent;
-        readonly IChatHistoryFactory _chatHistoryFactory = chatHistoryFactory;
+        readonly IChatHistoryAdapter _chatHistoryFactory = chatHistoryFactory;
 
         public async Task<string> GenerarRespuestaAsync(
             List<Mensaje> mensajes,
             Dictionary<string, object?>? arguments = null)
         {
-            var chatHistory = _chatHistoryFactory.Create(mensajes);
+            var chatHistory = _chatHistoryFactory.Adapt(mensajes);
 
             var kernelArguments = new KernelArguments(arguments ?? []);
 

@@ -4,6 +4,7 @@ using Domain.Abstractions;
 using Domain.Entities;
 using Domain.Events;
 using Domain.Repositories;
+using Domain.ValueObjects;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,7 +18,7 @@ namespace AppServices.EventHandlers
 {
     internal class MensajeRecibidoHandler(
         IChatRepository chatRepository,
-        IAgent generadorRespuesta,
+        [FromKeyedServices(TipoAgent.Chat)] IAgent generadorRespuesta,
         [FromKeyedServices(Contexts.Chat)] IUnitOfWork unitOfWork,
         ILogger<MensajeGeneradoHandler> logger)
         : INotificationHandler<MensajeRecibidoEvent>

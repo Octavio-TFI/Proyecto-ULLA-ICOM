@@ -1,10 +1,8 @@
 ﻿using AppServices.Abstractions;
+using Domain.Abstractions;
 using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.VectorData;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Embeddings;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,16 +10,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.KernelPlugins
+namespace Domain.Services
 {
-    internal class InformacionPlugin(
-        ILogger<InformacionPlugin> _logger,
-        ITextEmbeddingGenerationService _embeddingService,
+    internal class InformacionTool(
+        ILogger<InformacionTool> _logger,
+        IEmbeddingService _embeddingService,
         IConsultaRepository _consultaRepository,
         IDocumentRepository _documentRepository,
         IRanker _ranker)
     {
-        [KernelFunction("informacion")]
+        [DisplayName("informacion")]
         [Description(
             "Busca documentación relacionada a la pregunta del usuario y soluciones a preguntas similares")]
         public async Task<string> BuscarInformacionAsync(
@@ -35,12 +33,15 @@ BUSCANDO INFORMACION PARA QUERY:
                 pregunta);
 
             var embeddingConsulta = await _embeddingService
-                .GenerateEmbeddingAsync(pregunta);
+                .GenerateAsync(pregunta)
+                .ConfigureAwait(false);
 
             var consultas = await _consultaRepository
-                .GetConsultasSimilaresAsync(embeddingConsulta);
+                .GetConsultasSimilaresAsync(embeddingConsulta)
+                .ConfigureAwait(false);
 
-            var rankedConsultas = await _ranker.RankAsync(consultas, pregunta);
+            var rankedConsultas = await _ranker.RankAsync(consultas, pregunta)
+                .ConfigureAwait(false);
 
             _logger.LogInformation(
                 @"
@@ -51,9 +52,11 @@ SE ENCONTRARON {consultasCount} CONSULTAS PARA QUERY:
                 pregunta);
 
             var documents = await _documentRepository
-                .GetDocumentosRelacionadosAsync(embeddingConsulta);
+                .GetDocumentosRelacionadosAsync(embeddingConsulta)
+                .ConfigureAwait(false);
 
-            var rankedDocuments = await _ranker.RankAsync(documents, pregunta);
+            var rankedDocuments = await _ranker.RankAsync(documents, pregunta)
+                .ConfigureAwait(false);
 
             _logger.LogInformation(
                 @"

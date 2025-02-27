@@ -1,7 +1,6 @@
 ﻿using AppServices.Abstractions;
 using AppServices.ConsultasProcessing;
 using AppServices.DocumentProcessing;
-using AppServices.KernelPlugins;
 using AppServices.Ports;
 using Domain.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,26 +50,6 @@ namespace AppServices
                 services => (string plataforma) =>
                 {
                     return services.GetRequiredKeyedService<IClient>(plataforma);
-                });
-
-            services.AddKeyedScoped(
-                TipoAgent.Chat,
-                (services, key) =>
-                {
-                    var kernel = services.GetRequiredKeyedService<Kernel>(
-                        TipoKernel.Grande);
-
-                    var informacionPlugin = kernel.Plugins
-                        .AddFromType<InformacionPlugin>(
-                            "buscar",
-                            serviceProvider: services);
-
-                    return services.GetRequiredService<AgentFactory>()
-                        .Create(
-                            kernel,
-                            TipoAgent.Chat,
-                            FunctionChoiceBehavior.Auto(informacionPlugin),
-                            temperature: 0.2);
                 });
 
             return services.AddMediatR(

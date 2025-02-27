@@ -30,13 +30,12 @@ namespace Infrastructure.LLM
                 });
 
             services
-                .AddSingleton<ITextEmbeddingGenerationService, LMStudioEmbeddingService>(
+                .AddSingleton<IEmbeddingService, LMStudioEmbeddingService>(
                     );
 
-            services
-                .AddHttpClient<ITextEmbeddingGenerationService, LMStudioEmbeddingService>(
-                    x => x.BaseAddress =
-                        new Uri("http://ulaai.ulanet.local:1234/v1/embeddings"));
+            services.AddHttpClient<IEmbeddingService, LMStudioEmbeddingService>(
+                x => x.BaseAddress =
+                    new Uri("http://ulaai.ulanet.local:1234/v1/embeddings"));
 
             services.AddKeyedTransient(
                 TipoLLM.Pequeño,
@@ -76,6 +75,7 @@ namespace Infrastructure.LLM
                 });
 
             services.AddTransient<IAgentBuilder, AgentBuilder>();
+            services.AddSingleton<IChatHistoryAdapter, ChatHistoryAdapter>();
 
             return services;
         }

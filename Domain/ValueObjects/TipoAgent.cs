@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Domain.ValueObjects
 {
-    internal static class TipoAgent
+    public static class TipoAgent
     {
-        internal const string ProcesadorConsulta = "ProcesadorConsulta";
+        public const string ProcesadorConsulta = "ProcesadorConsulta";
 
-        internal const string Ranker = "Ranker";
+        public const string Ranker = "Ranker";
 
-        internal const string Chat = "Chat";
+        public const string Chat = "Chat";
     }
 }

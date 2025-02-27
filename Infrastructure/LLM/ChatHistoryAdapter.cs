@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.LLM
 {
-    internal class ChatHistoryFactory
-        : IChatHistoryFactory
+    internal class ChatHistoryAdapter
+        : IChatHistoryAdapter
     {
-        public ChatHistory Create(List<Mensaje> mensajes)
+        public ChatHistory Adapt(List<Mensaje> mensajes)
         {
             ChatHistory chatHistory = [];
 

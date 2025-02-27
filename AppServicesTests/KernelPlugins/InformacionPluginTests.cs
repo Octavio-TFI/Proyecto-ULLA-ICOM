@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Domain.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel.Embeddings;
 using System;
@@ -74,7 +75,7 @@ namespace AppServices.KernelPlugins.Tests
                 .ReturnsAsync(documentos);
 
             var consultasPlugin = new InformacionPlugin(
-                Mock.Of<ILogger<InformacionPlugin>>(),
+                Mock.Of<ILogger<InformacionTool>>(),
                 textEmbeddingGenerationService.Object,
                 consultaRepository.Object,
                 documentRepository.Object,
@@ -138,7 +139,7 @@ namespace AppServices.KernelPlugins.Tests
                 .ReturnsAsync(new List<Document>());
 
             var consultasPlugin = new InformacionPlugin(
-                Mock.Of<ILogger<InformacionPlugin>>(),
+                Mock.Of<ILogger<InformacionTool>>(),
                 textEmbeddingGenerationService.Object,
                 consultaRepository.Object,
                 documentRepository.Object,
