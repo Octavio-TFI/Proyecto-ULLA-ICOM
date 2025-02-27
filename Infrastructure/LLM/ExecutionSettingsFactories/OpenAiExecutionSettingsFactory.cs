@@ -1,4 +1,4 @@
-﻿using AppServices.Ports;
+﻿using Infrastructure.LLM.Abstractions;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using System;

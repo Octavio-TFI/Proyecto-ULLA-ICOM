@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.Abstractions
+namespace Domain.Abstractions.Factories
 {
-    internal interface IConsultaProcessor
+    public interface IConsultaFactory
     {
         /// <summary>
-        /// Procesa los datos de una consulta y genera los embeddings
+        /// Crea una consulta con sus embeddings a partir de los datos de la consulta
         /// </summary>
         /// <param name="consultaData">Datos de la consulta</param>
         /// <returns>Consulta con embeddings generados</returns>
-        Task<Consulta> ProcessAsync(ConsultaData consultaData);
+        Task<Consulta> CreateAsync(ConsultaData consultaData);
     }
 }

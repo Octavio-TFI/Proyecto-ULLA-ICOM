@@ -16,7 +16,7 @@ namespace AppServices.EventHandlers.Tests
         {
             // Arrange
             var mensajeRepositoryMock = new Mock<IMensajeRepository>();
-            var generadorRespuestaMock = new Mock<IGeneradorRespuesta>();
+            var generadorRespuestaMock = new Mock<IAgent>();
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             var loggerMock = new Mock<ILogger<MensajeGeneradoHandler>>();
 

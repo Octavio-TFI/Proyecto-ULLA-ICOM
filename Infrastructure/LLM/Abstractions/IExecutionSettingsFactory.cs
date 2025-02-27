@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.Ports
+namespace Infrastructure.LLM.Abstractions
 {
-    public interface IExecutionSettingsFactory
+    internal interface IExecutionSettingsFactory
     {
         PromptExecutionSettings Create(
             FunctionChoiceBehavior? functionChoiceBehavior,

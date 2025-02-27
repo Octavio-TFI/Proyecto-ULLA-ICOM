@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.Agents
+namespace Domain.ValueObjects
 {
     internal static class TipoAgent
     {

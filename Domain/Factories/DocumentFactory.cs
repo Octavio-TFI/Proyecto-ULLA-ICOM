@@ -1,7 +1,6 @@
-﻿using Domain.Abstractions.Factories;
+﻿using Domain.Abstractions;
+using Domain.Abstractions.Factories;
 using Domain.Entities;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Embeddings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +10,10 @@ using System.Threading.Tasks;
 namespace Domain.Factories
 {
     internal class DocumentFactory(
-        ITextEmbeddingGenerationService embeddingService)
+        IEmbeddingService embeddingService)
         : IDocumentFactory
     {
-        readonly ITextEmbeddingGenerationService _emmbeddingService = embeddingService;
+        readonly IEmbeddingService _emmbeddingService = embeddingService;
 
         public async Task<Document> CreateAsync(
             string filename,
@@ -23,8 +22,9 @@ namespace Domain.Factories
         {
             var document = new Document { Filename = filename, Texto = text, };
 
-            var chunkEmbeddings = await _emmbeddingService.GenerateEmbeddingsAsync(
-                [.. textChunks]);
+            var chunkEmbeddings = await _emmbeddingService
+                .GenerateAsync(textChunks)
+                .ConfigureAwait(false);
 
             for (int i = 0; i < textChunks.Count; i++)
             {

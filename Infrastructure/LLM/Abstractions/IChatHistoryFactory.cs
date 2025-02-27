@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.Abstractions
+namespace Infrastructure.LLM.Abstractions
 {
     internal interface IChatHistoryFactory
     {

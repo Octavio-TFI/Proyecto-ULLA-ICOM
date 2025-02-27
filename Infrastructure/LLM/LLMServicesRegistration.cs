@@ -1,5 +1,7 @@
 ﻿using AppServices;
-using AppServices.Ports;
+using Domain.Abstractions;
+using Domain.ValueObjects;
+using Infrastructure.LLM.Abstractions;
 using Infrastructure.LLM.ExecutionSettingsFactories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,16 +30,16 @@ namespace Infrastructure.LLM
                 });
 
             services
-                .AddSingleton<ITextEmbeddingGenerationService, LMStudioTextEmbeddingGenerationService>(
+                .AddSingleton<ITextEmbeddingGenerationService, LMStudioEmbeddingService>(
                     );
 
             services
-                .AddHttpClient<ITextEmbeddingGenerationService, LMStudioTextEmbeddingGenerationService>(
+                .AddHttpClient<ITextEmbeddingGenerationService, LMStudioEmbeddingService>(
                     x => x.BaseAddress =
                         new Uri("http://ulaai.ulanet.local:1234/v1/embeddings"));
 
             services.AddKeyedTransient(
-                TipoKernel.Pequeño,
+                TipoLLM.Pequeño,
                 (services, key) =>
                 {
                     var kernelBuilder = Kernel.CreateBuilder()
@@ -53,7 +55,7 @@ namespace Infrastructure.LLM
                 });
 
             services.AddKeyedTransient(
-                TipoKernel.Grande,
+                TipoLLM.Grande,
                 (services, key) =>
                 {
                     string? apiKey = services
@@ -72,6 +74,8 @@ namespace Infrastructure.LLM
 
                     return kernelBuilder.Build();
                 });
+
+            services.AddTransient<IAgentBuilder, AgentBuilder>();
 
             return services;
         }

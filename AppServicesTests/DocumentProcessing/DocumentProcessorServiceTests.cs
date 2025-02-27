@@ -1,5 +1,4 @@
-﻿using AppServices.DocumentProcessing;
-using Domain;
+﻿using Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;

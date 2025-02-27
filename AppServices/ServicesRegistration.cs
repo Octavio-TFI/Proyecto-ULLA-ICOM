@@ -1,8 +1,6 @@
 ﻿using AppServices.Abstractions;
-using AppServices.Agents;
 using AppServices.ConsultasProcessing;
 using AppServices.DocumentProcessing;
-using AppServices.Factories;
 using AppServices.KernelPlugins;
 using AppServices.Ports;
 using AppServices.Ranking;
@@ -48,19 +46,14 @@ namespace AppServices
 
             // Procesamiento de consultas
             services.AddHostedService<ConsultasProcesorService>();
-            services.AddSingleton<IConsultaProcessor, ConsultaProcessor>();
 
             services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
-            services.AddScoped<IGeneradorRespuesta, GeneradorRespuesta>();
-            services.AddSingleton<IChatHistoryFactory, ChatHistoryFactory>();
             services.AddSingleton<IRanker, Ranker>();
             services.AddSingleton<Func<string, IClient>>(
                 services => (string plataforma) =>
                 {
                     return services.GetRequiredKeyedService<IClient>(plataforma);
                 });
-
-            services.AddSingleton<AgentFactory>();
 
             services.AddKeyedTransient(
                 TipoAgent.ProcesadorConsulta,

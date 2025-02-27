@@ -1,7 +1,6 @@
-﻿using AppServices.Abstractions;
-using AppServices.Ports;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.ValueObjects;
+using Infrastructure.LLM.Abstractions;
 using Microsoft.SemanticKernel.ChatCompletion;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.Factories
+namespace Infrastructure.LLM
 {
     internal class ChatHistoryFactory
         : IChatHistoryFactory

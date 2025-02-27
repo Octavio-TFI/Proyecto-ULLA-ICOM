@@ -1,5 +1,4 @@
-﻿using AppServices.Ports;
-using Infrastructure.Database;
+﻿using Infrastructure.Database;
 using Infrastructure.Database.Chats;
 using Infrastructure.Database.Embeddings;
 using Infrastructure.Outbox.Abstractions;

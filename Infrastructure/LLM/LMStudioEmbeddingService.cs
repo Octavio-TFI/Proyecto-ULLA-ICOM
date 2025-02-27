@@ -1,4 +1,5 @@
-﻿using Infrastructure.LLM.DTOs;
+﻿using Domain.Abstractions;
+using Infrastructure.LLM.DTOs;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
 using System;
@@ -11,30 +12,29 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.LLM
 {
-    internal class LMStudioTextEmbeddingGenerationService(
-        HttpClient _httpClient)
-        : ITextEmbeddingGenerationService
+    internal class LMStudioEmbeddingService(HttpClient _httpClient)
+        : IEmbeddingService
     {
-        public IReadOnlyDictionary<string, object?> Attributes
+        public async Task<float[]> GenerateAsync(string texto)
         {
-            get;
-        } = new Dictionary<string, object?>();
+            var result = await GenerateAsync([texto]).ConfigureAwait(false);
 
-        public async Task<IList<ReadOnlyMemory<float>>> GenerateEmbeddingsAsync(
-            IList<string> data,
-            Kernel? kernel = null,
-            CancellationToken cancellationToken = default)
+            return result.First();
+        }
+
+        public async Task<List<float[]>> GenerateAsync(
+            IList<string> textos)
         {
             var request = new EmbeddingRequest
             {
-                Input = data,
+                Input = textos,
                 Model = "text-embedding-nomic-embed-text-v1.5@f16"
             };
 
             var response = await _httpClient.PostAsJsonAsync(
                 string.Empty,
-                request,
-                cancellationToken);
+                request)
+                .ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -42,11 +42,12 @@ namespace Infrastructure.LLM
             }
 
             var embeddings = await response.Content
-                    .ReadFromJsonAsync<EmbeddingResponseList>(cancellationToken) ??
+                    .ReadFromJsonAsync<EmbeddingResponseList>()
+                    .ConfigureAwait(false) ??
                 throw new Exception("Error al obtener embeddings");
 
             return embeddings.Data
-                .Select(x => new ReadOnlyMemory<float>(x.Embedding))
+                .Select(x => x.Embedding)
                 .ToList();
         }
     }

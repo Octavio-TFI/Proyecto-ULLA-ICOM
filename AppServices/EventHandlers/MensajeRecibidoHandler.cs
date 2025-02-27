@@ -17,13 +17,13 @@ namespace AppServices.EventHandlers
 {
     internal class MensajeRecibidoHandler(
         IChatRepository chatRepository,
-        IGeneradorRespuesta generadorRespuesta,
+        IAgent generadorRespuesta,
         [FromKeyedServices(Contexts.Chat)] IUnitOfWork unitOfWork,
         ILogger<MensajeGeneradoHandler> logger)
         : INotificationHandler<MensajeRecibidoEvent>
     {
         readonly IChatRepository _chatRepository = chatRepository;
-        readonly IGeneradorRespuesta _generadorRespuesta = generadorRespuesta;
+        readonly IAgent _generadorRespuesta = generadorRespuesta;
         readonly IUnitOfWork _unitOfWork = unitOfWork;
         readonly ILogger<MensajeGeneradoHandler> _logger = logger;
 

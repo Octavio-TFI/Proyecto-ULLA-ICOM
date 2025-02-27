@@ -1,5 +1,3 @@
-using AppServices.Agents;
-using AppServices.Ports;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;

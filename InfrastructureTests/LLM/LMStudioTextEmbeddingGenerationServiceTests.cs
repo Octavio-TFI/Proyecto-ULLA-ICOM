@@ -24,7 +24,7 @@ namespace Infrastructure.LLM.Tests
 
             var httpClient = MockHttpClient(response);
 
-            var service = new LMStudioTextEmbeddingGenerationService(httpClient);
+            var service = new LMStudioEmbeddingService(httpClient);
 
             // Act
             async Task Act() => await service.GenerateEmbeddingsAsync(data);
@@ -47,7 +47,7 @@ namespace Infrastructure.LLM.Tests
 
             var httpClient = MockHttpClient(response);
 
-            var service = new LMStudioTextEmbeddingGenerationService(httpClient);
+            var service = new LMStudioEmbeddingService(httpClient);
 
             // Act
             async Task Act() => await service.GenerateEmbeddingsAsync(data);
@@ -77,7 +77,7 @@ namespace Infrastructure.LLM.Tests
 
             var httpClient = MockHttpClient(response);
 
-            var service = new LMStudioTextEmbeddingGenerationService(httpClient);
+            var service = new LMStudioEmbeddingService(httpClient);
 
             // Act
             var result = await service.GenerateEmbeddingsAsync(data);

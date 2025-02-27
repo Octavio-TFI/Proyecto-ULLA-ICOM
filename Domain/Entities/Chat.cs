@@ -57,12 +57,12 @@ namespace Domain.Entities
         /// <summary>
         /// Generar un mensaje de respuesta y lo añade a la lista de mensajes
         /// </summary>
-        /// <param name="generadorRespuesta">Generador de respuestas</param>
+        /// <param name="agente">Agente</param>
         /// <returns>Mensaje de respuesta generado</returns>
         public async Task<Mensaje> GenerarMensajeAsync(
-            IGeneradorRespuesta generadorRespuesta)
+            IAgent agente)
         {
-            var stringRespuesta = await generadorRespuesta
+            var stringRespuesta = await agente
                 .GenerarRespuestaAsync(Mensajes)
                 .ConfigureAwait(false);
 

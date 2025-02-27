@@ -1,11 +1,8 @@
-﻿using AppServices;
-using AppServices.Abstractions;
-using AppServices.Agents;
-using AppServices.Ports;
-using Domain.Abstractions;
+﻿using Domain.Abstractions;
 using Domain.Abstractions.Factories;
 using Domain.Entities;
 using Domain.ValueObjects;
+using Infrastructure.LLM.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
@@ -16,12 +13,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices
+namespace Infrastructure.LLM
 {
-    internal class GeneradorRespuesta(
-        [FromKeyedServices(TipoAgent.Chat)] ChatCompletionAgent agent,
+    internal class Agent(
+        ChatCompletionAgent agent,
         IChatHistoryFactory chatHistoryFactory)
-        : IGeneradorRespuesta
+        : IAgent
     {
         readonly ChatCompletionAgent _agent = agent;
         readonly IChatHistoryFactory _chatHistoryFactory = chatHistoryFactory;
@@ -29,6 +26,18 @@ namespace AppServices
         public async Task<string> GenerarRespuestaAsync(List<Mensaje> mensajes)
         {
             var chatHistory = _chatHistoryFactory.Create(mensajes);
+
+            var result = await _agent.InvokeAsync(chatHistory)
+                .FirstAsync()
+                .ConfigureAwait(false);
+
+            return result.ToString();
+        }
+
+        public async Task<string> GenerarRespuestaAsync(string mensaje)
+        {
+            var chatHistory = new ChatHistory();
+            chatHistory.AddUserMessage(mensaje);
 
             var result = await _agent.InvokeAsync(chatHistory)
                 .FirstAsync()

@@ -1,6 +1,7 @@
 ﻿using AppServices.Abstractions;
 using AppServices.Ports;
 using Domain;
+using Domain.Abstractions.Factories;
 using Domain.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,12 +19,13 @@ namespace AppServices.ConsultasProcessing
     internal class ConsultasProcesorService(
         IServiceProvider services,
         IConsultaDataRepository consultaDataRepository,
-        IConsultaProcessor _consultaProcessor,
+        IConsultaFactory consultaFactory,
         ILogger<ConsultasProcesorService> logger)
         : BackgroundService
     {
         readonly IServiceProvider _services = services;
         readonly IConsultaDataRepository _consultaDataRepository = consultaDataRepository;
+        readonly IConsultaFactory _consultaFactory = consultaFactory;
         readonly ILogger<ConsultasProcesorService> _logger = logger;
 
         protected override async Task ExecuteAsync(
@@ -69,7 +71,7 @@ namespace AppServices.ConsultasProcessing
 
                 try
                 {
-                    var consulta = await _consultaProcessor.ProcessAsync(
+                    var consulta = await _consultaFactory.CreateAsync(
                         consultaData);
 
                     await consultasRepository.InsertAsync(consulta);

@@ -9,6 +9,10 @@ namespace Domain.Entities
     public class Consulta
         : Entity
     {
+        internal Consulta()
+        {
+        }
+
         public new required int Id { get; set; }
 
         public required string Titulo { get; set; }

@@ -1,6 +1,4 @@
-﻿using AppServices.Agents;
-using AppServices.ConsultasProcessing;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;

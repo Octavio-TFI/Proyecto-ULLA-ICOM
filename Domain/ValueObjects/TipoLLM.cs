@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices
+namespace Domain.ValueObjects
 {
-    public enum TipoKernel
+    public enum TipoLLM
     {
         Indefinido,
         Pequeño,
