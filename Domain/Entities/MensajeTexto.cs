@@ -9,6 +9,10 @@ namespace Domain.Entities
     public class MensajeTexto
         : Mensaje
     {
+        internal MensajeTexto()
+        {
+        }
+
         /// <summary>
         /// Texto del mensaje
         /// </summary>

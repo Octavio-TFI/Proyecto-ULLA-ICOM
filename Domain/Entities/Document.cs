@@ -9,6 +9,10 @@ namespace Domain.Entities
     public class Document
         : Entity
     {
+        internal Document()
+        {
+        }
+
         public required string Filename { get; set; }
 
         public required string Texto { get; set; }
