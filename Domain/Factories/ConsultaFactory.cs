@@ -45,12 +45,5 @@ namespace Domain.Factories
                 EmbeddingDescripcion = embeddings[1].ToArray()
             };
         }
-
-        private class ConsultaResumen
-        {
-            public required string Descripcion { get; set; }
-
-            public required string Solucion { get; set; }
-        }
     }
 }

@@ -28,7 +28,20 @@ namespace Domain
 
                     return builder
                         .SetTemperature(0.2)
-                        .Build(TipoAgent.Ranker, TipoLLM.Grande);
+                        .SetResponseSchema(typeof(RankerResult))
+                        .Build(TipoAgent.Ranker, TipoLLM.Pequeño);
+                });
+
+            services.AddKeyedTransient(
+                TipoAgent.ProcesadorConsulta,
+                (services, key) =>
+                {
+                    var builder = services.GetRequiredService<IAgentBuilder>();
+
+                    return builder
+                        .SetTemperature(0.2)
+                        .SetResponseSchema(typeof(ConsultaResumen))
+                        .Build(TipoAgent.ProcesadorConsulta, TipoLLM.Grande);
                 });
         }
     }

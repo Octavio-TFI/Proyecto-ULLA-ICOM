@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.Ranking
+namespace Domain.ValueObjects
 {
     internal record RankerResult
     {

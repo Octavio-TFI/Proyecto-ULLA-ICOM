@@ -23,23 +23,31 @@ namespace Infrastructure.LLM
         readonly ChatCompletionAgent _agent = agent;
         readonly IChatHistoryFactory _chatHistoryFactory = chatHistoryFactory;
 
-        public async Task<string> GenerarRespuestaAsync(List<Mensaje> mensajes)
+        public async Task<string> GenerarRespuestaAsync(
+            List<Mensaje> mensajes,
+            Dictionary<string, object?>? arguments = null)
         {
             var chatHistory = _chatHistoryFactory.Create(mensajes);
 
-            var result = await _agent.InvokeAsync(chatHistory)
+            var kernelArguments = new KernelArguments(arguments ?? []);
+
+            var result = await _agent.InvokeAsync(chatHistory, kernelArguments)
                 .FirstAsync()
                 .ConfigureAwait(false);
 
             return result.ToString();
         }
 
-        public async Task<string> GenerarRespuestaAsync(string mensaje)
+        public async Task<string> GenerarRespuestaAsync(
+            string mensaje,
+            Dictionary<string, object?>? arguments = null)
         {
             var chatHistory = new ChatHistory();
             chatHistory.AddUserMessage(mensaje);
 
-            var result = await _agent.InvokeAsync(chatHistory)
+            var kernelArguments = new KernelArguments(arguments ?? []);
+
+            var result = await _agent.InvokeAsync(chatHistory, kernelArguments)
                 .FirstAsync()
                 .ConfigureAwait(false);
 

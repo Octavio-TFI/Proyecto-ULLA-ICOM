@@ -1,11 +1,8 @@
 ﻿using AppServices.Abstractions;
+using Domain.Abstractions;
 using Domain.Entities;
-using Microsoft.Extensions.AI;
+using Domain.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Agents;
-using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.TextGeneration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,13 +11,13 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace AppServices.Ranking
+namespace Domain.Services
 {
     internal class Ranker(
-        [FromKeyedServices(TipoAgent.Ranker)] ChatCompletionAgent rankingAgent)
+        [FromKeyedServices(TipoAgent.Ranker)] IAgent rankingAgent)
         : IRanker
     {
-        readonly ChatCompletionAgent _rankingAgent = rankingAgent;
+        readonly IAgent _rankingAgent = rankingAgent;
 
         public async Task<List<T>> RankAsync<T>(
             List<T> datosRecuperados,
@@ -31,17 +28,14 @@ namespace AppServices.Ranking
 
             foreach (T datosRecuperado in datosRecuperados)
             {
-                var arguments = new KernelArguments()
+                var arguments = new Dictionary<string, object?>
                 {
                     ["document"] = datosRecuperado.ToString()
                 };
 
-                ChatHistory chat = [];
-                chat.AddUserMessage(consulta);
-
                 var agentResult = await _rankingAgent
-                    .InvokeAsync(chat, arguments)
-                    .FirstAsync();
+                    .GenerarRespuestaAsync(consulta, arguments)
+                    .ConfigureAwait(false);
 
                 var result = JsonConvert.DeserializeObject<RankerResult>(
                     agentResult.ToString());

@@ -13,14 +13,20 @@ namespace Domain.Abstractions
         /// Genera una respuesta a partir de mensajes.
         /// </summary>
         /// <param name="mensajes">Mensajes</param>
+        /// <param name="arguments">Argumentos</param>
         /// <returns>Respuesta generada por el agente</returns>
-        Task<string> GenerarRespuestaAsync(List<Mensaje> mensajes);
+        Task<string> GenerarRespuestaAsync(
+            List<Mensaje> mensajes,
+            Dictionary<string, object?>? arguments = null);
 
         /// <summary>
         /// Genera una respuesta a partir de un mensaje.
         /// </summary>
         /// <param name="mensaje">Mensaje</param>
+        /// <param name="arguments">Argumentos</param>
         /// <returns>Respuesta generada por el agente</returns>
-        Task<string> GenerarRespuestaAsync(string mensaje);
+        Task<string> GenerarRespuestaAsync(
+            string mensaje,
+            Dictionary<string, object?>? arguments = null);
     }
 }

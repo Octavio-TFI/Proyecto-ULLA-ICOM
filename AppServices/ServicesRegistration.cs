@@ -3,7 +3,6 @@ using AppServices.ConsultasProcessing;
 using AppServices.DocumentProcessing;
 using AppServices.KernelPlugins;
 using AppServices.Ports;
-using AppServices.Ranking;
 using Domain.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
@@ -48,41 +47,10 @@ namespace AppServices
             services.AddHostedService<ConsultasProcesorService>();
 
             services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
-            services.AddSingleton<IRanker, Ranker>();
             services.AddSingleton<Func<string, IClient>>(
                 services => (string plataforma) =>
                 {
                     return services.GetRequiredKeyedService<IClient>(plataforma);
-                });
-
-            services.AddKeyedTransient(
-                TipoAgent.ProcesadorConsulta,
-                (services, key) =>
-                {
-                    var kernel = services.GetRequiredKeyedService<Kernel>(
-                        TipoKernel.Grande);
-
-                    return services.GetRequiredService<AgentFactory>()
-                        .Create(
-                            kernel,
-                            TipoAgent.ProcesadorConsulta,
-                            schema: typeof(ConsultaResumen),
-                            temperature: 0.2);
-                });
-
-            services.AddKeyedTransient(
-                TipoAgent.Ranker,
-                (services, key) =>
-                {
-                    var kernel = services.GetRequiredKeyedService<Kernel>(
-                        TipoKernel.Pequeño);
-
-                    return services.GetRequiredService<AgentFactory>()
-                        .Create(
-                            kernel,
-                            TipoAgent.Ranker,
-                            schema: typeof(RankerResult),
-                            temperature: 0.2);
                 });
 
             services.AddKeyedScoped(

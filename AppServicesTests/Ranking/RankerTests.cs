@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.AI;
+﻿using Domain.Services;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
