@@ -37,7 +37,6 @@ namespace Infrastructure.Database
             services.AddKeyedScoped<IUnitOfWork, UnitOfWork<ChatContext>>(
                 Contexts.Chat);
             services.AddScoped<IChatRepository, ChatRepository>();
-            services.AddScoped<IMensajeRepository, MensajeRepository>();
 
             // Como SQL Server todavia no soporta Vector Search
             // Se utiliza SQLite

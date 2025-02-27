@@ -31,7 +31,8 @@ namespace Infrastructure.Database.Chats
         public async Task<Chat> GetWithUltimosMensajesAsync(int id)
         {
             return await _context.Chats
-                    .Include(c => c.Mensajes.Take(10))
+                    .Include(
+                        c => c.Mensajes.OrderByDescending(m => m.DateTime).Take(10))
                     .Where(c => c.Id == id)
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false) ??
