@@ -22,5 +22,10 @@ namespace Domain.Entities
         /// Platforma utilizada para enviar el mensaje
         /// </summary>
         public required string Plataforma { get; init; }
+
+        /// <summary>
+        /// Lista de mensajes
+        /// </summary>
+        public List<Mensaje> Mensajes { get; } = [];
     }
 }

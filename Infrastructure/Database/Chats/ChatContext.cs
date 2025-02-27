@@ -49,8 +49,12 @@ namespace Infrastructure.Database.Chats
         static void ConfigureMensajeModel(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Mensaje>().HasKey(m => m.Id);
-            // Ver de hacer required
-            modelBuilder.Entity<Mensaje>().HasOne<Chat>().WithMany();
+
+            modelBuilder.Entity<Mensaje>()
+                .HasOne<Chat>()
+                .WithMany(c => c.Mensajes)
+                .IsRequired()
+                .HasForeignKey(x => x.ChatId);
 
             modelBuilder.Entity<Mensaje>().UseTpcMappingStrategy();
         }
