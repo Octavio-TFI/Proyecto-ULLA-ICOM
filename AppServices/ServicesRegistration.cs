@@ -6,6 +6,7 @@ using AppServices.Factories;
 using AppServices.KernelPlugins;
 using AppServices.Ports;
 using AppServices.Ranking;
+using Domain.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using System;

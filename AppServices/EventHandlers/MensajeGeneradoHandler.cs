@@ -21,15 +21,17 @@ namespace AppServices.EventHandlers
             MensajeGeneradoEvent mensajeGeneradoEvent,
             CancellationToken cancellationToken)
         {
-            var chat = await _chatRepository.GetAsync(
-                mensajeGeneradoEvent.Mensaje.ChatId);
+            var chat = await _chatRepository
+                .GetAsync(mensajeGeneradoEvent.EntityId)
+                .ConfigureAwait(false);
 
             var client = _clientFactory.Invoke(chat.Plataforma);
 
             await client.EnviarMensajeAsync(
                 chat.ChatPlataformaId,
                 chat.UsuarioId,
-                mensajeGeneradoEvent.Mensaje);
+                mensajeGeneradoEvent.Mensaje)
+                .ConfigureAwait(false);
 
             _logger.LogInformation(
                 @"

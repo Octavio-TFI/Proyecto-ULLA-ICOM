@@ -1,5 +1,4 @@
-﻿using AppServices.Abstractions;
-using AppServices.Agents;
+﻿using AppServices.Agents;
 using AppServices.ConsultasProcessing;
 using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;

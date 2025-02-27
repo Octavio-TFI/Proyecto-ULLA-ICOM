@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.Abstractions
+namespace Domain.Abstractions
 {
     public interface IGeneradorRespuesta
     {
@@ -14,6 +14,6 @@ namespace AppServices.Abstractions
         /// </summary>
         /// <param name="mensajes">Ultimos mensajes de un chat</param>
         /// <returns>Respuesta generada por el LLM</returns>
-        Task<Mensaje> GenerarRespuestaAsync(List<Mensaje> mensajes);
+        Task<string> GenerarRespuestaAsync(List<Mensaje> mensajes);
     }
 }

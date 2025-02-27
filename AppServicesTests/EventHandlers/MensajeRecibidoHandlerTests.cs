@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Domain.Abstractions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Mock;
 using System;
 using System.Collections.Generic;

@@ -16,7 +16,6 @@ namespace Domain
         public static void AddDomainServices(this IServiceCollection services)
         {
             services.AddSingleton<IDocumentFactory, DocumentFactory>();
-            services.AddSingleton<IMensajeFactory, MensajeFactory>();
         }
     }
 }

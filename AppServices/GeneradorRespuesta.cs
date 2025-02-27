@@ -2,6 +2,7 @@
 using AppServices.Abstractions;
 using AppServices.Agents;
 using AppServices.Ports;
+using Domain.Abstractions;
 using Domain.Abstractions.Factories;
 using Domain.Entities;
 using Domain.ValueObjects;
@@ -19,23 +20,21 @@ namespace AppServices
 {
     internal class GeneradorRespuesta(
         [FromKeyedServices(TipoAgent.Chat)] ChatCompletionAgent agent,
-        IMensajeFactory mensajeFactory,
         IChatHistoryFactory chatHistoryFactory)
         : IGeneradorRespuesta
     {
         readonly ChatCompletionAgent _agent = agent;
-        readonly IMensajeFactory _mensajeFactory = mensajeFactory;
         readonly IChatHistoryFactory _chatHistoryFactory = chatHistoryFactory;
 
-        public async Task<Mensaje> GenerarRespuestaAsync(List<Mensaje> mensajes)
+        public async Task<string> GenerarRespuestaAsync(List<Mensaje> mensajes)
         {
             var chatHistory = _chatHistoryFactory.Create(mensajes);
 
-            var result = await _agent.InvokeAsync(chatHistory).FirstAsync();
+            var result = await _agent.InvokeAsync(chatHistory)
+                .FirstAsync()
+                .ConfigureAwait(false);
 
-            return _mensajeFactory.CreateMensajeTextoGenerado(
-                chatId: mensajes.First().ChatId,
-                texto: result.ToString());
+            return result.ToString();
         }
     }
 }

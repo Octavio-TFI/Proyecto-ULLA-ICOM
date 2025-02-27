@@ -5,13 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Schema;
 
 namespace Domain.Events
 {
-    public record MensajeGeneradoEvent
-        : EntityEvent
+    public abstract record EntityEvent : INotification
     {
-        public required Mensaje Mensaje { get; init; }
+        public required int EntityId { get; init; }
     }
 }
