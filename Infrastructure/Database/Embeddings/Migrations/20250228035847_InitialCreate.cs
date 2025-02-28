@@ -64,7 +64,7 @@ namespace Infrastructure.Database.Embeddings.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Texto = table.Column<string>(type: "TEXT", nullable: false),
-                    Embedding = table.Column<string>(type: "TEXT", nullable: false),
+                    Embedding = table.Column<string>(type: "float[768]", nullable: false),
                     DocumentId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

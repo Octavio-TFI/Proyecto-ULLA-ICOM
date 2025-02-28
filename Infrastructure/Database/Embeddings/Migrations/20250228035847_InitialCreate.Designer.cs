@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Database.Embeddings.Migrations
 {
     [DbContext(typeof(EmbeddingContext))]
-    [Migration("20250228035402_InitialCreate")]
+    [Migration("20250228035847_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -87,7 +87,7 @@ namespace Infrastructure.Database.Embeddings.Migrations
 
                     b.PrimitiveCollection<string>("Embedding")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("float[768]");
 
                     b.Property<string>("Texto")
                         .IsRequired()

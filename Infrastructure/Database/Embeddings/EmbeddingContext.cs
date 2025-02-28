@@ -38,6 +38,7 @@ namespace Infrastructure.Database.Embeddings
                 .HasName("vec_distance_cosine");
 
             ConfigureDocumentModel(modelBuilder);
+            ConfigureDocumentChunkModel(modelBuilder);
             ConfigureConsultaModel(modelBuilder);
         }
 

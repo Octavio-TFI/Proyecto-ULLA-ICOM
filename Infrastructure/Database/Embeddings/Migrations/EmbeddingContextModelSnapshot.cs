@@ -84,7 +84,7 @@ namespace Infrastructure.Database.Embeddings.Migrations
 
                     b.PrimitiveCollection<string>("Embedding")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("float[768]");
 
                     b.Property<string>("Texto")
                         .IsRequired()
