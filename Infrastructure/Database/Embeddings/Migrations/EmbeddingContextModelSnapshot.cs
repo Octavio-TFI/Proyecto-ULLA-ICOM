@@ -19,9 +19,9 @@ namespace Infrastructure.Database.Embeddings.Migrations
 
             modelBuilder.Entity("Domain.Entities.Consulta", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
@@ -34,6 +34,9 @@ namespace Infrastructure.Database.Embeddings.Migrations
                     b.PrimitiveCollection<string>("EmbeddingTitulo")
                         .IsRequired()
                         .HasColumnType("float[768]");
+
+                    b.Property<int>("RemoteId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Solucion")
                         .IsRequired()
@@ -50,9 +53,9 @@ namespace Infrastructure.Database.Embeddings.Migrations
 
             modelBuilder.Entity("Domain.Entities.Document", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Filename")
                         .IsRequired()
@@ -72,12 +75,12 @@ namespace Infrastructure.Database.Embeddings.Migrations
 
             modelBuilder.Entity("Domain.Entities.DocumentChunk", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("DocumentId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("DocumentId")
+                        .HasColumnType("TEXT");
 
                     b.PrimitiveCollection<string>("Embedding")
                         .IsRequired()

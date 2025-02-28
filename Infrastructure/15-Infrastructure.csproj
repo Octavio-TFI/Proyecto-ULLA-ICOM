@@ -39,4 +39,8 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Database\Embeddings\Migrations\" />
+	</ItemGroup>
+
 </Project>

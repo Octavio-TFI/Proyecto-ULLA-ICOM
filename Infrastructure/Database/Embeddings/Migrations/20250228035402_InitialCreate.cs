@@ -15,8 +15,8 @@ namespace Infrastructure.Database.Embeddings.Migrations
                 name: "Consultas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RemoteId = table.Column<int>(type: "INTEGER", nullable: false),
                     Titulo = table.Column<string>(type: "TEXT", nullable: false),
                     Descripcion = table.Column<string>(type: "TEXT", nullable: false),
                     Solucion = table.Column<string>(type: "TEXT", nullable: false),
@@ -32,8 +32,7 @@ namespace Infrastructure.Database.Embeddings.Migrations
                 name: "Documents",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Filename = table.Column<string>(type: "TEXT", nullable: false),
                     Texto = table.Column<string>(type: "TEXT", nullable: false)
                 },
@@ -63,11 +62,10 @@ namespace Infrastructure.Database.Embeddings.Migrations
                 name: "DocumentChunks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Texto = table.Column<string>(type: "TEXT", nullable: false),
                     Embedding = table.Column<string>(type: "TEXT", nullable: false),
-                    DocumentId = table.Column<int>(type: "INTEGER", nullable: false)
+                    DocumentId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
