@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Infrastructure.Migrations
+namespace Infrastructure.Database.Chats.Migrations
 {
     [DbContext(typeof(ChatContext))]
     [Migration("20250228033247_InitialCreate")]

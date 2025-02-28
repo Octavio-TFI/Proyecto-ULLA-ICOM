@@ -1,9 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 #nullable disable
 
-namespace Infrastructure.Migrations
+namespace Infrastructure.Database.Chats.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -19,10 +19,18 @@ namespace Infrastructure.Migrations
                 schema: "Chat",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ChatPlataformaId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Plataforma = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Id = table.Column<Guid>(
+                        type: "uniqueidentifier",
+                        nullable: false),
+                    UsuarioId = table.Column<string>(
+                        type: "nvarchar(450)",
+                        nullable: false),
+                    ChatPlataformaId = table.Column<string>(
+                        type: "nvarchar(450)",
+                        nullable: false),
+                    Plataforma = table.Column<string>(
+                        type: "nvarchar(450)",
+                        nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,10 +44,18 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EventType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EventData = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OccurredOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ProcessedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EventType = table.Column<string>(
+                        type: "nvarchar(max)",
+                        nullable: false),
+                    EventData = table.Column<string>(
+                        type: "nvarchar(max)",
+                        nullable: false),
+                    OccurredOn = table.Column<DateTime>(
+                        type: "datetime2",
+                        nullable: false),
+                    ProcessedOn = table.Column<DateTime>(
+                        type: "datetime2",
+                        nullable: true),
                     IsProcessed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -52,11 +68,19 @@ namespace Infrastructure.Migrations
                 schema: "Chat",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Id = table.Column<Guid>(
+                        type: "uniqueidentifier",
+                        nullable: false),
+                    DateTime = table.Column<DateTime>(
+                        type: "datetime2",
+                        nullable: false),
                     Tipo = table.Column<int>(type: "int", nullable: false),
-                    ChatId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Texto = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ChatId = table.Column<Guid>(
+                        type: "uniqueidentifier",
+                        nullable: false),
+                    Texto = table.Column<string>(
+                        type: "nvarchar(max)",
+                        nullable: false)
                 },
                 constraints: table =>
                 {
