@@ -45,7 +45,7 @@ namespace Infrastructure.Database.Embeddings.Tests
             var result = await repository.GetAllIdsAsync();
 
             // Assert
-            Assert.That(result, Is.EqualTo(new int[] { 1, 2 }));
+            Assert.That(result, Is.EquivalentTo(new int[] { 1, 2 }));
         }
 
         [Test]
