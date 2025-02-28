@@ -17,7 +17,7 @@ namespace Infrastructure.Database.Embeddings.Tests
             {
                 new()
                 {
-                    Id = 1,
+                    RemoteId = 1,
                     Titulo = "Titulo0",
                     EmbeddingTitulo = [0.1f, 0.2f, 0.3f],
                     Descripcion = "Descripcion0",
@@ -26,7 +26,7 @@ namespace Infrastructure.Database.Embeddings.Tests
                 },
                 new()
                 {
-                    Id = 2,
+                    RemoteId = 2,
                     Titulo = "Titulo1",
                     EmbeddingTitulo = [0.4f, 0.5f, 0.6f],
                     Descripcion = "Descripcion1",
@@ -58,7 +58,7 @@ namespace Infrastructure.Database.Embeddings.Tests
             {
                 new()
                 {
-                    Id = 1,
+                    RemoteId = 1,
                     Titulo = "Titulo0",
                     EmbeddingTitulo = [0.1f, 0.2f, 0.3f],
                     Descripcion = "Descripcion0",
@@ -67,7 +67,7 @@ namespace Infrastructure.Database.Embeddings.Tests
                 },
                 new()
                 {
-                    Id = 2,
+                    RemoteId = 2,
                     Titulo = "Titulo1",
                     EmbeddingTitulo = [0.4f, 0.5f, 0.6f],
                     Descripcion = "Descripcion1",
@@ -76,7 +76,7 @@ namespace Infrastructure.Database.Embeddings.Tests
                 },
                 new()
                 {
-                    Id = 3,
+                    RemoteId = 3,
                     Titulo = "Titulo2",
                     EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
                     Descripcion = "Descripcion2",
@@ -85,7 +85,7 @@ namespace Infrastructure.Database.Embeddings.Tests
                 },
                 new()
                 {
-                    Id = 4,
+                    RemoteId = 4,
                     Titulo = "Titulo3",
                     EmbeddingTitulo = [-0.7f, -0.8f, -0.9f],
                     Descripcion = "Descripcion3",
@@ -94,7 +94,7 @@ namespace Infrastructure.Database.Embeddings.Tests
                 },
                 new()
                 {
-                    Id = 5,
+                    RemoteId = 5,
                     Titulo = "Titulo4",
                     EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
                     Descripcion = "Descripcion4",
@@ -103,7 +103,7 @@ namespace Infrastructure.Database.Embeddings.Tests
                 },
                 new()
                 {
-                    Id = 6,
+                    RemoteId = 6,
                     Titulo = "Titulo5",
                     EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
                     Descripcion = "Descripcion5",

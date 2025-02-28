@@ -1,16 +1,17 @@
-﻿using Microsoft.SemanticKernel.ChatCompletion;
+﻿using Infrastructure.LLM;
+using Microsoft.SemanticKernel.ChatCompletion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.Factories.Tests
+namespace Infrastructure.LLM.Tests
 {
-    internal class ChatHistoryFactoryTests
+    internal class ChatHistoryAdapterTests
     {
         [Test]
-        public void Create()
+        public void Adapt()
         {
             // Arrange
             List<Mensaje> mensajes =
@@ -18,21 +19,19 @@ namespace AppServices.Factories.Tests
             {
                 Texto = "0",
                 DateTime = DateTime.Now,
-                ChatId = 1,
                 Tipo = TipoMensaje.Usuario
             },new MensajeTexto()
             {
                 Texto = "1",
                 DateTime = DateTime.Now,
-                ChatId = 1,
                 Tipo = TipoMensaje.Asistente
             }];
 
 
-            var chatHistoryFactory = new ChatHistoryFactory();
+            var chatHistoryFactory = new ChatHistoryAdapter();
 
             // Act
-            var chatHistory = chatHistoryFactory.Create(mensajes);
+            var chatHistory = chatHistoryFactory.Adapt(mensajes);
 
             // Assert
             Assert.That(chatHistory[0].Role, Is.EqualTo(AuthorRole.User));

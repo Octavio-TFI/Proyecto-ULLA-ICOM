@@ -1,6 +1,7 @@
 ﻿using Domain.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Mock;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,63 +16,44 @@ namespace AppServices.EventHandlers.Tests
         public async Task HandleTest()
         {
             // Arrange
-            var mensajeRepositoryMock = new Mock<IMensajeRepository>();
-            var generadorRespuestaMock = new Mock<IAgent>();
+            var chatRepositoryMock = new Mock<IChatRepository>();
+            var agentMock = new Mock<IAgent>();
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             var loggerMock = new Mock<ILogger<MensajeGeneradoHandler>>();
 
-            var chatId = 1;
-            var request = new MensajeRecibidoEvent { ChatId = chatId };
             var cancellationToken = new CancellationToken();
 
-            var mensajes = new List<Mensaje>
-            {
-                new MensajeTexto
-                {
-                    ChatId = chatId,
-                    Texto = "Hola",
-                    DateTime = DateTime.Now,
-                    Tipo = TipoMensaje.Usuario
-                }
-            };
+            var chatId = Guid.NewGuid();
+            var chatMock = new Mock<Chat>();
 
             var respuesta = new MensajeTexto
             {
-                ChatId = chatId,
                 Texto = "Hola",
                 DateTime = DateTime.Now,
                 Tipo = TipoMensaje.Asistente
             };
 
-            mensajeRepositoryMock.Setup(
-                repo => repo.GetUltimosMensajesChatAsync(chatId))
-                .ReturnsAsync(mensajes);
+            chatRepositoryMock.Setup(
+                repo => repo.GetWithUltimosMensajesAsync(chatId))
+                .ReturnsAsync(chatMock.Object);
 
-            generadorRespuestaMock.Setup(
-                gen => gen.GenerarRespuestaAsync(mensajes))
+            chatMock.Setup(x => x.GenerarMensajeAsync(agentMock.Object))
                 .ReturnsAsync(respuesta);
 
             var handler = new MensajeRecibidoHandler(
-                mensajeRepositoryMock.Object,
-                generadorRespuestaMock.Object,
+                chatRepositoryMock.Object,
+                agentMock.Object,
                 unitOfWorkMock.Object,
                 loggerMock.Object);
 
+            var notification = new MensajeRecibidoEvent { EntityId = chatId };
+
             // Act
-            await handler.Handle(request, cancellationToken);
+            await handler.Handle(notification, cancellationToken)
+                .ConfigureAwait(false);
 
             // Assert
-            mensajeRepositoryMock.Verify(
-                repo => repo.GetUltimosMensajesChatAsync(chatId),
-                Times.Once);
-
-            generadorRespuestaMock.Verify(
-                gen => gen.GenerarRespuestaAsync(mensajes),
-                Times.Once);
-
-            mensajeRepositoryMock.Verify(
-                repo => repo.InsertAsync(respuesta),
-                Times.Once);
+            chatMock.Verify(x => x.GenerarMensajeAsync(agentMock.Object), Times.Once);
 
             unitOfWorkMock.Verify(x => x.SaveChangesAsync(), Times.Once);
 
@@ -81,7 +63,7 @@ namespace AppServices.EventHandlers.Tests
                     $@"
 MENSAJE GENERADO
 Texto: {respuesta}
-ChatId: {respuesta.ChatId}")
+ChatId: {notification.EntityId}")
                 .Times(1);
         }
     }

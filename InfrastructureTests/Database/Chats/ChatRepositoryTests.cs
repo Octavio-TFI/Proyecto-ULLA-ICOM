@@ -23,7 +23,6 @@ namespace Infrastructure.Database.Chats.Tests
 
             var chat = new Chat
             {
-                Id = 1,
                 UsuarioId = "1",
                 ChatPlataformaId = "2",
                 Plataforma = "Telegram"

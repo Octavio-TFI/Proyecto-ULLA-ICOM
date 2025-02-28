@@ -28,7 +28,7 @@ namespace Infrastructure.Database.Chats
                 throw new NotFoundException();
         }
 
-        public async Task<Chat> GetWithUltimosMensajesAsync(int id)
+        public async Task<Chat> GetWithUltimosMensajesAsync(Guid id)
         {
             return await _context.Chats
                     .Include(

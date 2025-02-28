@@ -37,7 +37,7 @@ namespace Domain.Factories
 
             return new Consulta
             {
-                Id = consultaData.Id,
+                RemoteId = consultaData.Id,
                 Titulo = consultaData.Titulo,
                 Descripcion = consultaResumen.Descripcion,
                 Solucion = consultaResumen.Solucion,

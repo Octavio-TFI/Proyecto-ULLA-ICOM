@@ -4,19 +4,16 @@ using Infrastructure.Database.Chats;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Infrastructure.Database.Chats.Migrations
+namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    [Migration("20241230012633_InitialCreate")]
-    partial class InitialCreate
+    partial class ChatContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,15 +23,11 @@ namespace Infrastructure.Database.Chats.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.HasSequence("MensajeSequence");
-
             modelBuilder.Entity("Domain.Entities.Chat", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ChatPlataformaId")
                         .IsRequired()
@@ -58,15 +51,12 @@ namespace Infrastructure.Database.Chats.Migrations
 
             modelBuilder.Entity("Domain.Entities.Mensaje", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR [Chat].[MensajeSequence]");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseSequence(b.Property<int>("Id"));
-
-                    b.Property<int>("ChatId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ChatId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
@@ -127,10 +117,15 @@ namespace Infrastructure.Database.Chats.Migrations
             modelBuilder.Entity("Domain.Entities.Mensaje", b =>
                 {
                     b.HasOne("Domain.Entities.Chat", null)
-                        .WithMany()
+                        .WithMany("Mensajes")
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Chat", b =>
+                {
+                    b.Navigation("Mensajes");
                 });
 #pragma warning restore 612, 618
         }

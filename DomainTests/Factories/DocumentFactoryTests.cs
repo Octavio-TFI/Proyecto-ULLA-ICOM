@@ -1,7 +1,6 @@
-﻿using Domain.Entities;
+﻿using Domain.Abstractions;
+using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Embeddings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,20 +20,18 @@ namespace Domain.Factories.Tests
             List<string> textChunks = ["sample1", "sample2"];
             List<float[]> embeddings = [[1, 2, 3],[4, 5, 6],];
 
-            var embeddingGeneratorMock = new Mock<ITextEmbeddingGenerationService>(
+            var embeddingGeneratorMock = new Mock<IEmbeddingService>(
                 );
 
             embeddingGeneratorMock
-                .Setup(
-                    x => x.GenerateEmbeddingsAsync(textChunks, null, default))
-                .ReturnsAsync(
-                    [new ReadOnlyMemory<float>(embeddings[0]),
-                    new ReadOnlyMemory<float>(embeddings[1])]);
+                .Setup(x => x.GenerateAsync(textChunks))
+                .ReturnsAsync(embeddings);
 
             var factory = new DocumentFactory(embeddingGeneratorMock.Object);
 
             // Act
-            var result = await factory.CreateAsync(filename, text, textChunks);
+            var result = await factory.CreateAsync(filename, text, textChunks)
+                .ConfigureAwait(false);
 
             // Assert
             Assert.That(result.Filename, Is.EqualTo(filename));

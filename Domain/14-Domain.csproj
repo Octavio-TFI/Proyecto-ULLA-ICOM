@@ -6,7 +6,6 @@
     <Nullable>enable</Nullable>
 	<RootNamespace>Domain</RootNamespace>
 	<AssemblyName>Domain</AssemblyName>
-	<NoWarn>SKEXP0001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

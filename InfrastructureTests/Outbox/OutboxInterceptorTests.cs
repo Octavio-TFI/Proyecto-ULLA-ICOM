@@ -26,11 +26,11 @@ namespace Infrastructure.Outbox.Tests
             // Arrange
             List<INotification> domainEvents1 = [new MensajeRecibidoEvent
             {
-                ChatId = 1
+                EntityId = Guid.NewGuid()
             }];
             List<INotification> domainEvents2 = [new MensajeRecibidoEvent
             {
-                ChatId = 2
+                EntityId = Guid.NewGuid()
             }];
 
             var jsonSettings = new JsonSerializerSettings
@@ -50,7 +50,6 @@ namespace Infrastructure.Outbox.Tests
                 DateTime = DateTime.Now,
                 Texto = string.Empty,
                 Tipo = TipoMensaje.Indefinido,
-                ChatId = 1,
             };
 
             var entity2 = new MensajeTexto
@@ -58,7 +57,6 @@ namespace Infrastructure.Outbox.Tests
                 DateTime = DateTime.Now,
                 Texto = string.Empty,
                 Tipo = TipoMensaje.Indefinido,
-                ChatId = 2,
             };
 
             entity1.Events.AddRange(domainEvents1);

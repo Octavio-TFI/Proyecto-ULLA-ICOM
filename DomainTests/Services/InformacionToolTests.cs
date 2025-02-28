@@ -1,32 +1,33 @@
-﻿using Domain.Services;
+﻿using AppServices.Abstractions;
+using Domain.Abstractions;
+using Domain.Entities;
+using Domain.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.SemanticKernel.Embeddings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServices.KernelPlugins.Tests
+namespace Domain.Services.Tests
 {
-    internal class InformacionPluginTests
+    internal class InformacionToolTests
     {
         [Test]
         public async Task BuscarInformacionAsyncTest()
         {
             // Arrange
-            var textEmbeddingGenerationService
-                = new Mock<ITextEmbeddingGenerationService>();
+            var embeddingServiceMock = new Mock<IEmbeddingService>();
             var consultaRepository = new Mock<IConsultaRepository>();
             var documentRepository = new Mock<IDocumentRepository>();
             var rankerMock = new Mock<IRanker>();
 
             var consulta = "consulta";
-            var embeddingConsulta = new ReadOnlyMemory<float>([1, 2, 3]);
+            var embeddingConsulta = new float[] { 1, 2, 3 };
             var consultaSimilar = new Consulta
             {
-                Id = 1,
+                RemoteId = 1,
                 Titulo = "Consulta",
                 Descripcion = "Descripcion",
                 EmbeddingTitulo = [1, 2, 3],
@@ -52,13 +53,9 @@ namespace AppServices.KernelPlugins.Tests
                 documentoRelacionado
             };
 
-            textEmbeddingGenerationService
-                .Setup(
-                    x => x.GenerateEmbeddingsAsync(
-                        It.Is<IList<string>>(x => x.Contains(consulta)),
-                        null,
-                        default))
-                .ReturnsAsync([embeddingConsulta]);
+            embeddingServiceMock
+                .Setup(x => x.GenerateAsync(consulta))
+                .ReturnsAsync(embeddingConsulta);
 
             consultaRepository
                 .Setup(x => x.GetConsultasSimilaresAsync(embeddingConsulta))
@@ -74,16 +71,17 @@ namespace AppServices.KernelPlugins.Tests
             rankerMock.Setup(x => x.RankAsync(documentos, consulta))
                 .ReturnsAsync(documentos);
 
-            var consultasPlugin = new InformacionPlugin(
+            var consultasPlugin = new InformacionTool(
                 Mock.Of<ILogger<InformacionTool>>(),
-                textEmbeddingGenerationService.Object,
+                embeddingServiceMock.Object,
                 consultaRepository.Object,
                 documentRepository.Object,
                 rankerMock.Object);
 
             // Act
-            string result = await consultasPlugin.BuscarInformacionAsync(
-                consulta);
+            string result = await consultasPlugin
+                .BuscarInformacionAsync(consulta)
+                .ConfigureAwait(false);
 
             // Assert
             string expected = new StringBuilder()
@@ -105,22 +103,18 @@ namespace AppServices.KernelPlugins.Tests
         public async Task BuscarInformacionAsync_NoDocumentsNoConsultasTest()
         {
             // Arrange
-            var textEmbeddingGenerationService
-                = new Mock<ITextEmbeddingGenerationService>();
+            var embeddingServiceMock
+                = new Mock<IEmbeddingService>();
             var consultaRepository = new Mock<IConsultaRepository>();
             var documentRepository = new Mock<IDocumentRepository>();
             var rankerMock = new Mock<IRanker>();
 
             var consulta = "consulta";
-            var embeddingConsulta = new ReadOnlyMemory<float>([1, 2, 3]);
+            var embeddingConsulta = new float[] { 1, 2, 3 };
 
-            textEmbeddingGenerationService
-                .Setup(
-                    x => x.GenerateEmbeddingsAsync(
-                        It.Is<IList<string>>(x => x.Contains(consulta)),
-                        null,
-                        default))
-                .ReturnsAsync([embeddingConsulta]);
+            embeddingServiceMock
+                .Setup(x => x.GenerateAsync(consulta))
+                .ReturnsAsync(embeddingConsulta);
 
             consultaRepository
                 .Setup(x => x.GetConsultasSimilaresAsync(embeddingConsulta))
@@ -138,16 +132,18 @@ namespace AppServices.KernelPlugins.Tests
                 x => x.RankAsync(It.IsAny<List<Document>>(), consulta))
                 .ReturnsAsync(new List<Document>());
 
-            var consultasPlugin = new InformacionPlugin(
+            var consultasPlugin = new InformacionTool(
                 Mock.Of<ILogger<InformacionTool>>(),
-                textEmbeddingGenerationService.Object,
+                embeddingServiceMock.Object,
                 consultaRepository.Object,
                 documentRepository.Object,
                 rankerMock.Object);
 
             // Act
-            string result = await consultasPlugin.BuscarInformacionAsync(
-                consulta);
+            string result = await consultasPlugin
+                .BuscarInformacionAsync(consulta)
+                .ConfigureAwait(false);
+            ;
 
             // Assert
             string expected = new StringBuilder()

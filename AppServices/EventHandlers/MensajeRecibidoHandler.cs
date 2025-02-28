@@ -18,13 +18,13 @@ namespace AppServices.EventHandlers
 {
     internal class MensajeRecibidoHandler(
         IChatRepository chatRepository,
-        [FromKeyedServices(TipoAgent.Chat)] IAgent generadorRespuesta,
+        [FromKeyedServices(TipoAgent.Chat)] IAgent agent,
         [FromKeyedServices(Contexts.Chat)] IUnitOfWork unitOfWork,
         ILogger<MensajeGeneradoHandler> logger)
         : INotificationHandler<MensajeRecibidoEvent>
     {
         readonly IChatRepository _chatRepository = chatRepository;
-        readonly IAgent _generadorRespuesta = generadorRespuesta;
+        readonly IAgent _agent = agent;
         readonly IUnitOfWork _unitOfWork = unitOfWork;
         readonly ILogger<MensajeGeneradoHandler> _logger = logger;
 
@@ -37,7 +37,7 @@ namespace AppServices.EventHandlers
                 .ConfigureAwait(false);
 
             var respuesta = await chat
-                .GenerarMensajeAsync(_generadorRespuesta)
+                .GenerarMensajeAsync(_agent)
                 .ConfigureAwait(false);
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -48,7 +48,7 @@ MENSAJE GENERADO
 Texto: {Texto}
 ChatId: {ChatId}",
                 respuesta.ToString(),
-                respuesta.ChatId);
+                notification.EntityId);
         }
     }
 }

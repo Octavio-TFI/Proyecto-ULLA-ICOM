@@ -12,7 +12,7 @@ namespace Domain.Entities
         /// <summary>
         /// Id del mensaje
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         /// <summary>
         /// Lista de eventos

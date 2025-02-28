@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.LLM.Tests
 {
-    internal class LMStudioTextEmbeddingGenerationServiceTests
+    internal class LMStudioEmbeddingServiceTests
     {
         [Test]
         public void GenerateEmbeddingsAsync_UnsuccessfulStatusCode_ShouldThrow()
@@ -27,7 +27,8 @@ namespace Infrastructure.LLM.Tests
             var service = new LMStudioEmbeddingService(httpClient);
 
             // Act
-            async Task Act() => await service.GenerateEmbeddingsAsync(data);
+            async Task Act() => await service.GenerateAsync(data)
+                .ConfigureAwait(false);
 
             // Assert
             Assert.ThrowsAsync<Exception>(Act);
@@ -50,7 +51,8 @@ namespace Infrastructure.LLM.Tests
             var service = new LMStudioEmbeddingService(httpClient);
 
             // Act
-            async Task Act() => await service.GenerateEmbeddingsAsync(data);
+            async Task Act() => await service.GenerateAsync(data)
+                .ConfigureAwait(false);
 
             // Assert
             Assert.ThrowsAsync<Exception>(Act);
@@ -80,7 +82,8 @@ namespace Infrastructure.LLM.Tests
             var service = new LMStudioEmbeddingService(httpClient);
 
             // Act
-            var result = await service.GenerateEmbeddingsAsync(data);
+            var result = await service.GenerateAsync(data)
+                .ConfigureAwait(false);
 
             // Assert
             Assert.That(

@@ -11,7 +11,10 @@
         public async Task PublishOutboxEventAsync_Succeded()
         {
             // Arrange
-            var mensajeRecibidoEvent = new MensajeRecibidoEvent { ChatId = 1 };
+            var mensajeRecibidoEvent = new MensajeRecibidoEvent
+            {
+                EntityId = Guid.NewGuid()
+            };
 
             var outboxEvent = new OutboxEvent
             {
@@ -64,7 +67,10 @@
         public async Task PublishOutboxEventAsync_ErrorPublishingEvent()
         {
             // Arrange
-            var mensajeRecibidoEvent = new MensajeRecibidoEvent { ChatId = 1 };
+            var mensajeRecibidoEvent = new MensajeRecibidoEvent
+            {
+                EntityId = Guid.NewGuid()
+            };
             var outboxEvent = new OutboxEvent
             {
                 EventType = "EventType",

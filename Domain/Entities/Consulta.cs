@@ -13,7 +13,10 @@ namespace Domain.Entities
         {
         }
 
-        public new required int Id { get; set; }
+        /// <summary>
+        /// Id de la consulta en la base de datos original
+        /// </summary>
+        public required int RemoteId { get; set; }
 
         public required string Titulo { get; set; }
 

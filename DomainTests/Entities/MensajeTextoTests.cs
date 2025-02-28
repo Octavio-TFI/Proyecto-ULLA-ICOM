@@ -18,8 +18,7 @@ namespace Domain.Entities.Tests
             {
                 Texto = texto,
                 DateTime = DateTime.Now,
-                Tipo = TipoMensaje.Usuario,
-                ChatId = 1
+                Tipo = TipoMensaje.Usuario
             };
 
             // Act

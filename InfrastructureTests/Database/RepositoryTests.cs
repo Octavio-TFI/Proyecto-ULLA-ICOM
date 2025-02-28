@@ -19,24 +19,23 @@ namespace Infrastructure.Database.Tests
         {
             // Arrange
             var context = DatabaseTestsHelper.CreateInMemoryChatContext();
-            var repository = new MensajeRepository(context);
+            var repository = new ChatRepository(context);
 
-            var mensaje = new MensajeTexto
+            var chat = new Chat
             {
-                ChatId = 1,
-                DateTime = DateTime.Now,
-                Tipo = TipoMensaje.Usuario,
-                Texto = "Hola"
+                ChatPlataformaId = "1",
+                UsuarioId = "2",
+                Plataforma = "Test"
             };
 
-            await context.AddAsync(mensaje);
+            await context.AddAsync(chat);
             await context.SaveChangesAsync();
 
             // Act
-            var result = await repository.GetAsync(mensaje.Id);
+            var result = await repository.GetAsync(chat.Id);
 
             // Assert
-            Assert.That(result, Is.EqualTo(mensaje));
+            Assert.That(result, Is.EqualTo(chat));
         }
 
         [Test]
@@ -44,11 +43,11 @@ namespace Infrastructure.Database.Tests
         {
             // Arrange
             var context = DatabaseTestsHelper.CreateInMemoryChatContext();
-            var repository = new MensajeRepository(context);
+            var repository = new ChatRepository(context);
 
             // Act and Assert
             var result = Assert.ThrowsAsync<NotFoundException>(
-                async () => await repository.GetAsync(1));
+                async () => await repository.GetAsync(Guid.NewGuid()));
         }
 
         [Test]
@@ -56,64 +55,25 @@ namespace Infrastructure.Database.Tests
         {
             // Arrange
             var context = DatabaseTestsHelper.CreateInMemoryChatContext();
-            var repository = new MensajeRepository(context);
+            var repository = new ChatRepository(context);
 
-            var mensaje = new MensajeTexto
+            var chat = new Chat
             {
-                ChatId = 1,
-                DateTime = DateTime.Now,
-                Tipo = TipoMensaje.Usuario,
-                Texto = "Hola"
+                ChatPlataformaId = "1",
+                UsuarioId = "2",
+                Plataforma = "Test"
             };
 
             // Act
-            var result = await repository.InsertAsync(mensaje);
+            var result = await repository.InsertAsync(chat);
             await context.SaveChangesAsync();
 
             // Assert
             Assert.Multiple(
                 () =>
                 {
-                    Assert.That(result, Is.EqualTo(mensaje));
-                    Assert.That(context.Mensajes, Has.Member(result));
-                });
-        }
-
-        [Test]
-        public async Task InsertRangeAsync_ShouldInsertEntities()
-        {
-            // Arrange
-            var context = DatabaseTestsHelper.CreateInMemoryChatContext();
-            var repository = new MensajeRepository(context);
-            var mensajes = new List<Mensaje>
-            {
-                new MensajeTexto
-                {
-                    ChatId = 1,
-                    DateTime = DateTime.Now,
-                    Tipo = TipoMensaje.Usuario,
-                    Texto = "Hola"
-                },
-                new MensajeTexto
-                {
-                    ChatId = 1,
-                    DateTime = DateTime.Now,
-                    Tipo = TipoMensaje.Usuario,
-                    Texto = "Chau"
-                }
-            };
-
-            // Act
-            var result = await repository.InsertRangeAsync(mensajes);
-            await context.SaveChangesAsync();
-
-            // Assert
-            Assert.Multiple(
-                () =>
-                {
-                    Assert.That(result, Is.EqualTo(mensajes));
-                    Assert.That(context.Mensajes, Has.Member(result[0]));
-                    Assert.That(context.Mensajes, Has.Member(result[1]));
+                    Assert.That(result, Is.EqualTo(chat));
+                    Assert.That(context.Chats, Has.Member(result));
                 });
         }
     }

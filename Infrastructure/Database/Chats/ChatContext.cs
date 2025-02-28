@@ -44,17 +44,16 @@ namespace Infrastructure.Database.Chats
                 .HasIndex(
                     c => new { c.UsuarioId, c.ChatPlataformaId, c.Plataforma })
                 .IsUnique();
+
+            modelBuilder.Entity<Chat>()
+                .HasMany(c => c.Mensajes)
+                .WithOne()
+                .IsRequired();
         }
 
         static void ConfigureMensajeModel(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Mensaje>().HasKey(m => m.Id);
-
-            modelBuilder.Entity<Mensaje>()
-                .HasOne<Chat>()
-                .WithMany(c => c.Mensajes)
-                .IsRequired()
-                .HasForeignKey(x => x.ChatId);
 
             modelBuilder.Entity<Mensaje>().UseTpcMappingStrategy();
         }

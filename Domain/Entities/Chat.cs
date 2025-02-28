@@ -36,13 +36,12 @@ namespace Domain.Entities
         /// </summary>
         /// <param name="dateTime">Date Time de cuando se envio el mensaje</param>
         /// <param name="texto">Texto del mensaje</param>
-        public Mensaje AñadirMensajeTextoRecibido(
+        public virtual Mensaje AñadirMensajeTextoRecibido(
             DateTime dateTime,
             string texto)
         {
             var mensaje = new MensajeTexto
             {
-                ChatId = Id,
                 DateTime = dateTime,
                 Tipo = TipoMensaje.Usuario,
                 Texto = texto
@@ -59,7 +58,7 @@ namespace Domain.Entities
         /// </summary>
         /// <param name="agente">Agente</param>
         /// <returns>Mensaje de respuesta generado</returns>
-        public async Task<Mensaje> GenerarMensajeAsync(
+        public virtual async Task<Mensaje> GenerarMensajeAsync(
             IAgent agente)
         {
             var stringRespuesta = await agente
@@ -68,7 +67,6 @@ namespace Domain.Entities
 
             var respuesta = new MensajeTexto
             {
-                ChatId = Id,
                 DateTime = DateTime.Now,
                 Tipo = TipoMensaje.Asistente,
                 Texto = stringRespuesta

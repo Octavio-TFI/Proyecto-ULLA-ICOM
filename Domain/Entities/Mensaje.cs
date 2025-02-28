@@ -16,11 +16,6 @@ namespace Domain.Entities
         public required DateTime DateTime { get; init; }
 
         /// <summary>
-        /// Id del Chat
-        /// </summary>
-        public required int ChatId { get; init; }
-
-        /// <summary>
         /// Tipo del mensaje.
         /// Enviado por usuario o generado por el asistente(LLM)
         /// </summary>

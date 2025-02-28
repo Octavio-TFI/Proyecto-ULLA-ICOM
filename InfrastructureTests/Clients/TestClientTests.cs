@@ -26,7 +26,6 @@ namespace Infrastructure.Clients.Tests
 
             var mensaje = new MensajeTexto
             {
-                ChatId = 1,
                 Texto = "Texto",
                 DateTime = DateTime.Now,
                 Tipo = TipoMensaje.Asistente
@@ -102,7 +101,6 @@ namespace Infrastructure.Clients.Tests
 
             var mensaje = new MensajeTexto
             {
-                ChatId = 1,
                 Texto = "Texto",
                 DateTime = DateTime.Now,
                 Tipo = TipoMensaje.Asistente

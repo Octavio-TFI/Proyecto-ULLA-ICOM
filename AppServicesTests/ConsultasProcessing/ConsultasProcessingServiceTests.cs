@@ -37,7 +37,7 @@ namespace AppServices.ConsultasProcessing.Tests
 
             var consulta = new Consulta
             {
-                Id = 1,
+                RemoteId = 1,
                 Titulo = "Titulo1",
                 Descripcion = "Descripcion1",
                 Solucion = "Solucion1",
@@ -47,7 +47,7 @@ namespace AppServices.ConsultasProcessing.Tests
 
             var services = new ServiceCollection();
             var consultaDataRepositoryMock = new Mock<IConsultaDataRepository>();
-            var consultaProcessorMock = new Mock<IConsultaProcessor>();
+            var consultaFactoryMock = new Mock<IConsultaFactory>();
             var loggerMock = new Mock<ILogger<ConsultasProcesorService>>();
             var consultaRepositoryMock = new Mock<IConsultaRepository>();
             var unitOfWorkMock = new Mock<IUnitOfWork>();
@@ -59,10 +59,10 @@ namespace AppServices.ConsultasProcessing.Tests
                 x => x.GetAllExceptExistingIdsAsync(existingIds))
                 .ReturnsAsync(consultasDatas);
 
-            consultaProcessorMock.Setup(x => x.ProcessAsync(consultasDatas[0]))
+            consultaFactoryMock.Setup(x => x.CreateAsync(consultasDatas[0]))
                 .ReturnsAsync(consulta);
 
-            consultaProcessorMock.Setup(x => x.ProcessAsync(consultasDatas[1]))
+            consultaFactoryMock.Setup(x => x.CreateAsync(consultasDatas[1]))
                 .ThrowsAsync(new Exception());
 
             services.AddSingleton(consultaRepositoryMock.Object);
@@ -73,11 +73,12 @@ namespace AppServices.ConsultasProcessing.Tests
             var consultasProcesorService = new ConsultasProcesorService(
                 services.BuildServiceProvider(),
                 consultaDataRepositoryMock.Object,
-                consultaProcessorMock.Object,
+                consultaFactoryMock.Object,
                 loggerMock.Object);
 
             // Act
-            await consultasProcesorService.StartAsync(CancellationToken.None);
+            await consultasProcesorService.StartAsync(CancellationToken.None)
+                .ConfigureAwait(false);
 
             // Assert
             consultaRepositoryMock.Verify(
@@ -89,7 +90,8 @@ namespace AppServices.ConsultasProcessing.Tests
 
             unitOfWorkMock.Verify(x => x.SaveChangesAsync(), Times.Once);
 
-            await consultasProcesorService.StopAsync(CancellationToken.None);
+            await consultasProcesorService.StopAsync(CancellationToken.None)
+                .ConfigureAwait(false);
         }
     }
 }

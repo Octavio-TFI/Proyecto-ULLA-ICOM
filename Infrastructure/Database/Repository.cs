@@ -5,16 +5,18 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Database
 {
-    internal abstract class Repository<T>(DbContext _context) where T : Entity
+    internal abstract class Repository<T>(DbContext _context)
+        where T : Entity
     {
-        public async Task<T> GetAsync(int id)
+        public async Task<T> GetAsync(Guid id)
         {
-            return await _context.FindAsync<T>(id) ??
+            return await _context.Set<T>().FindAsync(id) ??
                 throw new NotFoundException();
         }
 
@@ -23,13 +25,6 @@ namespace Infrastructure.Database
             await _context.AddAsync(entity);
 
             return entity;
-        }
-
-        public async Task<List<T>> InsertRangeAsync(List<T> entities)
-        {
-            await _context.AddRangeAsync(entities);
-
-            return entities;
         }
     }
 }

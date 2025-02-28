@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Infrastructure.Database.Chats.Migrations
+namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -14,17 +14,12 @@ namespace Infrastructure.Database.Chats.Migrations
             migrationBuilder.EnsureSchema(
                 name: "Chat");
 
-            migrationBuilder.CreateSequence(
-                name: "MensajeSequence",
-                schema: "Chat");
-
             migrationBuilder.CreateTable(
                 name: "Chats",
                 schema: "Chat",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ChatPlataformaId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Plataforma = table.Column<string>(type: "nvarchar(450)", nullable: false)
@@ -57,10 +52,10 @@ namespace Infrastructure.Database.Chats.Migrations
                 schema: "Chat",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [Chat].[MensajeSequence]"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ChatId = table.Column<int>(type: "int", nullable: false),
                     Tipo = table.Column<int>(type: "int", nullable: false),
+                    ChatId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Texto = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -102,10 +97,6 @@ namespace Infrastructure.Database.Chats.Migrations
 
             migrationBuilder.DropTable(
                 name: "Chats",
-                schema: "Chat");
-
-            migrationBuilder.DropSequence(
-                name: "MensajeSequence",
                 schema: "Chat");
         }
     }

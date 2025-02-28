@@ -16,7 +16,7 @@ namespace Domain.Repositories
         /// <param name="id">Id del chat</param>
         /// <returns>Chat con el id indicado</returns>
         /// <exception cref="NotFoundException"/>
-        Task<Chat> GetAsync(int id);
+        Task<Chat> GetAsync(Guid id);
 
         /// <summary>
         /// Obtiene un chat de la DB con los ultimos 10 mensajes
@@ -24,7 +24,7 @@ namespace Domain.Repositories
         /// <param name="id">Id del chat</param>
         /// <returns>Chat con el id indicado y los ultimos 10 mensajes</returns>
         /// <exception cref="NotFoundException"/>
-        Task<Chat> GetWithUltimosMensajesAsync(int id);
+        Task<Chat> GetWithUltimosMensajesAsync(Guid id);
 
         /// <summary>
         /// Obtiene un chat de la DB

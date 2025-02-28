@@ -39,7 +39,7 @@ MENSAJE ENVIADO
 Texto: {Texto}
 ChatId: {ChatId}",
                 mensajeGeneradoEvent.Mensaje.ToString(),
-                mensajeGeneradoEvent.Mensaje.ChatId);
+                mensajeGeneradoEvent.EntityId);
         }
     }
 }

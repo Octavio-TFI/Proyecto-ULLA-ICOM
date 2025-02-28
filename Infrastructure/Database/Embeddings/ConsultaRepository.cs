@@ -17,7 +17,7 @@ namespace Infrastructure.Database.Embeddings
 
         public Task<int[]> GetAllIdsAsync()
         {
-            return _context.Consultas.Select(c => c.Id).ToArrayAsync();
+            return _context.Consultas.Select(c => c.RemoteId).ToArrayAsync();
         }
 
         public Task<List<Consulta>> GetConsultasSimilaresAsync(

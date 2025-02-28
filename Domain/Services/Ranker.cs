@@ -30,7 +30,7 @@ namespace Domain.Services
             {
                 var arguments = new Dictionary<string, object?>
                 {
-                    ["document"] = datosRecuperado.ToString()
+                    ["document"] = datosRecuperado
                 };
 
                 var agentResult = await _rankingAgent
@@ -38,7 +38,7 @@ namespace Domain.Services
                     .ConfigureAwait(false);
 
                 var result = JsonConvert.DeserializeObject<RankerResult>(
-                    agentResult.ToString());
+                    agentResult);
 
                 if (result?.Score is true)
                 {

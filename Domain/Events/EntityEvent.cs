@@ -10,6 +10,6 @@ namespace Domain.Events
 {
     public abstract record EntityEvent : INotification
     {
-        public required int EntityId { get; init; }
+        public required Guid EntityId { get; init; }
     }
 }
