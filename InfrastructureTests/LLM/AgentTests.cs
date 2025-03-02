@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.ChatAgregado;
+using Domain.ValueObjects;
 using Infrastructure.LLM.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
@@ -47,6 +48,8 @@ namespace Infrastructure.LLM.Tests
                 Instructions = "{{$argument}}"
             };
 
+            var agentData = new AgentData();
+
             chatHistoryFactoryMock
                 .Setup(x => x.Adapt(mensajes))
                 .Returns(chatHistory);
@@ -66,6 +69,7 @@ namespace Infrastructure.LLM.Tests
 
             var generadorRespuesta = new Agent(
                 agent,
+                agentData,
                 chatHistoryFactoryMock.Object);
 
             // Act
@@ -74,7 +78,8 @@ namespace Infrastructure.LLM.Tests
                 .ConfigureAwait(false);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expectedResponse));
+            Assert.That(result.Texto, Is.EqualTo(expectedResponse));
+            Assert.That(result.AgentData, Is.EqualTo(agentData));
         }
 
         [Test]
@@ -93,6 +98,7 @@ namespace Infrastructure.LLM.Tests
             var kernel = kernelBuilder.Build();
 
             var agent = new ChatCompletionAgent() { Kernel = kernel };
+            var agentData = new AgentData();
 
             chatCompletionMock
                 .Setup(
@@ -109,6 +115,7 @@ namespace Infrastructure.LLM.Tests
 
             var generadorRespuesta = new Agent(
                 agent,
+                agentData,
                 chatHistoryFactoryMock.Object);
 
             // Act
@@ -117,7 +124,8 @@ namespace Infrastructure.LLM.Tests
                 .ConfigureAwait(false);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expectedResponse));
+            Assert.That(result.Texto, Is.EqualTo(expectedResponse));
+            Assert.That(result.AgentData, Is.EqualTo(agentData));
         }
     }
 }
