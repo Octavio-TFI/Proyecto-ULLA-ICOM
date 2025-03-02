@@ -25,7 +25,7 @@ namespace Infrastructure.Outbox
             InterceptionResult<int> result,
             CancellationToken cancellationToken = default)
         {
-            if(eventData.Context is not null)
+            if (eventData.Context is not null)
             {
                 await SaveOutboxMessagesAsync(eventData.Context);
             }
@@ -42,7 +42,6 @@ namespace Infrastructure.Outbox
 
             var outboxMessages = context.ChangeTracker
                 .Entries<Entity>()
-                .Where(entity => entity.State != EntityState.Unchanged)
                 .SelectMany(
                     entity =>
                     {

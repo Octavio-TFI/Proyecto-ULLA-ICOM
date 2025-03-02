@@ -14,7 +14,7 @@ namespace Domain.Abstractions.Entities
         public Guid InformacionId { get; }
 
         /// <summary>
-        /// Indica si la informacion recuperada fue relevante y se utilizo para responder
+        /// Indica si la informacion recuperada fue relevante y si se utilizo para responder
         /// </summary>
         public bool Rank { get; }
     }
