@@ -17,6 +17,10 @@ namespace Domain.Entities.ChatAgregado
 
         public bool? Calificacion { get; set; }
 
+        public List<DocumentoRecuperado> DocumentosRecuperados { get; } = [];
+
+        public List<ConsultaRecuperada> ConsultasRecuperadas { get; } = [];
+
         public override string ToString()
         {
             return Texto;
