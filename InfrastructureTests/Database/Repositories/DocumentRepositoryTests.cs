@@ -94,6 +94,36 @@ namespace Infrastructure.Database.Repositories.Tests
                 },
             };
 
+            documentos.AddRange(
+                Enumerable.Range(0, 10)
+                    .Select(
+                        x => new Document
+                            {
+                                Filename = $"FilanameRelacionado{x}",
+                                Texto = "TextoNoRelacionado",
+                                Chunks =
+                                    [new()
+                                            {
+                                                Texto = "TextoRelacionado",
+                                                Embedding = [0.5f, 0.6f, -1f]
+                                            }]
+                            }));
+
+            documentos.AddRange(
+                Enumerable.Range(0, 15)
+                    .Select(
+                        x => new Document
+                            {
+                                Filename = $"FilanameNoRelacionado{x}",
+                                Texto = "TextoNoRelacionado",
+                                Chunks =
+                                    [new()
+                                            {
+                                                Texto = "TextoNoRelacionado",
+                                                Embedding = [-0.8f, -0.9f, -1f]
+                                            }]
+                            }));
+
             var context = DatabaseTestsHelper.CreateInMemoryChatContext();
             await context.Documents.AddRangeAsync(documentos);
             await context.SaveChangesAsync();
@@ -108,14 +138,11 @@ namespace Infrastructure.Database.Repositories.Tests
             Assert.Multiple(
                 () =>
                 {
-                    Assert.That(result, Has.Count.EqualTo(5));
+                    Assert.That(result, Has.Count.EqualTo(15));
 
-                    Assert.That(result, Has.Member(documentos[0]));
-                    Assert.That(result, Has.Member(documentos[1]));
-                    Assert.That(result, Has.No.Member(documentos[2]));
-                    Assert.That(result, Has.Member(documentos[3]));
-                    Assert.That(result, Has.Member(documentos[4]));
-                    Assert.That(result, Has.Member(documentos[5]));
+                    Assert.That(
+                        result,
+                        Is.EquivalentTo(documentos.Except([documentos[2]]).Take(15)));
                 });
         }
 
