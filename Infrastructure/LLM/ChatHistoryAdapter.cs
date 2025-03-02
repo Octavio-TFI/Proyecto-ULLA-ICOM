@@ -17,7 +17,7 @@ namespace Infrastructure.LLM
         {
             ChatHistory chatHistory = [];
 
-            foreach (Mensaje mensaje in mensajes)
+            foreach (Mensaje mensaje in mensajes.OrderBy(m => m.DateTime))
             {
                 if (mensaje is MensajeTextoUsuario mensajeTexto)
                 {
