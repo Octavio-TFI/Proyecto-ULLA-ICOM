@@ -19,11 +19,10 @@ namespace AppServices.EventHandlers.Tests
             {
                 EntityId = Guid.NewGuid(),
                 Mensaje =
-                    new MensajeTexto
+                    new MensajeTextoUsuario
                     {
                         Texto = "Texto",
-                        DateTime = DateTime.Now,
-                        Tipo = TipoMensaje.Asistente
+                        DateTime = DateTime.Now
                     }
             };
 

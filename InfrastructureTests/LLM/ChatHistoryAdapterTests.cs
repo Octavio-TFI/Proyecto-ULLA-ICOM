@@ -1,4 +1,5 @@
-﻿using Infrastructure.LLM;
+﻿using Domain.Entities.ChatAgregado;
+using Infrastructure.LLM;
 using Microsoft.SemanticKernel.ChatCompletion;
 using System;
 using System.Collections.Generic;
@@ -15,16 +16,14 @@ namespace Infrastructure.LLM.Tests
         {
             // Arrange
             List<Mensaje> mensajes =
-            [new MensajeTexto()
+            [new MensajeTextoUsuario()
             {
                 Texto = "0",
-                DateTime = DateTime.Now,
-                Tipo = TipoMensaje.Usuario
-            },new MensajeTexto()
+                DateTime = DateTime.Now
+            },new MensajeIA()
             {
                 Texto = "1",
-                DateTime = DateTime.Now,
-                Tipo = TipoMensaje.Asistente
+                DateTime = DateTime.Now
             }];
 
 

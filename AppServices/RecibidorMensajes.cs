@@ -3,7 +3,7 @@ using AppServices.Abstractions.DTOs;
 using AppServices.Ports;
 using Domain;
 using Domain.Abstractions.Factories;
-using Domain.Entities;
+using Domain.Entities.ChatAgregado;
 using Domain.Exceptions;
 using Domain.Repositories;
 using Domain.ValueObjects;

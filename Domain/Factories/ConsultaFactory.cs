@@ -1,6 +1,7 @@
 ﻿using Domain.Abstractions;
 using Domain.Abstractions.Factories;
 using Domain.Entities;
+using Domain.Entities.ConsultaAgregado;
 using Domain.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;

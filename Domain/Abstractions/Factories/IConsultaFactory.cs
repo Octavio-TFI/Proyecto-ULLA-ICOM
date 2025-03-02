@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.ConsultaAgregado;
 using System;
 using System.Collections.Generic;
 using System.Linq;

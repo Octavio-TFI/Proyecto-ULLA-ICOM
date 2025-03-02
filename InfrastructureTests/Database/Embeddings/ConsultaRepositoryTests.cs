@@ -1,4 +1,5 @@
-﻿using InfrastructureTests.Database.Tests;
+﻿using Domain.Entities.ConsultaAgregado;
+using InfrastructureTests.Database.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;

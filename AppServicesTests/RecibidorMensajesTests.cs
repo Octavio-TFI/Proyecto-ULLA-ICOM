@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.ChatAgregado;
 using Moq;
 
 namespace AppServices.Tests

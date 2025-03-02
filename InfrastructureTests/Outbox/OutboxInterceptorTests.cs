@@ -45,18 +45,16 @@ namespace Infrastructure.Outbox.Tests
                 domainEvents2.First(),
                 jsonSettings);
 
-            var entity1 = new MensajeTexto
+            var entity1 = new MensajeTextoUsuario
             {
                 DateTime = DateTime.Now,
-                Texto = string.Empty,
-                Tipo = TipoMensaje.Indefinido,
+                Texto = string.Empty
             };
 
-            var entity2 = new MensajeTexto
+            var entity2 = new MensajeTextoUsuario
             {
                 DateTime = DateTime.Now,
-                Texto = string.Empty,
-                Tipo = TipoMensaje.Indefinido,
+                Texto = string.Empty
             };
 
             entity1.Events.AddRange(domainEvents1);

@@ -1,4 +1,7 @@
 ﻿global using Domain.Entities;
+global using Domain.Entities.ChatAgregado;
+global using Domain.Entities.ConsultaAgregado;
+global using Domain.Entities.DocumentoAgregado;
 global using Domain.Events;
 global using Domain.Repositories;
 global using Domain.ValueObjects;

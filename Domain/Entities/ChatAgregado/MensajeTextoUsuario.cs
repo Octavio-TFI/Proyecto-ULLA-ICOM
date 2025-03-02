@@ -1,21 +1,20 @@
-﻿using System;
+﻿using Domain.Abstractions.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain.Entities.ChatAgregado
 {
-    public class MensajeTexto
+    public class MensajeTextoUsuario
         : Mensaje
+        , IMensajeTexto
     {
-        internal MensajeTexto()
+        internal MensajeTextoUsuario()
         {
         }
 
-        /// <summary>
-        /// Texto del mensaje
-        /// </summary>
         public required string Texto { get; init; }
 
         public override string ToString()

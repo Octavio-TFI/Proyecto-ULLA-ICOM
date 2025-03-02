@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain.Entities.ChatAgregado
 {
     public class Chat : Entity
     {
@@ -40,11 +40,10 @@ namespace Domain.Entities
             DateTime dateTime,
             string texto)
         {
-            var mensaje = new MensajeTexto
+            var mensaje = new MensajeTextoUsuario
             {
-                DateTime = dateTime,
-                Tipo = TipoMensaje.Usuario,
-                Texto = texto
+                Texto = texto,
+                DateTime = dateTime
             };
 
             Mensajes.Add(mensaje);
@@ -65,11 +64,10 @@ namespace Domain.Entities
                 .GenerarRespuestaAsync(Mensajes)
                 .ConfigureAwait(false);
 
-            var respuesta = new MensajeTexto
+            var respuesta = new MensajeIA()
             {
-                DateTime = DateTime.Now,
-                Tipo = TipoMensaje.Asistente,
-                Texto = stringRespuesta
+                Texto = stringRespuesta,
+                DateTime = DateTime.Now
             };
 
             Mensajes.Add(respuesta);

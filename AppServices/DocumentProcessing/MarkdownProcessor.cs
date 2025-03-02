@@ -1,7 +1,7 @@
 ﻿using AppServices.Abstractions;
 using AppServices.Helpers;
 using Domain.Abstractions.Factories;
-using Domain.Entities;
+using Domain.Entities.DocumentoAgregado;
 using iText.Forms.Xfdf;
 using Markdig;
 using Markdig.Renderers.Normalize;

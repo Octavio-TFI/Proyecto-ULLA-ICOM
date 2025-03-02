@@ -1,5 +1,5 @@
 ﻿using Domain.Abstractions;
-using Domain.Entities;
+using Domain.Entities.DocumentoAgregado;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

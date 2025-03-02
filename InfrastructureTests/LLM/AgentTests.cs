@@ -1,4 +1,5 @@
-﻿using Infrastructure.LLM.Abstractions;
+﻿using Domain.Entities.ChatAgregado;
+using Infrastructure.LLM.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
@@ -17,11 +18,10 @@ namespace Infrastructure.LLM.Tests
         public async Task GenerarRespuesta_ListaDeMensajesAsync()
         {
             // Arrange
-            List<Mensaje> mensajes = [new MensajeTexto()
+            List<Mensaje> mensajes = [new MensajeTextoUsuario()
             {
                 Texto = "Hola",
-                DateTime = DateTime.Now,
-                Tipo = TipoMensaje.Usuario
+                DateTime = DateTime.Now
             }];
 
             Dictionary<string, object?> arguments = new()

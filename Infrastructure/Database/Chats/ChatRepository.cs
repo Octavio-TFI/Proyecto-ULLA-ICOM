@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.ChatAgregado;
 using Domain.Exceptions;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;

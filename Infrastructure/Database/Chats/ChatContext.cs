@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.ChatAgregado;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System;
@@ -15,7 +15,7 @@ namespace Infrastructure.Database.Chats
 
         public DbSet<Mensaje> Mensajes { get; set; }
 
-        public DbSet<MensajeTexto> MensajesDeTexto { get; set; }
+        public DbSet<MensajeTextoUsuario> MensajesDeTexto { get; set; }
 
         public ChatContext() : base()
         {

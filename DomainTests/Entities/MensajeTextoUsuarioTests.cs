@@ -5,20 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities.Tests
+namespace Domain.Entities.ChatAgregado.Tests
 {
-    internal class MensajeTextoTests
+    internal class MensajeTextoUsuarioTests
     {
         [Test]
         public void ToString_WhenCalled_ReturnsTexto()
         {
             // Arrange
             var texto = "Hola, mundo!";
-            var mensaje = new MensajeTexto
+            var mensaje = new MensajeTextoUsuario
             {
                 Texto = texto,
-                DateTime = DateTime.Now,
-                Tipo = TipoMensaje.Usuario
+                DateTime = DateTime.Now
             };
 
             // Act

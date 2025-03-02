@@ -1,6 +1,6 @@
 ﻿using Domain.Abstractions;
 using Domain.Abstractions.Factories;
-using Domain.Entities;
+using Domain.Entities.ChatAgregado;
 using Domain.ValueObjects;
 using Infrastructure.LLM.Abstractions;
 using Microsoft.Extensions.DependencyInjection;

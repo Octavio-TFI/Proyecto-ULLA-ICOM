@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.DocumentoAgregado;
 using InfrastructureTests.Database.Tests;
 using System;
 using System.Collections.Generic;

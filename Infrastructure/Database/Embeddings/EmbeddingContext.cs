@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.ConsultaAgregado;
+using Domain.Entities.DocumentoAgregado;
 using Infrastructure.Database.Chats;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;

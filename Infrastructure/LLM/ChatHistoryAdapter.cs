@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.ChatAgregado;
 using Domain.ValueObjects;
 using Infrastructure.LLM.Abstractions;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -19,16 +19,13 @@ namespace Infrastructure.LLM
 
             foreach (Mensaje mensaje in mensajes)
             {
-                if (mensaje is MensajeTexto mensajeTexto)
+                if (mensaje is MensajeTextoUsuario mensajeTexto)
                 {
-                    if (mensaje.Tipo == TipoMensaje.Usuario)
-                    {
-                        chatHistory.AddUserMessage(mensajeTexto.Texto);
-                    }
-                    else if (mensaje.Tipo == TipoMensaje.Asistente)
-                    {
-                        chatHistory.AddAssistantMessage(mensajeTexto.Texto);
-                    }
+                    chatHistory.AddUserMessage(mensajeTexto.Texto);
+                }
+                else if (mensaje is MensajeIA mensajeIA)
+                {
+                    chatHistory.AddAssistantMessage(mensajeIA.Texto);
                 }
             }
 

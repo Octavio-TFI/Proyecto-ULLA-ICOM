@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities.Tests
+namespace Domain.Entities.DocumentoAgregado.Tests
 {
     internal class DocumentTests
     {

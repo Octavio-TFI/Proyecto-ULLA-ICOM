@@ -1,6 +1,7 @@
 ﻿using Domain.Abstractions;
 using Domain.Abstractions.Factories;
 using Domain.Entities;
+using Domain.Entities.DocumentoAgregado;
 using System;
 using System.Collections.Generic;
 using System.Linq;

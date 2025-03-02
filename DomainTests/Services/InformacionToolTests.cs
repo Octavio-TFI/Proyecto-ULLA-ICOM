@@ -1,6 +1,7 @@
 ﻿using AppServices.Abstractions;
 using Domain.Abstractions;
-using Domain.Entities;
+using Domain.Entities.ConsultaAgregado;
+using Domain.Entities.DocumentoAgregado;
 using Domain.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

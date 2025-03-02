@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.ChatAgregado;
 using MediatR;
 using System;
 using System.Collections.Generic;

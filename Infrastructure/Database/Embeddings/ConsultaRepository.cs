@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.ConsultaAgregado;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;

@@ -1,4 +1,5 @@
 ﻿using Domain.Abstractions;
+using Domain.Entities.ChatAgregado;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Mock;
 using Moq;
@@ -26,11 +27,10 @@ namespace AppServices.EventHandlers.Tests
             var chatId = Guid.NewGuid();
             var chatMock = new Mock<Chat>();
 
-            var respuesta = new MensajeTexto
+            var respuesta = new MensajeTextoUsuario
             {
                 Texto = "Hola",
-                DateTime = DateTime.Now,
-                Tipo = TipoMensaje.Asistente
+                DateTime = DateTime.Now
             };
 
             chatRepositoryMock.Setup(
