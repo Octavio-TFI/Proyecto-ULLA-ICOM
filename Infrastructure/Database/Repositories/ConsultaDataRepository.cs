@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Infrastructure.Database.MesaDeAyuda
+namespace Infrastructure.Database.Repositories
 {
     internal class ConsultaDataRepository(IFileManager fileManager)
         : IConsultaDataRepository

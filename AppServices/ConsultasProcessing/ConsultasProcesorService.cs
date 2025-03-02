@@ -45,8 +45,7 @@ namespace AppServices.ConsultasProcessing
             var consultasRepository = scopeServices
                 .GetRequiredService<IConsultaRepository>();
 
-            var unitOfWork = scopeServices
-                .GetRequiredKeyedService<IUnitOfWork>(Contexts.Embedding);
+            var unitOfWork = scopeServices.GetRequiredService<IUnitOfWork>();
 
             // Se obtienen las consultas de la base de datos de mesa de ayuda
             var existingIds = await consultasRepository.GetAllIdsAsync();

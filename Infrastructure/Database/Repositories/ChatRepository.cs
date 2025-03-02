@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database.Chats
+namespace Infrastructure.Database.Repositories
 {
     internal class ChatRepository(ChatContext _context)
         : Repository<Chat>(_context)

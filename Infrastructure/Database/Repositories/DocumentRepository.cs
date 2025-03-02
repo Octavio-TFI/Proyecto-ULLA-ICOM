@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database.Embeddings
+namespace Infrastructure.Database.Repositories
 {
-    internal class DocumentRepository(EmbeddingContext _context)
+    internal class DocumentRepository(ChatContext _context)
         : Repository<Document>(_context)
         , IDocumentRepository
     {

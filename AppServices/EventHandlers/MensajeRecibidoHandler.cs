@@ -19,7 +19,7 @@ namespace AppServices.EventHandlers
     internal class MensajeRecibidoHandler(
         IChatRepository chatRepository,
         [FromKeyedServices(TipoAgent.Chat)] IAgent agent,
-        [FromKeyedServices(Contexts.Chat)] IUnitOfWork unitOfWork,
+        IUnitOfWork unitOfWork,
         ILogger<MensajeGeneradoHandler> logger)
         : INotificationHandler<MensajeRecibidoEvent>
     {

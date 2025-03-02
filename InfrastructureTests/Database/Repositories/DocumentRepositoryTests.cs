@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database.Embeddings.Tests
+namespace Infrastructure.Database.Repositories.Tests
 {
     internal class DocumentRepositoryTests
     {
@@ -94,7 +94,7 @@ namespace Infrastructure.Database.Embeddings.Tests
                 },
             };
 
-            var context = DatabaseTestsHelper.CreateInMemoryEmbeddingContext();
+            var context = DatabaseTestsHelper.CreateInMemoryChatContext();
             await context.Documents.AddRangeAsync(documentos);
             await context.SaveChangesAsync();
 
@@ -129,7 +129,7 @@ namespace Infrastructure.Database.Embeddings.Tests
                 new() { Filename = "fileName1", Texto = "Texto1" },
             };
 
-            var context = DatabaseTestsHelper.CreateInMemoryEmbeddingContext();
+            var context = DatabaseTestsHelper.CreateInMemoryChatContext();
             await context.Documents.AddRangeAsync(documentos);
             await context.SaveChangesAsync();
 

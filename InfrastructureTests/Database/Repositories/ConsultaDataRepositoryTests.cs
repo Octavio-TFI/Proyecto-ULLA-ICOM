@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database.MesaDeAyuda.Tests
+namespace Infrastructure.Database.Repositories.Tests
 {
     internal class ConsultaDataRepositoryTests
     {

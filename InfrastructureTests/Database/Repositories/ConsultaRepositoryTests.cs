@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database.Embeddings.Tests
+namespace Infrastructure.Database.Repositories.Tests
 {
     internal class ConsultaRepositoryTests
     {
@@ -36,7 +36,7 @@ namespace Infrastructure.Database.Embeddings.Tests
                 }
             };
 
-            var context = DatabaseTestsHelper.CreateInMemoryEmbeddingContext();
+            var context = DatabaseTestsHelper.CreateInMemoryChatContext();
             await context.Consultas.AddRangeAsync(consultas);
             await context.SaveChangesAsync();
 
@@ -113,7 +113,7 @@ namespace Infrastructure.Database.Embeddings.Tests
                 },
             };
 
-            var context = DatabaseTestsHelper.CreateInMemoryEmbeddingContext();
+            var context = DatabaseTestsHelper.CreateInMemoryChatContext();
             await context.Consultas.AddRangeAsync(consultas);
             await context.SaveChangesAsync();
 

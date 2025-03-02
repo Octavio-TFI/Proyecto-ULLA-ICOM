@@ -30,8 +30,7 @@ namespace AppServices.DocumentProcessing
             var documentRepository = scopeServices
                 .GetRequiredService<IDocumentRepository>();
 
-            var unitOfWork = scopeServices
-                .GetRequiredKeyedService<IUnitOfWork>(Contexts.Embedding);
+            var unitOfWork = scopeServices.GetRequiredService<IUnitOfWork>();
 
             var documentPaths = _directoryManager.GetFiles("Documentacion");
 

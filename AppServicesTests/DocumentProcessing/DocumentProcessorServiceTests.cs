@@ -61,7 +61,7 @@ namespace AppServices.DocumentProcessing.Tests
             services.AddKeyedSingleton("pdf", pdfProcessor.Object);
             services.AddKeyedSingleton("txt", txtProcessor.Object);
             services.AddSingleton(documentRepository.Object);
-            services.AddKeyedSingleton(Contexts.Embedding, unitOfWork.Object);
+            services.AddSingleton(unitOfWork.Object);
 
             var documentProcessorService = new DocumentProcessorService(
                 services.BuildServiceProvider(),
@@ -125,7 +125,7 @@ namespace AppServices.DocumentProcessing.Tests
 
             services.AddKeyedSingleton("pdf", pdfProcessor.Object);
             services.AddSingleton(documentRepository.Object);
-            services.AddKeyedSingleton(Contexts.Embedding, unitOfWork.Object);
+            services.AddSingleton(unitOfWork.Object);
 
             var documentProcessorService = new DocumentProcessorService(
                 services.BuildServiceProvider(),

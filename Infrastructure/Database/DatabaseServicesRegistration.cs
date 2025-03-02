@@ -1,9 +1,7 @@
 ﻿using AppServices.Ports;
 using Domain;
 using Domain.Repositories;
-using Infrastructure.Database.Chats;
-using Infrastructure.Database.Embeddings;
-using Infrastructure.Database.MesaDeAyuda;
+using Infrastructure.Database.Repositories;
 using Infrastructure.Outbox;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -23,36 +21,23 @@ namespace Infrastructure.Database
             this IServiceCollection services,
             string connectionString)
         {
+            // Como SQL Server todavia no soporta Vector Search
+            // Se utiliza SQLite
             services.AddDbContext<ChatContext>(
                 options =>
                 {
-                    options.UseSqlServer(
-                        connectionString,
-                        o => o.MigrationsHistoryTable(
-                                tableName: HistoryRepository.DefaultTableName,
-                                schema: "Chat"))
-                        .AddInterceptors(new OutboxInterceptor());
-                });
-
-            services.AddKeyedScoped<IUnitOfWork, UnitOfWork<ChatContext>>(
-                Contexts.Chat);
-            services.AddScoped<IChatRepository, ChatRepository>();
-
-            // Como SQL Server todavia no soporta Vector Search
-            // Se utiliza SQLite
-            services.AddDbContext<EmbeddingContext>(
-                options =>
-                {
-                    options.UseSqlite("Data Source=Embeddings.db")
+                    options.UseSqlite(connectionString)
                         .AddInterceptors(
                             new OutboxInterceptor(),
                             new SQLiteExtensionInterceptor());
                 });
 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<IChatRepository, ChatRepository>();
+
             services.AddScoped<IConsultaRepository, ConsultaRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();
-            services.AddKeyedScoped<IUnitOfWork, UnitOfWork<EmbeddingContext>>(
-                Contexts.Embedding);
 
             // Mesa de ayuda
             services.AddSingleton<IConsultaDataRepository, ConsultaDataRepository>(

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database.Embeddings
+namespace Infrastructure.Database
 {
     internal class SQLiteExtensionInterceptor
         : DbConnectionInterceptor
@@ -16,7 +16,7 @@ namespace Infrastructure.Database.Embeddings
             ConnectionCreatedEventData eventData,
             DbConnection result)
         {
-            if(eventData.Connection is not SqliteConnection connection)
+            if (eventData.Connection is not SqliteConnection connection)
             {
                 return base.ConnectionCreated(eventData, result);
             }

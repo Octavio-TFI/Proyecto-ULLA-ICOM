@@ -3,10 +3,10 @@ using Controllers;
 using Domain;
 using Infrastructure.Clients;
 using Infrastructure.Database;
+using Infrastructure.FileSystem;
 using Infrastructure.LLM;
 using Infrastructure.Outbox;
 using System.Reflection;
-using Infrastructure.FileSystem;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +18,7 @@ builder.Services.AddControllers().AddApplicationPart(controllersAssembly);
 builder.Services.AddAppServices();
 builder.Services.AddDomainServices();
 
-string connectionString = builder.Configuration.GetConnectionString("Chat") ??
+string connectionString = builder.Configuration.GetConnectionString("Default") ??
     throw new Exception("Connection string no configurado");
 
 builder.Services.AddClientServices();
@@ -34,7 +34,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if(app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

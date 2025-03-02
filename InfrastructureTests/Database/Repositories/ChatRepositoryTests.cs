@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Exceptions;
 using Domain.ValueObjects;
-using Infrastructure.Database.Chats;
 using InfrastructureTests.Database.Tests;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database.Chats.Tests
+namespace Infrastructure.Database.Repositories.Tests
 {
     internal class ChatRepositoryTests
     {

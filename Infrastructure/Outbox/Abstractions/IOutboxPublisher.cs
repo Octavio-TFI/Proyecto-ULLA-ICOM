@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Outbox.Abstractions
 {
-    internal interface IOutboxPublisher<Context> where Context : BaseContext
+    internal interface IOutboxPublisher
     {
         /// <summary>
         /// Publica un evento de outbox.

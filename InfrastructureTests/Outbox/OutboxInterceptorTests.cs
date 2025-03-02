@@ -45,16 +45,18 @@ namespace Infrastructure.Outbox.Tests
                 domainEvents2.First(),
                 jsonSettings);
 
-            var entity1 = new MensajeTextoUsuario
+            var entity1 = new Chat
             {
-                DateTime = DateTime.Now,
-                Texto = string.Empty
+                ChatPlataformaId = "1",
+                Plataforma = "1",
+                UsuarioId = "Usuario1"
             };
 
-            var entity2 = new MensajeTextoUsuario
+            var entity2 = new Chat
             {
-                DateTime = DateTime.Now,
-                Texto = string.Empty
+                ChatPlataformaId = "2",
+                Plataforma = "2",
+                UsuarioId = "Usuario2"
             };
 
             entity1.Events.AddRange(domainEvents1);

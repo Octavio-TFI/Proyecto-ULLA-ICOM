@@ -26,10 +26,10 @@
                 OccurredOn = DateTime.Now
             };
 
-            var context = new Mock<BaseContext>();
+            var context = new Mock<ChatContext>();
             var publisher = new Mock<IPublisher>();
-            var logger = new Mock<ILogger<OutboxPublisher<BaseContext>>>();
-            var outboxPublisher = new OutboxPublisher<BaseContext>(
+            var logger = new Mock<ILogger<OutboxPublisher>>();
+            var outboxPublisher = new OutboxPublisher(
                 publisher.Object,
                 logger.Object,
                 context.Object);
@@ -81,10 +81,10 @@
                 OccurredOn = DateTime.Now
             };
 
-            var context = new Mock<BaseContext>();
+            var context = new Mock<ChatContext>();
             var publisher = new Mock<IPublisher>();
-            var logger = new Mock<ILogger<OutboxPublisher<BaseContext>>>();
-            var outboxPublisher = new OutboxPublisher<BaseContext>(
+            var logger = new Mock<ILogger<OutboxPublisher>>();
+            var outboxPublisher = new OutboxPublisher(
                 publisher.Object,
                 logger.Object,
                 context.Object);
@@ -129,10 +129,10 @@
                 OccurredOn = DateTime.Now
             };
 
-            var context = new Mock<BaseContext>();
+            var context = new Mock<ChatContext>();
             var publisher = new Mock<IPublisher>();
-            var logger = new Mock<ILogger<OutboxPublisher<BaseContext>>>();
-            var outboxPublisher = new OutboxPublisher<BaseContext>(
+            var logger = new Mock<ILogger<OutboxPublisher>>();
+            var outboxPublisher = new OutboxPublisher(
                 publisher.Object,
                 logger.Object,
                 context.Object);
@@ -174,10 +174,10 @@
                 OccurredOn = DateTime.Now
             };
 
-            var context = new Mock<BaseContext>();
+            var context = new Mock<ChatContext>();
             var publisher = new Mock<IPublisher>();
-            var logger = new Mock<ILogger<OutboxPublisher<BaseContext>>>();
-            var outboxPublisher = new OutboxPublisher<BaseContext>(
+            var logger = new Mock<ILogger<OutboxPublisher>>();
+            var outboxPublisher = new OutboxPublisher(
                 publisher.Object,
                 logger.Object,
                 context.Object);

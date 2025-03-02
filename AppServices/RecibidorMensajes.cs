@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace AppServices
 {
     internal class RecibidorMensajes(
-        [FromKeyedServices(Contexts.Chat)] IUnitOfWork _unitOfWork,
+        IUnitOfWork _unitOfWork,
         IChatRepository _chatRepository)
         : IRecibidorMensajes
     {

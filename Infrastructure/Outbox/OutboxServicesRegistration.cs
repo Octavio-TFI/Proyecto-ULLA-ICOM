@@ -15,9 +15,7 @@ namespace Infrastructure.Outbox
         {
             services.AddHostedService<OutboxService>();
             services.AddSingleton<IOutboxProcessor, OutboxProcessor>();
-            services.AddScoped(
-                typeof(IOutboxPublisher<>),
-                typeof(OutboxPublisher<>));
+            services.AddScoped<IOutboxPublisher, OutboxPublisher>();
 
             return services;
         }

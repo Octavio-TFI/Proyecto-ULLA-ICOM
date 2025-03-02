@@ -13,11 +13,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Outbox
 {
-    internal class OutboxPublisher<Context>(
+    internal class OutboxPublisher(
         IPublisher _publisher,
-        ILogger<OutboxPublisher<Context>> _logger,
-        Context _context)
-        : IOutboxPublisher<Context> where Context : BaseContext
+        ILogger<OutboxPublisher> _logger,
+        ChatContext _context) : IOutboxPublisher
     {
         static readonly JsonSerializerSettings _jsonSettings = new()
         {
@@ -37,7 +36,7 @@ namespace Infrastructure.Outbox
                         "Deserializacion de domain event devolvio null");
 
                 await _publisher.Publish(domainEvent, cancellationToken);
-            } catch(Exception ex)
+            } catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al publicar el evento de Outbox");
 

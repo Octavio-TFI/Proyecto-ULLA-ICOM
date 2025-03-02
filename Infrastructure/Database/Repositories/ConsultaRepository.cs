@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database.Embeddings
+namespace Infrastructure.Database.Repositories
 {
-    internal class ConsultaRepository(EmbeddingContext context)
+    internal class ConsultaRepository(ChatContext context)
         : Repository<Consulta>(context)
         , IConsultaRepository
     {
-        readonly EmbeddingContext _context = context;
+        readonly ChatContext _context = context;
 
         public Task<int[]> GetAllIdsAsync()
         {

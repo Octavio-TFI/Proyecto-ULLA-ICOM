@@ -67,9 +67,7 @@ namespace AppServices.ConsultasProcessing.Tests
                 .ThrowsAsync(new Exception());
 
             services.AddSingleton(consultaRepositoryMock.Object);
-            services.AddKeyedSingleton(
-                Contexts.Embedding,
-                unitOfWorkMock.Object);
+            services.AddSingleton(unitOfWorkMock.Object);
 
             var consultasProcesorService = new ConsultasProcesorService(
                 services.BuildServiceProvider(),

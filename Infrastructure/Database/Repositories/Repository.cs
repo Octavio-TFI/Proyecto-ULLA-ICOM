@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Database
+namespace Infrastructure.Database.Repositories
 {
     internal abstract class Repository<T>(DbContext _context)
         where T : Entity
