@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.ChatAgregado;
+using Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Domain.Abstractions
         /// <param name="mensajes">Mensajes</param>
         /// <param name="arguments">Argumentos</param>
         /// <returns>Respuesta generada por el agente</returns>
-        Task<string> GenerarRespuestaAsync(
+        Task<AgentResult> GenerarRespuestaAsync(
             List<Mensaje> mensajes,
             Dictionary<string, object?>? arguments = null);
 
@@ -25,7 +26,7 @@ namespace Domain.Abstractions
         /// <param name="mensaje">Mensaje</param>
         /// <param name="arguments">Argumentos</param>
         /// <returns>Respuesta generada por el agente</returns>
-        Task<string> GenerarRespuestaAsync(
+        Task<AgentResult> GenerarRespuestaAsync(
             string mensaje,
             Dictionary<string, object?>? arguments = null);
     }

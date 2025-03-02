@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Abstractions.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.ChatAgregado
 {
-    public class ConsultaRecuperada : Entity
+    public class ConsultaRecuperada : Entity, IInformacionRecuperada
     {
         internal ConsultaRecuperada()
         {
         }
+
+        public Guid InformacionId => ConsultaId;
 
         /// <summary>
         /// Id de la consulta recuperada

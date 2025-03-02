@@ -1,7 +1,10 @@
 ﻿using AppServices.Abstractions;
 using Domain.Abstractions;
 using Domain.Entities;
+using Domain.Entities.ChatAgregado;
 using Domain.Repositories;
+using Domain.ValueObjects;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -17,7 +20,8 @@ namespace Domain.Services
         IEmbeddingService _embeddingService,
         IConsultaRepository _consultaRepository,
         IDocumentRepository _documentRepository,
-        IRanker _ranker)
+        IRanker _ranker,
+        AgentData _agentData)
     {
         [DisplayName("informacion")]
         [Description(
@@ -109,6 +113,26 @@ INFORMACION PARA QUERY: {query}
 ",
                 pregunta,
                 info);
+
+            // Guardar metadata de los datos recuperados
+            _agentData.InformacionRecuperada
+                .AddRange(
+                    consultas.Select(
+                        c => new ConsultaRecuperada
+                        {
+                            ConsultaId = c.Id,
+                            Rank = rankedConsultas.Contains(c)
+                        }));
+
+            _agentData.InformacionRecuperada
+                .AddRange(
+                    documents.Select(
+                        d => new DocumentoRecuperado
+                        {
+                            DocumentoId = d.Id,
+                            Rank = rankedDocuments.Contains(d)
+                        }));
+
 
             return info;
         }

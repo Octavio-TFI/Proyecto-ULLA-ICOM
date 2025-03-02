@@ -24,6 +24,8 @@ namespace Infrastructure.LLM
         readonly IFileManager _fileManager = fileManager;
         readonly IChatHistoryAdapter _chatHistoryFactory = chatHistoryFactory;
 
+        AgentData AgentData = new();
+
         Type? Schema;
         FunctionChoiceBehavior? FunctionChoiceBehavior;
         readonly List<KernelPlugin> Tools = [];
@@ -31,24 +33,29 @@ namespace Infrastructure.LLM
 
         public IAgentBuilder AddTool<T>(string name)
         {
-            var methods = typeof(T).GetMethods(BindingFlags.Public);
+            var methods = typeof(T).GetMethods(
+                BindingFlags.Instance | BindingFlags.Public);
 
             List<KernelFunction> functions = [];
 
             foreach (var method in methods)
             {
-                string functionName = method
+                string? functionName = method
                     .GetCustomAttribute<DisplayNameAttribute>()?
-                    .DisplayName ??
-                    throw new Exception(
-                        "Metodo publico no tiene atributo DisplayName." +
-                            " Se debe agregar para añadir esta herramienta a un agente");
+                    .DisplayName;
+
+                if (functionName is null)
+                {
+                    continue;
+                }
 
                 string? functionDescription = method
                     .GetCustomAttribute<DescriptionAttribute>()?
                     .Description;
 
                 var parameters = method.GetParameters()
+                    .Where(
+                        p => p.GetCustomAttribute<DescriptionAttribute>() is not null)
                     .Select(
                         p => new KernelParameterMetadata(p.Name!)
                         {
@@ -59,12 +66,19 @@ namespace Infrastructure.LLM
                 functions.Add(
                     KernelFunctionFactory.CreateFromMethod(
                         method,
-                        ActivatorUtilities.CreateInstance<T>(_serviceProvider),
+                        ActivatorUtilities.CreateInstance<T>(
+                            _serviceProvider,
+                            AgentData),
                         new KernelFunctionFromMethodOptions
                     {
                         FunctionName = functionName,
                         Description = functionDescription,
-                        Parameters = parameters
+                        Parameters = parameters,
+                        ReturnParameter =
+                            new KernelReturnParameterMetadata
+                                    {
+                                        ParameterType = method.ReturnType
+                                    },
                     }));
             }
 
@@ -100,7 +114,7 @@ namespace Infrastructure.LLM
             kernel.Plugins.AddRange(Tools);
 
             var executionSettings = kernel
-                .GetRequiredService<Abstractions.IExecutionSettingsFactory>()
+                .GetRequiredService<IExecutionSettingsFactory>()
                 .Create(FunctionChoiceBehavior, Schema, Temperature);
 
             var chatAgent = new ChatCompletionAgent()
@@ -111,31 +125,7 @@ namespace Infrastructure.LLM
                 Arguments = new KernelArguments(executionSettings)
             };
 
-            return new Agent(chatAgent, _chatHistoryFactory);
-        }
-
-        public ChatCompletionAgent Create(
-            Kernel kernel,
-            string name,
-            FunctionChoiceBehavior? functionChoiceBehavior = null,
-            Type? schema = null,
-            double? temperature = null)
-        {
-            string path = Path.Combine("Prompts", name, "Instructions.txt");
-
-            string instructions = _fileManager.ReadAllText(path);
-
-            var executionSettings = kernel
-                .GetRequiredService<Abstractions.IExecutionSettingsFactory>()
-                .Create(functionChoiceBehavior, schema, temperature);
-
-            return new ChatCompletionAgent()
-            {
-                Name = name,
-                Instructions = instructions,
-                Kernel = kernel,
-                Arguments = new KernelArguments(executionSettings)
-            };
+            return new Agent(chatAgent, AgentData, _chatHistoryFactory);
         }
     }
 }

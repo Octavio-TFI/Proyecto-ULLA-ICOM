@@ -60,15 +60,27 @@ namespace Domain.Entities.ChatAgregado
         public virtual async Task<Mensaje> GenerarMensajeAsync(
             IAgent agente)
         {
-            var stringRespuesta = await agente
+            var agentResult = await agente
                 .GenerarRespuestaAsync(Mensajes)
                 .ConfigureAwait(false);
 
             var respuesta = new MensajeIA()
             {
-                Texto = stringRespuesta,
+                Texto = agentResult.Texto,
                 DateTime = DateTime.Now
             };
+
+            respuesta.DocumentosRecuperados
+                .AddRange(
+                    agentResult.AgentData.InformacionRecuperada
+                        .Where(ir => ir is DocumentoRecuperado)
+                        .Cast<DocumentoRecuperado>());
+
+            respuesta.ConsultasRecuperadas
+                .AddRange(
+                    agentResult.AgentData.InformacionRecuperada
+                        .Where(ir => ir is ConsultaRecuperada)
+                        .Cast<ConsultaRecuperada>());
 
             Mensajes.Add(respuesta);
             Events.Add(

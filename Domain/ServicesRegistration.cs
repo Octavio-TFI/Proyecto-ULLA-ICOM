@@ -1,4 +1,5 @@
-﻿using Domain.Abstractions;
+﻿using AppServices.Abstractions;
+using Domain.Abstractions;
 using Domain.Abstractions.Factories;
 using Domain.Entities;
 using Domain.Factories;
@@ -20,6 +21,7 @@ namespace Domain
         {
             services.AddSingleton<IConsultaFactory, ConsultaFactory>();
             services.AddSingleton<IDocumentFactory, DocumentFactory>();
+            services.AddSingleton<IRanker, Ranker>();
 
             services.AddKeyedTransient(
                 TipoAgent.Ranker,

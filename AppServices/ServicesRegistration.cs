@@ -43,7 +43,7 @@ namespace AppServices
                 ".md");
 
             // Procesamiento de consultas
-            services.AddHostedService<ConsultasProcesorService>();
+            //services.AddHostedService<ConsultasProcesorService>();
 
             services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
             services.AddSingleton<Func<string, IClient>>(

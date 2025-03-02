@@ -17,13 +17,15 @@ namespace Infrastructure.LLM
 {
     internal class Agent(
         ChatCompletionAgent agent,
+        AgentData agentData,
         IChatHistoryAdapter chatHistoryFactory)
         : IAgent
     {
         readonly ChatCompletionAgent _agent = agent;
+        readonly AgentData _data = agentData;
         readonly IChatHistoryAdapter _chatHistoryFactory = chatHistoryFactory;
 
-        public Task<string> GenerarRespuestaAsync(
+        public Task<AgentResult> GenerarRespuestaAsync(
             List<Mensaje> mensajes,
             Dictionary<string, object?>? arguments = null)
         {
@@ -32,7 +34,7 @@ namespace Infrastructure.LLM
             return GenerarRespuestaAsync(chatHistory, arguments);
         }
 
-        public Task<string> GenerarRespuestaAsync(
+        public Task<AgentResult> GenerarRespuestaAsync(
             string mensaje,
             Dictionary<string, object?>? arguments = null)
         {
@@ -42,17 +44,22 @@ namespace Infrastructure.LLM
             return GenerarRespuestaAsync(chatHistory, arguments);
         }
 
-        async Task<string> GenerarRespuestaAsync(
+        async Task<AgentResult> GenerarRespuestaAsync(
             ChatHistory chatHistory,
             Dictionary<string, object?>? arguments = null)
         {
             var kernelArguments = new KernelArguments(arguments ?? []);
 
-            var result = await _agent.InvokeAsync(chatHistory, kernelArguments)
+            var result = await _agent
+                .InvokeAsync(chatHistory, kernelArguments)
                 .FirstAsync()
                 .ConfigureAwait(false);
 
-            return result.ToString();
+            return new AgentResult
+            {
+                Texto = result.ToString(),
+                AgentData = _data,
+            };
         }
     }
 }
