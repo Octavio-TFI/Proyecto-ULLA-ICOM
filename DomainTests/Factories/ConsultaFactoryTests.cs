@@ -32,12 +32,17 @@ namespace Domain.Factories.Tests
             agentMock.Setup(
                 x => x.GenerarRespuestaAsync(consultaData.ToString(), null))
                 .ReturnsAsync(
-                    JsonConvert.SerializeObject(
-                        new ConsultaResumen
-                        {
-                            Descripcion = "Processed Description",
-                            Solucion = "Processed Solution"
-                        }));
+                    new AgentResult
+                    {
+                        Texto =
+                            JsonConvert.SerializeObject(
+                                    new ConsultaResumen
+                            {
+                                Descripcion = "Processed Description",
+                                Solucion = "Processed Solution"
+                            }),
+                        AgentData = new()
+                    });
 
             embeddingServiceMock.Setup(
                 e => e.GenerateAsync(
@@ -87,7 +92,12 @@ namespace Domain.Factories.Tests
 
             agentMock.Setup(
                 x => x.GenerarRespuestaAsync(consultaData.ToString(), null))
-                .ReturnsAsync(string.Empty);
+                .ReturnsAsync(
+                    new AgentResult
+                    {
+                        Texto = string.Empty,
+                        AgentData = new()
+                    });
 
             var consultaFactory = new ConsultaFactory(
                 agentMock.Object,

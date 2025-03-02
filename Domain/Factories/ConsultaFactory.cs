@@ -28,7 +28,7 @@ namespace Domain.Factories
                 .ConfigureAwait(false);
 
             var consultaResumen = JsonConvert.DeserializeObject<ConsultaResumen>(
-                    agentResult.ToString()) ??
+                    agentResult.Texto) ??
                 throw new Exception("Error Deserializando Json ConsultaResumen");
 
             var embeddings = await _embeddingService

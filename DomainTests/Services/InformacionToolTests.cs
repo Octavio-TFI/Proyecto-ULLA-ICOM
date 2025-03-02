@@ -1,8 +1,10 @@
 ﻿using AppServices.Abstractions;
 using Domain.Abstractions;
+using Domain.Entities.ChatAgregado;
 using Domain.Entities.ConsultaAgregado;
 using Domain.Entities.DocumentoAgregado;
 using Domain.Services;
+using Domain.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,35 +25,54 @@ namespace Domain.Services.Tests
             var consultaRepository = new Mock<IConsultaRepository>();
             var documentRepository = new Mock<IDocumentRepository>();
             var rankerMock = new Mock<IRanker>();
+            var agentData = new AgentData();
 
             var consulta = "consulta";
             var embeddingConsulta = new float[] { 1, 2, 3 };
+
             var consultaSimilar = new Consulta
             {
                 RemoteId = 1,
-                Titulo = "Consulta",
-                Descripcion = "Descripcion",
+                Titulo = "Consulta1",
+                Descripcion = "Descripcion1",
                 EmbeddingTitulo = [1, 2, 3],
                 EmbeddingDescripcion = [4, 5, 6],
-                Solucion = "Solucion",
+                Solucion = "Solucion1",
             };
 
-            var documentoRelacionado = new Document
+            var consultaNoSimilar = new Consulta
             {
-                Filename = "fileName",
-                Texto = "Documento",
+                RemoteId = 2,
+                Titulo = "Consulta2",
+                Descripcion = "Descripcion2",
+                EmbeddingTitulo = [7, 8, 9],
+                EmbeddingDescripcion = [10, 11, 12],
+                Solucion = "Solucion2",
             };
 
             var consultas = new List<Consulta>
             {
                 consultaSimilar,
-                consultaSimilar
+                consultaNoSimilar
+            };
+
+            var documentoRelacionado = new Document
+            {
+                Filename = "fileName1",
+                Texto = "Documento1",
+            };
+
+            var documentoNoRelacionado = new Document
+            {
+                Filename = "fileName2",
+                Texto = "Documento2",
             };
 
             var documentos = new List<Document>
             {
                 documentoRelacionado,
-                documentoRelacionado
+                documentoRelacionado,
+                documentoNoRelacionado
             };
 
             embeddingServiceMock
@@ -70,14 +91,15 @@ namespace Domain.Services.Tests
                 .ReturnsAsync([consultaSimilar]);
 
             rankerMock.Setup(x => x.RankAsync(documentos, consulta))
-                .ReturnsAsync(documentos);
+                .ReturnsAsync(documentos.Take(2).ToList());
 
             var consultasPlugin = new InformacionTool(
                 Mock.Of<ILogger<InformacionTool>>(),
                 embeddingServiceMock.Object,
                 consultaRepository.Object,
                 documentRepository.Object,
-                rankerMock.Object);
+                rankerMock.Object,
+                agentData);
 
             // Act
             string result = await consultasPlugin
@@ -98,6 +120,32 @@ namespace Domain.Services.Tests
                 .ToString();
 
             Assert.That(result, Is.EqualTo(expected));
+            Assert.That(agentData.InformacionRecuperada, Has.Count.EqualTo(5));
+            Assert.That(
+                agentData.InformacionRecuperada
+                    .Count(
+                        dr => dr is DocumentoRecuperado &&
+                                dr.InformacionId == documentoRelacionado.Id &&
+                                dr.Rank == true),
+                Is.EqualTo(2));
+            Assert.That(
+                agentData.InformacionRecuperada
+                    .Any(
+                        dr => dr is DocumentoRecuperado &&
+                                dr.InformacionId == documentoNoRelacionado.Id &&
+                                dr.Rank == false));
+            Assert.That(
+                agentData.InformacionRecuperada
+                    .Any(
+                        dr => dr is ConsultaRecuperada &&
+                                dr.InformacionId == consultaSimilar.Id &&
+                                dr.Rank == true));
+            Assert.That(
+                agentData.InformacionRecuperada
+                    .Any(
+                        dr => dr is ConsultaRecuperada &&
+                                dr.InformacionId == consultaNoSimilar.Id &&
+                                dr.Rank == false));
         }
 
         [Test]
@@ -109,6 +157,7 @@ namespace Domain.Services.Tests
             var consultaRepository = new Mock<IConsultaRepository>();
             var documentRepository = new Mock<IDocumentRepository>();
             var rankerMock = new Mock<IRanker>();
+            var agentData = new AgentData();
 
             var consulta = "consulta";
             var embeddingConsulta = new float[] { 1, 2, 3 };
@@ -138,13 +187,13 @@ namespace Domain.Services.Tests
                 embeddingServiceMock.Object,
                 consultaRepository.Object,
                 documentRepository.Object,
-                rankerMock.Object);
+                rankerMock.Object,
+                agentData);
 
             // Act
             string result = await consultasPlugin
                 .BuscarInformacionAsync(consulta)
                 .ConfigureAwait(false);
-            ;
 
             // Assert
             string expected = new StringBuilder()
@@ -158,6 +207,7 @@ namespace Domain.Services.Tests
                 .ToString();
 
             Assert.That(result, Is.EqualTo(expected));
+            Assert.That(agentData.InformacionRecuperada, Is.Empty);
         }
     }
 }

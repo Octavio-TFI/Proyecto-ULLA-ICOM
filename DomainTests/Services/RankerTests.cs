@@ -39,7 +39,12 @@ namespace Domain.Services.Tests
                     It.Is<Dictionary<string, object?>>(
                         a => a.First().Key == "document" &&
                             a.First().Value == datosRecuperados[0])))
-                .ReturnsAsync(TrueResult);
+                .ReturnsAsync(
+                    new AgentResult
+                    {
+                        Texto = TrueResult,
+                        AgentData = new()
+                    });
 
             agentMock.Setup(
                 x => x.GenerarRespuestaAsync(
@@ -47,7 +52,12 @@ namespace Domain.Services.Tests
                     It.Is<Dictionary<string, object?>>(
                         a => a.First().Key == "document" &&
                             a.First().Value == datosRecuperados[1])))
-                .ReturnsAsync(FalseResult);
+                .ReturnsAsync(
+                    new AgentResult
+                    {
+                        Texto = FalseResult,
+                        AgentData = new()
+                    });
 
             agentMock.Setup(
                 x => x.GenerarRespuestaAsync(
@@ -55,7 +65,12 @@ namespace Domain.Services.Tests
                     It.Is<Dictionary<string, object?>>(
                         a => a.First().Key == "document" &&
                             a.First().Value == datosRecuperados[2])))
-                .ReturnsAsync(string.Empty);
+                .ReturnsAsync(
+                    new AgentResult
+                    {
+                        Texto = string.Empty,
+                        AgentData = new()
+                    });
 
             var ranker = new Ranker(agentMock.Object);
 
