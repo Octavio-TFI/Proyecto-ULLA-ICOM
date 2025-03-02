@@ -1,5 +1,6 @@
 ﻿using AppServices.Abstractions;
 using AppServices.Ports;
+using Domain.Abstractions.Entities;
 using Domain.Entities.ChatAgregado;
 using Domain.Exceptions;
 using Newtonsoft.Json;
@@ -46,7 +47,7 @@ namespace Infrastructure.Clients
             string chatPlataformaId,
             Mensaje mensaje)
         {
-            if (mensaje is MensajeTextoUsuario mensajeTexto)
+            if (mensaje is IMensajeTexto mensajeTexto)
             {
                 return await client.PostAsync(
                     "/Chat",

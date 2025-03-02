@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Abstractions.Entities
 {
-    internal interface IMensajeTexto
+    public interface IMensajeTexto
     {
         /// <summary>
         /// Texto del mensaje
