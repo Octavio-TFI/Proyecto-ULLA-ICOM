@@ -371,3 +371,5 @@ FodyWeavers.xsd
 /API/Embeddings.db-wal
 /API/Documentacion/*
 /API/MesaDeAyuda.xml
+/API/Db.db-shm
+/API/Db.db-wal
