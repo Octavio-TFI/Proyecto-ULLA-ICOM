@@ -1,4 +1,5 @@
-﻿using Domain.ValueObjects;
+﻿using Domain.Entities.ChatAgregado;
+using Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
