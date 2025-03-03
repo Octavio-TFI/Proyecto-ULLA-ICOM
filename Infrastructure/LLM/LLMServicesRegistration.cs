@@ -12,6 +12,7 @@ using System;
 using System.ClientModel;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -69,6 +70,19 @@ namespace Infrastructure.LLM
                 TipoLLM.Grande,
                 (services, key) =>
                 {
+                    HttpClient? httpClient = null;
+                    string? url = services.GetRequiredService<IConfiguration>()
+                        .GetValue<string>("URLs:LLMNube");
+
+                    // Para poder testear sin ir a la nube
+                    if (url is not null)
+                    {
+                        var proxy = new WebProxy(url);
+
+                        httpClient = new HttpClient(
+                            new HttpClientHandler { Proxy = proxy });
+                    }
+
                     string? apiKey = services
                         .GetRequiredService<IConfiguration>()
                                 .GetValue<string>("GeminiApiKey") ??
@@ -77,7 +91,8 @@ namespace Infrastructure.LLM
                     var kernelBuilder = Kernel.CreateBuilder()
                         .AddGoogleAIGeminiChatCompletion(
                             "gemini-2.0-flash",
-                            apiKey);
+                            apiKey,
+                            httpClient: httpClient);
 
                     kernelBuilder.Services
                         .AddSingleton<IExecutionSettingsFactory, GeminiExecutionSettingsFactory>(
