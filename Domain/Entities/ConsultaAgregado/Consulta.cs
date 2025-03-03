@@ -30,7 +30,16 @@ namespace Domain.Entities.ConsultaAgregado
 
         public override string ToString()
         {
-            return base.ToString()!;
+            var sb = new StringBuilder();
+            sb.AppendLine($"# {Titulo}");
+
+            sb.AppendLine("## Descripcion");
+            sb.AppendLine(Descripcion);
+
+            sb.AppendLine("## Solucion");
+            sb.AppendLine(Solucion);
+
+            return sb.ToString();
         }
     }
 }
