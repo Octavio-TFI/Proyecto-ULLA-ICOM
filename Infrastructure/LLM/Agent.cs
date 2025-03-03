@@ -21,7 +21,8 @@ namespace Infrastructure.LLM
         IChatHistoryAdapter chatHistoryFactory)
         : IAgent
     {
-        readonly ChatCompletionAgent _agent = agent;
+        public ChatCompletionAgent ChatCompletionAgent { get; } = agent;
+
         readonly AgentData _data = agentData;
         readonly IChatHistoryAdapter _chatHistoryFactory = chatHistoryFactory;
 
@@ -50,7 +51,7 @@ namespace Infrastructure.LLM
         {
             var kernelArguments = new KernelArguments(arguments ?? []);
 
-            var result = await _agent
+            var result = await ChatCompletionAgent
                 .InvokeAsync(chatHistory, kernelArguments)
                 .FirstAsync()
                 .ConfigureAwait(false);

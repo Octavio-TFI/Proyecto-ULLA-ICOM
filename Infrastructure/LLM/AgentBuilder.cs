@@ -18,18 +18,22 @@ namespace Infrastructure.LLM
     internal class AgentBuilder(
         IServiceProvider serviceProvider,
         IFileManager fileManager,
-        IChatHistoryAdapter chatHistoryFactory) : IAgentBuilder
+        IChatHistoryAdapter chatHistoryFactory)
+        : IAgentBuilder
     {
         readonly IServiceProvider _serviceProvider = serviceProvider;
         readonly IFileManager _fileManager = fileManager;
         readonly IChatHistoryAdapter _chatHistoryFactory = chatHistoryFactory;
 
-        AgentData AgentData = new();
+        readonly AgentData AgentData = new();
 
-        Type? Schema;
-        FunctionChoiceBehavior? FunctionChoiceBehavior;
-        readonly List<KernelPlugin> Tools = [];
-        double? Temperature;
+        public Type? Schema { get; private set; }
+
+        public FunctionChoiceBehavior? FunctionChoiceBehavior { get; private set; }
+
+        public List<KernelPlugin> Tools { get; } = [];
+
+        public double? Temperature { get; private set; }
 
         public IAgentBuilder AddTool<T>(string name)
         {
@@ -109,7 +113,8 @@ namespace Infrastructure.LLM
 
             string instructions = _fileManager.ReadAllText(path);
 
-            var kernel = _serviceProvider.GetRequiredKeyedService<Kernel>(tipoLLM);
+            var kernel = _serviceProvider.GetRequiredKeyedService<Kernel>(
+                tipoLLM);
 
             kernel.Plugins.AddRange(Tools);
 
