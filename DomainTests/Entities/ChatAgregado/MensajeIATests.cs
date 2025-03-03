@@ -1,6 +1,4 @@
-﻿using Domain.Entities.ChatAgregado;
-using Domain.ValueObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.ChatAgregado.Tests
 {
-    internal class MensajeTextoUsuarioTests
+    class MensajeIATests
     {
         [Test]
         public void ToString_WhenCalled_ReturnsTexto()
         {
             // Arrange
             var texto = "Hola, mundo!";
-            var mensaje = new MensajeTextoUsuario
+            var mensaje = new MensajeIA
             {
                 Texto = texto,
                 DateTime = DateTime.Now
