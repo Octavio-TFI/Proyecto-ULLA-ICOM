@@ -22,25 +22,37 @@ namespace Infrastructure.LLM
         public static IServiceCollection AddLLMServices(
             this IServiceCollection services)
         {
-            var openAiClient = new OpenAIClient(
-                new ApiKeyCredential("lm-studio"),
-                new OpenAIClientOptions
-                {
-                    Endpoint = new Uri("http://ulaai.ulanet.local:1234/v1")
-                });
-
             services
-                .AddSingleton<IEmbeddingService, LMStudioEmbeddingService>(
-                    );
+                .AddSingleton<IEmbeddingService, LMStudioEmbeddingService>();
 
             services.AddHttpClient<IEmbeddingService, LMStudioEmbeddingService>(
-                x => x.BaseAddress =
-                    new Uri("http://ulaai.ulanet.local:1234/v1/embeddings"));
+                (services, httpClient) =>
+                {
+                    string url = services.GetRequiredService<IConfiguration>()
+                                .GetValue<string>("URLs:LLMLocal") ??
+                        throw new Exception(
+                                "Se debe configurar URL del LLM Local en URLs:LLMLocal");
+
+                    httpClient.BaseAddress =
+                        new Uri($"{url}/v1/embeddings");
+                });
 
             services.AddKeyedTransient(
                 TipoLLM.Pequeño,
                 (services, key) =>
                 {
+                    string url = services.GetRequiredService<IConfiguration>()
+                                .GetValue<string>("URLs:LLMLocal") ??
+                        throw new Exception(
+                                "Se debe configurar URL del LLM Local en URLs:LLMLocal");
+
+                    var openAiClient = new OpenAIClient(
+                        new ApiKeyCredential("lm-studio"),
+                        new OpenAIClientOptions
+                        {
+                            Endpoint = new Uri($"{url}/v1")
+                        });
+
                     var kernelBuilder = Kernel.CreateBuilder()
                         .AddOpenAIChatCompletion(
                             "qwen2.5-14b-instruct",
