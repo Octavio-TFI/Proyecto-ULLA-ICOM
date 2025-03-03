@@ -13,7 +13,7 @@ namespace Infrastructure.LLM.Tests
     internal class LMStudioEmbeddingServiceTests
     {
         [Test]
-        public void GenerateEmbeddingsAsync_UnsuccessfulStatusCode_ShouldThrow()
+        public void GenerateAsync_UnsuccessfulStatusCode_ShouldThrow()
         {
             // Arrange
             var data = new List<string> { "data" };
@@ -27,15 +27,15 @@ namespace Infrastructure.LLM.Tests
             var service = new LMStudioEmbeddingService(httpClient);
 
             // Act
-            async Task Act() => await service.GenerateAsync(data)
-                .ConfigureAwait(false);
+            async Task Act()
+                => await service.GenerateAsync(data).ConfigureAwait(false);
 
             // Assert
             Assert.ThrowsAsync<Exception>(Act);
         }
 
         [Test]
-        public void GenerateEmbeddingsAsync_NullResponse_ShouldThrow()
+        public void GenerateAsync_NullResponse_ShouldThrow()
         {
             // Arrange
             var data = new List<string> { "data" };
@@ -51,15 +51,15 @@ namespace Infrastructure.LLM.Tests
             var service = new LMStudioEmbeddingService(httpClient);
 
             // Act
-            async Task Act() => await service.GenerateAsync(data)
-                .ConfigureAwait(false);
+            async Task Act()
+                => await service.GenerateAsync(data).ConfigureAwait(false);
 
             // Assert
             Assert.ThrowsAsync<Exception>(Act);
         }
 
         [Test]
-        public async Task GenerateEmbeddingsAsync_SuccessfulResponse_ShouldReturnEmbeddings(
+        public async Task GenerateAsync_SuccessfulResponse_ShouldReturnEmbeddings(
             )
         {
             // Arrange
@@ -82,14 +82,44 @@ namespace Infrastructure.LLM.Tests
             var service = new LMStudioEmbeddingService(httpClient);
 
             // Act
-            var result = await service.GenerateAsync(data)
-                .ConfigureAwait(false);
+            var result = await service.GenerateAsync(data).ConfigureAwait(false);
 
             // Assert
             Assert.That(
                 result.Select(x => x.ToArray()).ToList(),
                 Is.EqualTo(
                     embeddingResponse.Data.Select(x => x.Embedding).ToList()));
+        }
+
+        [Test]
+        public async Task GenerateAsyncSingleString_SuccessfulResponse_ShouldReturnEmbeddings(
+            )
+        {
+            // Arrange
+            var embeddingResponse = new EmbeddingResponseList
+            {
+                Data = [new() { Embedding = [1, 2, 3] }]
+            };
+
+            var response = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = JsonContent.Create(embeddingResponse)
+            };
+
+            var httpClient = MockHttpClient(response);
+
+            var service = new LMStudioEmbeddingService(httpClient);
+
+            // Act
+            var result = await service.GenerateAsync("data")
+                .ConfigureAwait(false);
+
+            // Assert
+            Assert.That(
+                result,
+                Is.EqualTo(
+                    embeddingResponse.Data.Select(x => x.Embedding).First()));
         }
 
         static HttpClient MockHttpClient(HttpResponseMessage response)
