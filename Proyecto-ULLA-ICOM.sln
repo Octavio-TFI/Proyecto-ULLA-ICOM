@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15-Infrastructure", "Infras
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "19-InfrastructureTests", "InfrastructureTests\19-InfrastructureTests.csproj", "{8DC967F0-47F4-410D-BA5E-3980B797B0AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "20-ChatApp", "ChatApp\20-ChatApp.csproj", "{C41FE640-F34A-4D56-9AB1-BDB0D67C5F1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "21-ChatApp", "ChatApp\21-ChatApp.csproj", "{C41FE640-F34A-4D56-9AB1-BDB0D67C5F1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
