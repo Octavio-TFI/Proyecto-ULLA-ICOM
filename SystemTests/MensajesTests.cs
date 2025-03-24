@@ -1,16 +1,23 @@
 using Controllers.DTOs;
 using System.Net.Http.Json;
 using System.Tests;
+using WireMock.Server;
 
 namespace SystemTests
 {
-    public class ChatTests
+    public class MensajesTests
+        : BaseTests
     {
         [Test]
-        public async Task PrimerMensajeTest()
+        public async Task MensajeBasicoTest()
         {
             // Arrange
-            var apiFactory = new APIFactory();
+            var localLLMServer = WireMockServer.Start();
+            var nubeLLMServer = WireMockServer.Start();
+
+            var apiFactory = CreateAPIFactory(
+                localLLMServer.Port,
+                nubeLLMServer.Port);
 
             var client = apiFactory.CreateClient();
 
