@@ -27,11 +27,7 @@ namespace System.Tests
                 })
                 .Build();
 
-            var options = new DbContextOptionsBuilder<ChatContext>()
-                .UseSqlite(_connectionString)
-                .Options;
-
-            var context = new ChatContext(options);
+            var context = CreateContext();
 
             context.Database.EnsureCreated();
 
@@ -40,15 +36,20 @@ namespace System.Tests
 
         public override async ValueTask DisposeAsync()
         {
-            var options = new DbContextOptionsBuilder<ChatContext>()
-                .UseSqlite(_connectionString)
-                .Options;
-
-            var context = new ChatContext(options);
+            var context = CreateContext();
 
             await context.Database.EnsureDeletedAsync();
 
             await base.DisposeAsync();
+        }
+
+        ChatContext CreateContext()
+        {
+            var options = new DbContextOptionsBuilder<ChatContext>()
+                .UseSqlite(_connectionString)
+                .Options;
+
+            return new ChatContext(options);
         }
     }
 }

@@ -1,4 +1,8 @@
 using Controllers.DTOs;
+using Domain.Entities.ChatAgregado;
+using Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
 using System.Tests;
 using WireMock.Server;
@@ -21,7 +25,7 @@ namespace SystemTests
 
             var client = apiFactory.CreateClient();
 
-            var mensaje = new MensajeTextoPrueba
+            var mensajeDTO = new MensajeTextoPrueba
             {
                 ChatId = Guid.NewGuid(),
                 DateTime = DateTime.Now,
@@ -29,10 +33,26 @@ namespace SystemTests
             };
 
             // Act
-            var httpResponse = await client.PostAsJsonAsync("/Test", mensaje);
+            var httpResponse = await client.PostAsJsonAsync("/Test", mensajeDTO);
 
             // Assert
-            Assert.That(httpResponse.IsSuccessStatusCode);
+            var dbContext = apiFactory.Services.CreateScope().ServiceProvider
+                .GetRequiredService<ChatContext>();
+
+            var chat = dbContext.Chats.Include(c => c.Mensajes).FirstOrDefault();
+            var mensaje = chat?.Mensajes.FirstOrDefault();
+
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.That(httpResponse.IsSuccessStatusCode);
+                    Assert.That(chat, Is.Not.Null);
+                    Assert.That(
+                        mensaje,
+                        Is.TypeOf<MensajeTextoUsuario>().And
+                                .Matches<MensajeTextoUsuario>(
+                                    m => m.Texto == "Hola"));
+                });
         }
     }
 }
