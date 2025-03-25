@@ -4,6 +4,7 @@ using Infrastructure.Database;
 using Infrastructure.LLM.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel.Connectors.Google.Core;
 using System.Net.Http.Json;
 using System.Tests;
 using WireMock.RequestBuilders;
@@ -15,7 +16,7 @@ namespace SystemTests
     public class MensajesTests
         : BaseTests
     {
-        [Test]
+        [Test, Timeout(11000)]
         public async Task MensajeBasicoTest()
         {
             // Arrange
@@ -29,7 +30,13 @@ namespace SystemTests
                         .WithBodyAsJson(
                             new EmbeddingResponseList
                                 {
-                                    Data = [new() { Embedding = [1,2,3] }]
+                                    Data =
+                                        [..Enumerable.Repeat(
+                                                    new EmbeddingResponse
+                                        {
+                                            Embedding = [1,2,3]
+                                        },
+                                                    10)]
                                 }));
 
             var nubeLLMServer = WireMockServer.Start();
@@ -54,8 +61,13 @@ namespace SystemTests
             var dbContext = apiFactory.Services.CreateScope().ServiceProvider
                 .GetRequiredService<ChatContext>();
 
+            while (dbContext.Set<Mensaje>().Count() < 2)
+            {
+                await Task.Delay(100);
+            }
+
             var chat = dbContext.Chats.Include(c => c.Mensajes).FirstOrDefault();
-            var mensaje = chat?.Mensajes.FirstOrDefault();
+            var mensajeUsuario = chat?.Mensajes.FirstOrDefault();
 
             Assert.Multiple(
                 () =>
@@ -63,7 +75,7 @@ namespace SystemTests
                     Assert.That(httpResponse.IsSuccessStatusCode);
                     Assert.That(chat, Is.Not.Null);
                     Assert.That(
-                        mensaje,
+                        mensajeUsuario,
                         Is.TypeOf<MensajeTextoUsuario>().And
                                 .Matches<MensajeTextoUsuario>(
                                     m => m.Texto == "Hola"));
