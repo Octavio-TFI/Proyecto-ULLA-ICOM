@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace System.Tests
 {
-    public class APIFactory(int localLLMPort, int nubeLLMPort, string dbName)
+    public class APIFactory(int localLLMPort, string dbName)
         : WebApplicationFactory<APIProgram>
     {
         readonly string _connectionString = $"Data Source={dbName}.db";
@@ -21,8 +21,8 @@ namespace System.Tests
             var config = new ConfigurationBuilder().AddInMemoryCollection(
                 new Dictionary<string, string?>
                 {
-                { "URLs:LLMLocal", $"http://localhost:{localLLMPort}" },
-                { "URLs:LLMNube", $"http://localhost:{nubeLLMPort}" },
+                { "Testing", "true" },
+                { "LLMLocal:URL", $"http://localhost:{localLLMPort}" },
                 { "ConnectionStrings:Default", _connectionString }
                 })
                 .Build();

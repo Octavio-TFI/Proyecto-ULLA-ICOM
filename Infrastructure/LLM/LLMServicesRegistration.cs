@@ -23,16 +23,15 @@ namespace Infrastructure.LLM
         public static IServiceCollection AddLLMServices(
             this IServiceCollection services)
         {
-            services
-                .AddSingleton<IEmbeddingService, LMStudioEmbeddingService>();
+            services.AddSingleton<IEmbeddingService, LMStudioEmbeddingService>();
 
             services.AddHttpClient<IEmbeddingService, LMStudioEmbeddingService>(
                 (services, httpClient) =>
                 {
                     string url = services.GetRequiredService<IConfiguration>()
-                                .GetValue<string>("URLs:LLMLocal") ??
+                                .GetValue<string>("LLMLocal:URL") ??
                         throw new Exception(
-                                "Se debe configurar URL del LLM Local en URLs:LLMLocal");
+                                "Se debe configurar URL del LLM Local en LLMLocal:URL");
 
                     httpClient.BaseAddress =
                         new Uri($"{url}/v1/embeddings");
@@ -42,10 +41,11 @@ namespace Infrastructure.LLM
                 TipoLLM.Pequeño,
                 (services, key) =>
                 {
-                    string url = services.GetRequiredService<IConfiguration>()
-                                .GetValue<string>("URLs:LLMLocal") ??
+                    var config = services.GetRequiredService<IConfiguration>();
+
+                    string url = config.GetValue<string>("LLMLocal:URL") ??
                         throw new Exception(
-                                "Se debe configurar URL del LLM Local en URLs:LLMLocal");
+                                "Se debe configurar URL del LLM Local en LLMLocal:URL");
 
                     var openAiClient = new OpenAIClient(
                         new ApiKeyCredential("lm-studio"),
@@ -54,9 +54,13 @@ namespace Infrastructure.LLM
                             Endpoint = new Uri($"{url}/v1")
                         });
 
+                    string model = config.GetValue<string>("LLMLocal:Model") ??
+                        throw new Exception(
+                                "Se debe configurar el modelo del LLM Local en LLMLocal:Model");
+
                     var kernelBuilder = Kernel.CreateBuilder()
                         .AddOpenAIChatCompletion(
-                            "qwen2.5-14b-instruct",
+                            model,
                             openAiClient);
 
                     kernelBuilder.Services
@@ -70,33 +74,55 @@ namespace Infrastructure.LLM
                 TipoLLM.Grande,
                 (services, key) =>
                 {
-                    HttpClient? httpClient = null;
-                    string? url = services.GetRequiredService<IConfiguration>()
-                        .GetValue<string>("URLs:LLMNube");
+                    var config = services.GetRequiredService<IConfiguration>();
 
-                    // Para poder testear sin ir a la nube
-                    if (url is not null)
+                    bool testing = config.GetValue<bool>("Testing");
+
+                    var kernelBuilder = Kernel.CreateBuilder();
+
+                    if (testing)
                     {
-                        var proxy = new WebProxy(url);
+                        string url = config.GetValue<string>("LLMLocal:URL") ??
+                            throw new Exception(
+                                "Se debe configurar URL del LLM Local en LLMLocal:URL");
 
-                        httpClient = new HttpClient(
-                            new HttpClientHandler { Proxy = proxy });
+                        var openAiClient = new OpenAIClient(
+                            new ApiKeyCredential("lm-studio"),
+                            new OpenAIClientOptions
+                            {
+                                Endpoint = new Uri($"{url}/v1")
+                            });
+
+                        string model = config.GetValue<string>("LLMLocal:Model") ??
+                            throw new Exception(
+                                "Se debe configurar el modelo del LLM Local en LLMLocal:Model");
+
+                        kernelBuilder.AddOpenAIChatCompletion(
+                            model,
+                            openAiClient);
+
+                        kernelBuilder.Services
+                            .AddSingleton<IExecutionSettingsFactory, OpenAiExecutionSettingsFactory>(
+                                );
                     }
+                    else
+                    {
+                        string apiKey = config.GetValue<string>("LLMGoogle:ApiKey") ??
+                            throw new Exception(
+                                "Se debe configurar GeminiApiKey en LLMGoogle:ApiKey");
 
-                    string? apiKey = services
-                        .GetRequiredService<IConfiguration>()
-                                .GetValue<string>("GeminiApiKey") ??
-                        throw new Exception("GeminiApiKey no configurada");
+                        string model = config.GetValue<string>("LLMGoogle:Model") ??
+                            throw new Exception(
+                                "Se debe configurar GeminiModel en LLMGoogle:Model");
 
-                    var kernelBuilder = Kernel.CreateBuilder()
-                        .AddGoogleAIGeminiChatCompletion(
-                            "gemini-2.0-flash",
-                            apiKey,
-                            httpClient: httpClient);
+                        kernelBuilder.AddGoogleAIGeminiChatCompletion(
+                            model,
+                            apiKey);
 
-                    kernelBuilder.Services
-                        .AddSingleton<IExecutionSettingsFactory, GeminiExecutionSettingsFactory>(
-                            );
+                        kernelBuilder.Services
+                            .AddSingleton<IExecutionSettingsFactory, GeminiExecutionSettingsFactory>(
+                                );
+                    }
 
                     return kernelBuilder.Build();
                 });
