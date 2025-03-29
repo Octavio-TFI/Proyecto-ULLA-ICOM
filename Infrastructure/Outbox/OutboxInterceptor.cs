@@ -45,8 +45,13 @@ namespace Infrastructure.Outbox
                 .SelectMany(
                     entity =>
                     {
-                        return entity.Entity.Events
-                            .Select(e => CreateOutboxEvent(e, ocurredOn));
+                        var outboxEvents = entity.Entity.Events
+                            .Select(e => CreateOutboxEvent(e, ocurredOn))
+                            .ToList();
+
+                        entity.Entity.Events.Clear();
+
+                        return outboxEvents;
                     })
                 .ToList();
 

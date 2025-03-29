@@ -1,5 +1,6 @@
 using Controllers.DTOs;
 using Domain.Entities.ChatAgregado;
+using FluentAssertions;
 using Infrastructure.Database;
 using Infrastructure.LLM.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 using OpenAI.Chat;
 using System.Net.Http.Json;
 using System.Tests;
+using WireMock.FluentAssertions;
 using WireMock.Matchers;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -20,12 +22,12 @@ namespace SystemTests
     public class MensajesTests
         : BaseTests
     {
-        [Test, Timeout(11000)]
+        [Test, Timeout(15000)]
         public async Task MensajeBasicoTest()
         {
             // Arrange
-            var localLLMServer = WireMockServer.Start();
-            var chatServer = WireMockServer.Start();
+            using var localLLMServer = WireMockServer.Start();
+            using var chatServer = WireMockServer.Start();
 
             localLLMServer
                 .Given(Request.Create().WithPath("/v1/embeddings").UsingPost())
@@ -93,8 +95,12 @@ namespace SystemTests
   ""system_fingerprint"": ""fp_fc9f1d7035""
 }"));
 
+            chatServer.Given(Request.Create().WithPath("/Chat").UsingPost())
+                .RespondWith(Response.Create().WithSuccess());
+
             var apiFactory = CreateAPIFactory(
-                localLLMServer.Port);
+                localLLMServer.Port,
+                chatServer.Port);
 
             var client = apiFactory.CreateClient();
 
@@ -106,17 +112,18 @@ namespace SystemTests
             };
 
             // Act
-            var httpResponse = await client.PostAsJsonAsync("/Test", mensajeDTO);
+            var httpResponse = await client.PostAsJsonAsync("/Test", mensajeDTO)
+                .ConfigureAwait(false);
 
-            // Assert
             var dbContext = apiFactory.Services.CreateScope().ServiceProvider
                 .GetRequiredService<ChatContext>();
 
             while (dbContext.Set<Mensaje>().Count() < 2)
             {
-                await Task.Delay(100);
+                await Task.Delay(100).ConfigureAwait(false);
             }
 
+            // Assert
             var chat = dbContext.Chats.Include(c => c.Mensajes).FirstOrDefault();
             var mensajeUsuario = chat?.Mensajes.OrderBy(m => m.DateTime)
                 .FirstOrDefault();
@@ -140,6 +147,20 @@ namespace SystemTests
                                 .Matches<MensajeIA>(
                                     m => m.Texto == "Hola soy el test"));
                 });
+
+            while (chatServer.FindLogEntries(
+                    Request.Create().WithPath("/Chat").UsingPost())
+                    .Count ==
+                0)
+            {
+                await Task.Delay(100).ConfigureAwait(false);
+            }
+
+            chatServer.Should()
+                .HaveReceivedACall()
+                .AtUrl($"http://localhost:{chatServer.Port}/Chat")
+                .And
+                .WithBody(new RegexMatcher("\"texto\":\\s*\"Hola soy el test\""));
         }
     }
 }

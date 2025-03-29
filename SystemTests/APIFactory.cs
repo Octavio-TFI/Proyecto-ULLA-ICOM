@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Database;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -11,10 +12,13 @@ using System.Threading.Tasks;
 
 namespace System.Tests
 {
-    public class APIFactory(int localLLMPort, string dbName)
+    public class APIFactory(int localLLMPort, int testClientPort, string dbName)
         : WebApplicationFactory<APIProgram>
     {
         readonly string _connectionString = $"Data Source={dbName}.db";
+
+        readonly int localLLMPort = localLLMPort;
+        readonly int testClientPort = testClientPort;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -23,7 +27,8 @@ namespace System.Tests
                 {
                 { "Testing", "true" },
                 { "LLMLocal:URL", $"http://localhost:{localLLMPort}" },
-                { "ConnectionStrings:Default", _connectionString }
+                { "ConnectionStrings:Default", _connectionString },
+                { "Clients:Test:URL", $"http://localhost:{testClientPort}" }
                 })
                 .Build();
 
@@ -36,11 +41,11 @@ namespace System.Tests
 
         public override async ValueTask DisposeAsync()
         {
+            await base.DisposeAsync().ConfigureAwait(false);
+
             var context = CreateContext();
 
-            await context.Database.EnsureDeletedAsync();
-
-            await base.DisposeAsync();
+            await context.Database.EnsureDeletedAsync().ConfigureAwait(false);
         }
 
         ChatContext CreateContext()
