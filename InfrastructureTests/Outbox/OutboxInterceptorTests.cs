@@ -99,6 +99,9 @@ namespace Infrastructure.Outbox.Tests
                 () =>
                 {
                     // Assert
+                    Assert.That(
+                        entities,
+                        Has.All.Property(nameof(Entity.Events)).Empty);
                     Assert.That(context.OutboxEvents.Count(), Is.EqualTo(2));
                     Assert.That(
                         context.OutboxEvents,

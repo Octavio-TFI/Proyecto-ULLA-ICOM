@@ -10,11 +10,11 @@ namespace System.Tests
     {
         readonly Dictionary<string, APIFactory> _apiFactories = [];
 
-        protected APIFactory CreateAPIFactory(int localLLMPort, int nubeLLMPort)
+        protected APIFactory CreateAPIFactory(int localLLMPort, int testClientPort)
         {
-            string testId = TestContext.CurrentContext.Test.ID;
+            string testId = Guid.NewGuid().ToString();
 
-            var apiFactory = new APIFactory(localLLMPort, nubeLLMPort, testId);
+            var apiFactory = new APIFactory(localLLMPort, testClientPort, testId);
 
             _apiFactories.Add(testId, apiFactory);
 

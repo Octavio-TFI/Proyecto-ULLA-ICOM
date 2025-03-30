@@ -1,5 +1,6 @@
 ﻿using AppServices.Abstractions;
 using AppServices.Ports;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,16 @@ namespace Infrastructure.Clients
         {
             services.AddHttpClient(
                 Platforms.Test,
-                x => x.BaseAddress = new Uri("https://localhost:7128"));
+                (services, httpClient) =>
+                {
+                    string url = services.GetRequiredService<IConfiguration>()
+                                .GetSection("Clients:Test:URL")
+                                .Value ??
+                        throw new Exception(
+                                "Se debe configurar la URL de cliente de testing en Clients:Test:URL");
+
+                    httpClient.BaseAddress = new Uri(url);
+                });
             services.AddKeyedSingleton<IClient, TestClient>(Platforms.Test);
 
             return services;
