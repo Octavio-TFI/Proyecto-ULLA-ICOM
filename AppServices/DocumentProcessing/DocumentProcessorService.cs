@@ -32,7 +32,17 @@ namespace AppServices.DocumentProcessing
 
             var unitOfWork = scopeServices.GetRequiredService<IUnitOfWork>();
 
-            var documentPaths = _directoryManager.GetFiles("Documentacion");
+            string documentationPath = "Documentacion";
+
+            if (!_directoryManager.Exists(documentationPath))
+            {
+                _logger.LogWarning(
+                    "El directorio {documentationPath} no existe, omitiendo procesamiento de documentos",
+                    documentationPath);
+                return;
+            }
+
+            var documentPaths = _directoryManager.GetFiles(documentationPath);
 
             var dbDocumentsPaths = await documentRepository
                 .GetAllFilenamesAsync();

@@ -2,6 +2,7 @@
 using Domain.Entities.DocumentoAgregado;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Mock;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,7 @@ namespace AppServices.DocumentProcessing.Tests
             var documentRepository = new Mock<IDocumentRepository>();
             var unitOfWork = new Mock<IUnitOfWork>();
 
+            directoryManager.Setup(x => x.Exists("Documentacion")).Returns(true);
             directoryManager.Setup(x => x.GetFiles("Documentacion"))
                 .Returns(files);
 
@@ -142,6 +144,51 @@ namespace AppServices.DocumentProcessing.Tests
                 x => x.InsertAsync(document1),
                 Times.Never);
 
+            unitOfWork.Verify(x => x.SaveChangesAsync(), Times.Never);
+
+            await documentProcessorService.StopAsync(CancellationToken.None);
+        }
+
+        [Test]
+        public async Task ExecuteAsync_DirectoryDoesNotExist_LogsWarningAndReturns(
+            )
+        {
+            // Arrange
+            var services = new ServiceCollection();
+            var directoryManager = new Mock<IDirectoryManager>();
+            var pathManager = new Mock<IPathManager>();
+            var fileManager = new Mock<IFileManager>();
+            var logger = new Mock<ILogger<DocumentProcessorService>>();
+            var documentRepository = new Mock<IDocumentRepository>();
+            var unitOfWork = new Mock<IUnitOfWork>();
+
+            directoryManager.Setup(x => x.Exists("Documentacion"))
+                .Returns(false);
+
+            services.AddSingleton(documentRepository.Object);
+            services.AddSingleton(unitOfWork.Object);
+
+            var documentProcessorService = new DocumentProcessorService(
+                services.BuildServiceProvider(),
+                directoryManager.Object,
+                pathManager.Object,
+                fileManager.Object,
+                logger.Object);
+
+            // Act
+            await documentProcessorService.StartAsync(CancellationToken.None);
+
+            // Assert
+            logger.VerifyLog()
+                .WarningWasCalled()
+                .Message(x => x.Contains("no existe"));
+
+            directoryManager.Verify(
+                x => x.GetFiles(It.IsAny<string>()),
+                Times.Never);
+            documentRepository.Verify(
+                x => x.GetAllFilenamesAsync(),
+                Times.Never);
             unitOfWork.Verify(x => x.SaveChangesAsync(), Times.Never);
 
             await documentProcessorService.StopAsync(CancellationToken.None);
