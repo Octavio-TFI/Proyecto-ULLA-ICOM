@@ -28,9 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Documentacion\OpeCapataz_Stock_proyectado.pdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="MesaDeAyuda.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
