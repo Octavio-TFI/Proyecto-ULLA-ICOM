@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 	<RootNamespace>Infrastructure</RootNamespace>
 	<AssemblyName>Infrastructure</AssemblyName>
-	<NoWarn>SKEXP0001</NoWarn>
+	<NoWarn>SKEXP0001;SKEXP0010;SKEXP0070;SKEXP0110</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +20,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Google" Version="1.37.0-alpha" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.32.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
@@ -34,8 +35,15 @@
 			<_Parameter1>Infrastructure.Tests</_Parameter1>
 		</AssemblyAttribute>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>System.Tests</_Parameter1>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
 			<_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
 		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Database\Migrations\" />
 	</ItemGroup>
 
 </Project>

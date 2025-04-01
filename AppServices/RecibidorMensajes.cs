@@ -3,7 +3,7 @@ using AppServices.Abstractions.DTOs;
 using AppServices.Ports;
 using Domain;
 using Domain.Abstractions.Factories;
-using Domain.Entities;
+using Domain.Entities.ChatAgregado;
 using Domain.Exceptions;
 using Domain.Repositories;
 using Domain.ValueObjects;
@@ -17,10 +17,8 @@ using System.Threading.Tasks;
 namespace AppServices
 {
     internal class RecibidorMensajes(
-        [FromKeyedServices(Contexts.Chat)] IUnitOfWork _unitOfWork,
-        IChatRepository _chatRepository,
-        IMensajeFactory _mensajeFactory,
-        IMensajeRepository _mensajeRepository)
+        IUnitOfWork _unitOfWork,
+        IChatRepository _chatRepository)
         : IRecibidorMensajes
     {
         public async Task RecibirMensajeTextoAsync(
@@ -33,8 +31,9 @@ namespace AppServices
                 chat = await _chatRepository.GetAsync(
                     mensajeRecibido.UsuarioId,
                     mensajeRecibido.ChatPlataformaId,
-                    mensajeRecibido.Plataforma);
-            } catch(NotFoundException)
+                    mensajeRecibido.Plataforma)
+                    .ConfigureAwait(false);
+            } catch (NotFoundException)
             {
                 // Si el chat no existe, se crea uno nuevo
                 chat = await _chatRepository.InsertAsync(
@@ -43,21 +42,15 @@ namespace AppServices
                         UsuarioId = mensajeRecibido.UsuarioId,
                         ChatPlataformaId = mensajeRecibido.ChatPlataformaId,
                         Plataforma = mensajeRecibido.Plataforma
-                    });
-
-                // Se guarda el chat para obtener el Id
-                await _unitOfWork.SaveChangesAsync();
+                    })
+                    .ConfigureAwait(false);
             }
 
-            var mensaje = _mensajeFactory.CreateMensajeTextoRecibido(
-                chat.Id,
+            chat.AñadirMensajeTextoRecibido(
                 mensajeRecibido.DateTime,
-                TipoMensaje.Usuario,
                 mensajeRecibido.Texto);
 
-            await _mensajeRepository.InsertAsync(mensaje);
-
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

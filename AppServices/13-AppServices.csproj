@@ -6,7 +6,6 @@
     <Nullable>enable</Nullable>
 	<RootNamespace>AppServices</RootNamespace>
 	<AssemblyName>AppServices</AssemblyName>
-	<NoWarn>SKEXP0001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,10 +14,17 @@
   </ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="2GIS.ChmLibCore" Version="1.0.3" />
+	  <PackageReference Include="itext7" Version="9.1.0" />
+	  <PackageReference Include="Markdig" Version="0.40.0" />
 	  <PackageReference Include="MediatR" Version="12.4.1" />
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
-	  <PackageReference Include="Microsoft.SemanticKernel" Version="1.32.0" />
+	  <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
+	  <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.37.0-alpha" />
+	  <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.37.0" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	  <PackageReference Include="ReverseMarkdown" Version="4.6.0" />
+	  <PackageReference Include="Ude.NetStandard" Version="1.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>

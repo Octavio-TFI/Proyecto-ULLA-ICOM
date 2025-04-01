@@ -17,19 +17,17 @@ namespace AppServices.EventHandlers.Tests
             // Arrange
             var msjGeneradoEvent = new MensajeGeneradoEvent
             {
+                EntityId = Guid.NewGuid(),
                 Mensaje =
-                    new MensajeTexto
+                    new MensajeTextoUsuario
                     {
-                        ChatId = 1,
                         Texto = "Texto",
-                        DateTime = DateTime.Now,
-                        Tipo = TipoMensaje.Asistente
+                        DateTime = DateTime.Now
                     }
             };
 
             var chat = new Chat
             {
-                Id = 1,
                 ChatPlataformaId = "1",
                 UsuarioId = "1",
                 Plataforma = "Test"
@@ -40,7 +38,9 @@ namespace AppServices.EventHandlers.Tests
             var clientFactoryMock = new Mock<Func<string, IClient>>();
             var clientMock = new Mock<IClient>();
 
-            chatRepositoryMock.Setup(x => x.GetAsync(1)).ReturnsAsync(chat);
+            chatRepositoryMock
+                .Setup(x => x.GetAsync(msjGeneradoEvent.EntityId))
+                .ReturnsAsync(chat);
 
             clientFactoryMock.Setup(x => x.Invoke("Test"))
                 .Returns(clientMock.Object);
@@ -51,7 +51,8 @@ namespace AppServices.EventHandlers.Tests
                 loggerMock.Object);
 
             // Act
-            await handler.Handle(msjGeneradoEvent, CancellationToken.None);
+            await handler.Handle(msjGeneradoEvent, CancellationToken.None)
+                .ConfigureAwait(false);
 
             // Assert
             clientMock.Verify(
@@ -67,7 +68,7 @@ namespace AppServices.EventHandlers.Tests
                     $@"
 MENSAJE ENVIADO
 Texto: {msjGeneradoEvent.Mensaje}
-ChatId: {msjGeneradoEvent.Mensaje.ChatId}")
+ChatId: {msjGeneradoEvent.EntityId}")
                 .Times(1);
         }
     }

@@ -24,12 +24,10 @@ namespace Infrastructure.Clients.Tests
             string chatPlataformaId = "chatPlataformaId";
             string usuarioId = "usuarioId";
 
-            var mensaje = new MensajeTexto
+            var mensaje = new MensajeTextoUsuario
             {
-                ChatId = 1,
                 Texto = "Texto",
-                DateTime = DateTime.Now,
-                Tipo = TipoMensaje.Asistente
+                DateTime = DateTime.Now
             };
 
             var httpMessageRequestHandlerMock = new Mock<HttpMessageHandler>();
@@ -94,18 +92,16 @@ namespace Infrastructure.Clients.Tests
         }
 
         [Test]
-        public async Task EnviarMensajeTextoAsync_ExceptionOccurredTest()
+        public void EnviarMensajeTextoAsync_ExceptionOccurredTest()
         {
             // Arrange
             string chatPlataformaId = "chatPlataformaId";
             string usuarioId = "usuarioId";
 
-            var mensaje = new MensajeTexto
+            var mensaje = new MensajeTextoUsuario
             {
-                ChatId = 1,
                 Texto = "Texto",
-                DateTime = DateTime.Now,
-                Tipo = TipoMensaje.Asistente
+                DateTime = DateTime.Now
             };
 
             var innerEx = new Exception("Exception occurred");

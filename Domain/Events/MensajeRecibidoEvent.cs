@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Events
 {
-    public record MensajeRecibidoEvent : INotification
+    public record MensajeRecibidoEvent : EntityEvent
     {
-        public required int ChatId { get; init; }
     }
 }

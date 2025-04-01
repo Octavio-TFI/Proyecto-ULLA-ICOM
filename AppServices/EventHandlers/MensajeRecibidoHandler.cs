@@ -1,9 +1,10 @@
-﻿using AppServices.Abstractions;
-using AppServices.Ports;
+﻿using AppServices.Ports;
 using Domain;
+using Domain.Abstractions;
 using Domain.Entities;
 using Domain.Events;
 using Domain.Repositories;
+using Domain.ValueObjects;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,27 +17,30 @@ using System.Threading.Tasks;
 namespace AppServices.EventHandlers
 {
     internal class MensajeRecibidoHandler(
-        IMensajeRepository _mensajeRepository,
-        IGeneradorRespuesta _generadorRespuesta,
-        [FromKeyedServices(Contexts.Chat)] IUnitOfWork _unitOfWork,
-        ILogger<MensajeGeneradoHandler> _logger)
+        IChatRepository chatRepository,
+        [FromKeyedServices(TipoAgent.Chat)] IAgent agent,
+        IUnitOfWork unitOfWork,
+        ILogger<MensajeGeneradoHandler> logger)
         : INotificationHandler<MensajeRecibidoEvent>
     {
+        readonly IChatRepository _chatRepository = chatRepository;
+        readonly IAgent _agent = agent;
+        readonly IUnitOfWork _unitOfWork = unitOfWork;
+        readonly ILogger<MensajeGeneradoHandler> _logger = logger;
+
         public async Task Handle(
-            MensajeRecibidoEvent request,
+            MensajeRecibidoEvent notification,
             CancellationToken cancellationToken)
         {
-            // Obtener ultimos mensajes del chat
-            var mensajes = await _mensajeRepository.GetUltimosMensajesChatAsync(
-                request.ChatId);
+            var chat = await _chatRepository
+                .GetWithUltimosMensajesAsync(notification.EntityId)
+                .ConfigureAwait(false);
 
-            // Generar respuesta
-            var respuesta = await _generadorRespuesta.GenerarRespuestaAsync(
-                mensajes);
+            var respuesta = await chat
+                .GenerarMensajeAsync(_agent)
+                .ConfigureAwait(false);
 
-            // Almacenar respuesta
-            await _mensajeRepository.InsertAsync(respuesta);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
             _logger.LogInformation(
                 @"
@@ -44,7 +48,7 @@ MENSAJE GENERADO
 Texto: {Texto}
 ChatId: {ChatId}",
                 respuesta.ToString(),
-                respuesta.ChatId);
+                notification.EntityId);
         }
     }
 }

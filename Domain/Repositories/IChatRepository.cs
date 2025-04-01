@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.ChatAgregado;
 using Domain.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,15 @@ namespace Domain.Repositories
         /// <param name="id">Id del chat</param>
         /// <returns>Chat con el id indicado</returns>
         /// <exception cref="NotFoundException"/>
-        Task<Chat> GetAsync(int id);
+        Task<Chat> GetAsync(Guid id);
+
+        /// <summary>
+        /// Obtiene un chat de la DB con los ultimos 10 mensajes
+        /// </summary>
+        /// <param name="id">Id del chat</param>
+        /// <returns>Chat con el id indicado y los ultimos 10 mensajes</returns>
+        /// <exception cref="NotFoundException"/>
+        Task<Chat> GetWithUltimosMensajesAsync(Guid id);
 
         /// <summary>
         /// Obtiene un chat de la DB
