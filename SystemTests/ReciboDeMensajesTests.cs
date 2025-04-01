@@ -363,10 +363,20 @@ namespace SystemTests
                 Request.Create()
                     .WithPath("/v1/chat/completions")
                     .WithBody(
-                        new JsonPathMatcher(
-                                "$.messages[?(@.content == 'Chat')]",
-                                "$.messages[?(@.content == 'Que es una orden de trabajo')]",
-                                "$.tools"))
+                        new JsonPartialMatcher(
+                                @"
+{
+    ""messages"": [
+        {
+            ""role"": ""system"",
+            ""content"": ""Chat""
+        },
+        {
+            ""role"": ""user"",
+            ""content"": ""Que es una orden de trabajo""
+        }
+    ]
+}"))
                     .UsingPost())
                 .RespondWith(
                     Response.Create()
@@ -399,13 +409,26 @@ namespace SystemTests
     }
   ]
 }"));
+
             // Mock ranker
             localLLMServer.Given(
                 Request.Create()
                     .WithPath("/v1/chat/completions")
                     .WithBody(
-                        new JsonPathMatcher(
-                                "$.messages[?(@.role == 'system' && @.content == 'Documento')]"))
+                        new JsonPartialMatcher(
+                                @"
+{
+    ""messages"": [
+        {
+            ""role"": ""system"",
+            ""content"": ""Documento""
+        },
+        {
+            ""role"": ""user"",
+            ""content"": ""Que es una orden de trabajo en CAPATAZ""
+        }
+    ]
+}"))
                     .UsingPost())
                 .RespondWith(
                     Response.Create()
@@ -435,8 +458,22 @@ namespace SystemTests
                 Request.Create()
                     .WithPath("/v1/chat/completions")
                     .WithBody(
-                        new JsonPathMatcher(
-                                "$.messages[?(@.role == 'system' && @.content != 'Documento' && @.content != 'Chat')]"))
+                        new JsonPartialMatcher(
+                                @"
+{
+    ""messages"": [
+        {
+            ""role"": ""system"",
+            ""content"": ""^# Titulo(.|\\s)*$""
+        },
+        {
+            ""role"": ""user"",
+            ""content"": ""Que es una orden de trabajo en CAPATAZ""
+        }
+    ]
+}",
+                                false,
+                                true))
                     .UsingPost())
                 .RespondWith(
                     Response.Create()
