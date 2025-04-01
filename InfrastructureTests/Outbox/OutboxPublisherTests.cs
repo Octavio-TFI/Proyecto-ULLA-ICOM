@@ -11,7 +11,10 @@
         public async Task PublishOutboxEventAsync_Succeded()
         {
             // Arrange
-            var mensajeRecibidoEvent = new MensajeRecibidoEvent { ChatId = 1 };
+            var mensajeRecibidoEvent = new MensajeRecibidoEvent
+            {
+                EntityId = Guid.NewGuid()
+            };
 
             var outboxEvent = new OutboxEvent
             {
@@ -23,10 +26,10 @@
                 OccurredOn = DateTime.Now
             };
 
-            var context = new Mock<BaseContext>();
+            var context = new Mock<ChatContext>();
             var publisher = new Mock<IPublisher>();
-            var logger = new Mock<ILogger<OutboxPublisher<BaseContext>>>();
-            var outboxPublisher = new OutboxPublisher<BaseContext>(
+            var logger = new Mock<ILogger<OutboxPublisher>>();
+            var outboxPublisher = new OutboxPublisher(
                 publisher.Object,
                 logger.Object,
                 context.Object);
@@ -64,7 +67,10 @@
         public async Task PublishOutboxEventAsync_ErrorPublishingEvent()
         {
             // Arrange
-            var mensajeRecibidoEvent = new MensajeRecibidoEvent { ChatId = 1 };
+            var mensajeRecibidoEvent = new MensajeRecibidoEvent
+            {
+                EntityId = Guid.NewGuid()
+            };
             var outboxEvent = new OutboxEvent
             {
                 EventType = "EventType",
@@ -75,10 +81,10 @@
                 OccurredOn = DateTime.Now
             };
 
-            var context = new Mock<BaseContext>();
+            var context = new Mock<ChatContext>();
             var publisher = new Mock<IPublisher>();
-            var logger = new Mock<ILogger<OutboxPublisher<BaseContext>>>();
-            var outboxPublisher = new OutboxPublisher<BaseContext>(
+            var logger = new Mock<ILogger<OutboxPublisher>>();
+            var outboxPublisher = new OutboxPublisher(
                 publisher.Object,
                 logger.Object,
                 context.Object);
@@ -97,7 +103,8 @@
             // Assert
             logger.VerifyLog()
                 .ErrorWasCalled()
-                .MessageEquals("Error al publicar el evento de Outbox");
+                .MessageEquals(
+                    "Error al publicar el evento de Outbox de tipo EventType");
 
             context.Verify(c => c.Update(outboxEvent), Times.Never);
             context.Verify(
@@ -123,10 +130,10 @@
                 OccurredOn = DateTime.Now
             };
 
-            var context = new Mock<BaseContext>();
+            var context = new Mock<ChatContext>();
             var publisher = new Mock<IPublisher>();
-            var logger = new Mock<ILogger<OutboxPublisher<BaseContext>>>();
-            var outboxPublisher = new OutboxPublisher<BaseContext>(
+            var logger = new Mock<ILogger<OutboxPublisher>>();
+            var outboxPublisher = new OutboxPublisher(
                 publisher.Object,
                 logger.Object,
                 context.Object);
@@ -139,7 +146,8 @@
             // Assert
             logger.VerifyLog()
                 .ErrorWasCalled()
-                .MessageEquals("Error al publicar el evento de Outbox");
+                .MessageEquals(
+                    "Error al publicar el evento de Outbox de tipo EventType");
 
             context.Verify(c => c.Update(outboxEvent), Times.Never);
             context.Verify(
@@ -168,10 +176,10 @@
                 OccurredOn = DateTime.Now
             };
 
-            var context = new Mock<BaseContext>();
+            var context = new Mock<ChatContext>();
             var publisher = new Mock<IPublisher>();
-            var logger = new Mock<ILogger<OutboxPublisher<BaseContext>>>();
-            var outboxPublisher = new OutboxPublisher<BaseContext>(
+            var logger = new Mock<ILogger<OutboxPublisher>>();
+            var outboxPublisher = new OutboxPublisher(
                 publisher.Object,
                 logger.Object,
                 context.Object);
@@ -184,7 +192,8 @@
             // Assert
             logger.VerifyLog()
                 .ErrorWasCalled()
-                .MessageEquals("Error al publicar el evento de Outbox");
+                .MessageEquals(
+                    "Error al publicar el evento de Outbox de tipo EventType");
 
             context.Verify(c => c.Update(outboxEvent), Times.Never);
             context.Verify(

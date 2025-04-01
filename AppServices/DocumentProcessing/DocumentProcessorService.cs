@@ -30,10 +30,19 @@ namespace AppServices.DocumentProcessing
             var documentRepository = scopeServices
                 .GetRequiredService<IDocumentRepository>();
 
-            var unitOfWork = scopeServices
-                .GetRequiredKeyedService<IUnitOfWork>(Contexts.Embedding);
+            var unitOfWork = scopeServices.GetRequiredService<IUnitOfWork>();
 
-            var documentPaths = _directoryManager.GetFiles("Documentacion");
+            string documentationPath = "Documentacion";
+
+            if (!_directoryManager.Exists(documentationPath))
+            {
+                _logger.LogWarning(
+                    "El directorio {documentationPath} no existe, omitiendo procesamiento de documentos",
+                    documentationPath);
+                return;
+            }
+
+            var documentPaths = _directoryManager.GetFiles(documentationPath);
 
             var dbDocumentsPaths = await documentRepository
                 .GetAllFilenamesAsync();

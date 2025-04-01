@@ -1,5 +1,5 @@
 ﻿using AppServices.Abstractions;
-using Domain.Entities;
+using Domain.Entities.DocumentoAgregado;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using Microsoft.Extensions.DependencyInjection;

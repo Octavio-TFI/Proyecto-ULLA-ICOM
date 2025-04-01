@@ -1,7 +1,6 @@
 ﻿using AppServices.Abstractions;
 using AppServices.Helpers;
-using AppServices.Ports;
-using Domain.Entities;
+using Domain.Entities.DocumentoAgregado;
 using HtmlAgilityPack;
 using Markdig;
 using Markdig.Extensions.CustomContainers;

@@ -14,5 +14,10 @@ namespace Infrastructure.FileSystem
         {
             return Directory.GetFiles(path, "*", SearchOption.AllDirectories);
         }
+
+        public bool Exists(string path)
+        {
+            return Directory.Exists(path);
+        }
     }
 }

@@ -26,11 +26,11 @@ namespace Infrastructure.Outbox.Tests
             // Arrange
             List<INotification> domainEvents1 = [new MensajeRecibidoEvent
             {
-                ChatId = 1
+                EntityId = Guid.NewGuid()
             }];
             List<INotification> domainEvents2 = [new MensajeRecibidoEvent
             {
-                ChatId = 2
+                EntityId = Guid.NewGuid()
             }];
 
             var jsonSettings = new JsonSerializerSettings
@@ -45,20 +45,18 @@ namespace Infrastructure.Outbox.Tests
                 domainEvents2.First(),
                 jsonSettings);
 
-            var entity1 = new MensajeTexto
+            var entity1 = new Chat
             {
-                DateTime = DateTime.Now,
-                Texto = string.Empty,
-                Tipo = TipoMensaje.Indefinido,
-                ChatId = 1,
+                ChatPlataformaId = "1",
+                Plataforma = "1",
+                UsuarioId = "Usuario1"
             };
 
-            var entity2 = new MensajeTexto
+            var entity2 = new Chat
             {
-                DateTime = DateTime.Now,
-                Texto = string.Empty,
-                Tipo = TipoMensaje.Indefinido,
-                ChatId = 2,
+                ChatPlataformaId = "2",
+                Plataforma = "2",
+                UsuarioId = "Usuario2"
             };
 
             entity1.Events.AddRange(domainEvents1);
@@ -101,6 +99,9 @@ namespace Infrastructure.Outbox.Tests
                 () =>
                 {
                     // Assert
+                    Assert.That(
+                        entities,
+                        Has.All.Property(nameof(Entity.Events)).Empty);
                     Assert.That(context.OutboxEvents.Count(), Is.EqualTo(2));
                     Assert.That(
                         context.OutboxEvents,
