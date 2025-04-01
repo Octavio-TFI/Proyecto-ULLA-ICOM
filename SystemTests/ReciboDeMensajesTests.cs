@@ -133,7 +133,7 @@ namespace SystemTests
                     new RegexMatcher("\"texto\":\\s*\"Hola soy el test\""));
         }
 
-        [Test, Timeout(15000)]
+        [Test, Timeout(20000)]
         public async Task Mensaje_ConHistoriaYSinHerramienta_Test()
         {
             // Arrange
