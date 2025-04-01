@@ -1,3 +1,4 @@
+using AppServices.Abstractions;
 using Controllers.DTOs;
 using Domain.Entities.ChatAgregado;
 using Domain.Entities.ConsultaAgregado;
@@ -21,7 +22,7 @@ using WireMock.Util;
 
 namespace SystemTests
 {
-    public class MensajesTests
+    public class ReciboDeMensajesTests
         : BaseTests
     {
         [Test, Timeout(15000)]
@@ -30,23 +31,6 @@ namespace SystemTests
             // Arrange
             using var localLLMServer = WireMockServer.Start();
             using var chatServer = WireMockServer.Start();
-
-            localLLMServer
-                .Given(Request.Create().WithPath("/v1/embeddings").UsingPost())
-                .RespondWith(
-                    Response.Create()
-                        .WithSuccess()
-                        .WithBodyAsJson(
-                            new EmbeddingResponseList
-                                {
-                                    Data =
-                                        [..Enumerable.Repeat(
-                                                    new EmbeddingResponse
-                                        {
-                                            Embedding = [1,2,3]
-                                        },
-                                                    10)]
-                                }));
 
             localLLMServer
                 .Given(
@@ -147,6 +131,164 @@ namespace SystemTests
                 .And
                 .WithBody(
                     new RegexMatcher("\"texto\":\\s*\"Hola soy el test\""));
+        }
+
+        [Test, Timeout(15000)]
+        public async Task Mensaje_ConHistoriaYSinHerramienta_Test()
+        {
+            // Arrange
+            using var localLLMServer = WireMockServer.Start();
+            using var chatServer = WireMockServer.Start();
+
+            var apiFactory = CreateAPIFactory(
+                localLLMServer.Port,
+                chatServer.Port);
+
+            Guid chatId = Guid.NewGuid();
+
+            // Agregar historial de mensajes
+            var context = apiFactory.Services.CreateScope().ServiceProvider
+                .GetRequiredService<ChatContext>();
+
+            var chat = new Chat
+            {
+                Id = chatId,
+                ChatPlataformaId = chatId.ToString(),
+                Plataforma = Platforms.Test,
+                UsuarioId = chatId.ToString(),
+            };
+
+            chat.Mensajes
+                .AddRange(
+                    [new MensajeTextoUsuario
+                    {
+                        Texto = "Hola",
+                        DateTime = DateTime.Now
+                    }, new MensajeIA
+                    {
+                        Texto = "Hola soy el test",
+                        DateTime = DateTime.Now
+                    }]);
+
+            context.Chats.Add(chat);
+            context.SaveChanges();
+            context.Dispose();
+
+            localLLMServer
+                .Given(
+                    Request.Create()
+                        .WithPath("/v1/chat/completions")
+                        .WithBody(
+                            new JsonPartialMatcher(
+                                    @"
+{
+    ""messages"": [
+        {
+            ""role"": ""system"",
+            ""content"": ""Chat""
+        },
+        {
+            ""role"": ""user"",
+            ""content"": ""Hola""
+        },
+        {   
+            ""role"": ""assistant"",
+            ""content"": ""Hola soy el test""
+        },
+        {
+            ""role"": ""user"",
+            ""content"": ""Como andas?""
+        }
+    ]
+}"))
+                        .UsingPost())
+                .RespondWith(
+                    Response.Create()
+                        .WithSuccess()
+                        .WithBody(
+                            @"{
+  ""id"": ""chatcmpl-B9MHDbslfkBeAs8l4bebGdFOJ6PeG"",
+  ""object"": ""chat.completion"",
+  ""created"": 1741570283,
+  ""model"": ""gpt-4o-2024-08-06"",
+  ""choices"": [
+    {
+      ""index"": 0,
+      ""message"": {
+        ""role"": ""assistant"",
+        ""content"": ""Chau"",
+        ""refusal"": null,
+        ""annotations"": []
+      },
+      ""logprobs"": null,
+      ""finish_reason"": ""stop""
+    }
+  ]
+}"));
+
+            chatServer.Given(Request.Create().WithPath("/Chat").UsingPost())
+                .RespondWith(Response.Create().WithSuccess());
+
+            var client = apiFactory.CreateClient();
+
+            var mensajeDTO = new MensajeTextoPrueba
+            {
+                ChatId = chatId,
+                DateTime = DateTime.Now,
+                Texto = "Como andas?"
+            };
+
+            // Act
+            var httpResponse = await client.PostAsJsonAsync("/Test", mensajeDTO)
+                .ConfigureAwait(false);
+
+            var dbContext = apiFactory.Services.CreateScope().ServiceProvider
+                .GetRequiredService<ChatContext>();
+
+            while (dbContext.Set<Mensaje>().Count() < 4)
+            {
+                await Task.Delay(100).ConfigureAwait(false);
+            }
+
+            // Assert
+            var chatDb = dbContext.Chats.Include(c => c.Mensajes).FirstOrDefault();
+            var mensajeUsuario = chatDb?.Mensajes.OrderBy(m => m.DateTime)
+                .SkipLast(1)
+                .LastOrDefault();
+            var mensajeIA = chatDb?.Mensajes.OrderBy(m => m.DateTime)
+                .LastOrDefault();
+
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.That(httpResponse.IsSuccessStatusCode);
+                    Assert.That(chatDb, Is.Not.Null);
+                    Assert.That(
+                        mensajeUsuario,
+                        Is.TypeOf<MensajeTextoUsuario>().And
+                                .Matches<MensajeTextoUsuario>(
+                                    m => m.Texto == "Como andas?"));
+                    Assert.That(
+                        mensajeIA,
+                        Is.TypeOf<MensajeIA>().And
+                                .Matches<MensajeIA>(
+                                    m => m.Texto == "Chau"));
+                });
+
+            while (chatServer.FindLogEntries(
+                    Request.Create().WithPath("/Chat").UsingPost())
+                    .Count ==
+                0)
+            {
+                await Task.Delay(100).ConfigureAwait(false);
+            }
+
+            chatServer.Should()
+                .HaveReceivedACall()
+                .AtUrl($"http://localhost:{chatServer.Port}/Chat")
+                .And
+                .WithBody(
+                    new RegexMatcher("\"texto\":\\s*\"Chau\""));
         }
 
         [Test, Timeout(15000)]

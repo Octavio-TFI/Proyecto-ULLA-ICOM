@@ -103,7 +103,8 @@
             // Assert
             logger.VerifyLog()
                 .ErrorWasCalled()
-                .MessageEquals("Error al publicar el evento de Outbox");
+                .MessageEquals(
+                    "Error al publicar el evento de Outbox de tipo EventType");
 
             context.Verify(c => c.Update(outboxEvent), Times.Never);
             context.Verify(
@@ -145,7 +146,8 @@
             // Assert
             logger.VerifyLog()
                 .ErrorWasCalled()
-                .MessageEquals("Error al publicar el evento de Outbox");
+                .MessageEquals(
+                    "Error al publicar el evento de Outbox de tipo EventType");
 
             context.Verify(c => c.Update(outboxEvent), Times.Never);
             context.Verify(
@@ -190,7 +192,8 @@
             // Assert
             logger.VerifyLog()
                 .ErrorWasCalled()
-                .MessageEquals("Error al publicar el evento de Outbox");
+                .MessageEquals(
+                    "Error al publicar el evento de Outbox de tipo EventType");
 
             context.Verify(c => c.Update(outboxEvent), Times.Never);
             context.Verify(

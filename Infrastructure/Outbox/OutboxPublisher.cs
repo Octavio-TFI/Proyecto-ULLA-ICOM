@@ -38,7 +38,9 @@ namespace Infrastructure.Outbox
                 await _publisher.Publish(domainEvent, cancellationToken);
             } catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al publicar el evento de Outbox");
+                _logger.LogError(
+                    ex,
+                    $"Error al publicar el evento de Outbox de tipo {outboxEvent.EventType}");
 
                 return;
             }
