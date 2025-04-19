@@ -81,7 +81,9 @@ namespace SystemTests
             };
 
             // Act
-            var httpResponse = await client.PostAsJsonAsync("/Test", mensajeDTO)
+            var httpResponse = await client.PostAsJsonAsync(
+                "/Test/texto",
+                mensajeDTO)
                 .ConfigureAwait(false);
 
             var dbContext = apiFactory.Services.CreateScope().ServiceProvider
@@ -239,7 +241,9 @@ namespace SystemTests
             };
 
             // Act
-            var httpResponse = await client.PostAsJsonAsync("/Test", mensajeDTO)
+            var httpResponse = await client.PostAsJsonAsync(
+                "/Test/texto",
+                mensajeDTO)
                 .ConfigureAwait(false);
 
             var dbContext = apiFactory.Services.CreateScope().ServiceProvider
@@ -543,7 +547,9 @@ namespace SystemTests
             };
 
             // Act
-            var httpResponse = await client.PostAsJsonAsync("/Test", mensajeDTO)
+            var httpResponse = await client.PostAsJsonAsync(
+                "/Test/texto",
+                mensajeDTO)
                 .ConfigureAwait(false);
 
             context = apiFactory.Services.CreateScope().ServiceProvider
