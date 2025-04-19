@@ -16,7 +16,7 @@ namespace AppServices.Abstractions.DTOs
         /// <summary>
         /// Identificador del mensaje en la plataforma
         /// </summary>
-        public required string IdMensajePlataforma { get; init; }
+        public required string MensajePlataformaId { get; init; }
 
         /// <summary>
         /// Calificación del mensaje

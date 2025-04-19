@@ -73,7 +73,7 @@ namespace SystemTests
 
             var client = apiFactory.CreateClient();
 
-            var mensajeDTO = new MensajeTextoPrueba
+            var mensajeDTO = new TestMensajeTexto
             {
                 ChatId = Guid.NewGuid(),
                 DateTime = DateTime.Now,
@@ -231,7 +231,7 @@ namespace SystemTests
 
             var client = apiFactory.CreateClient();
 
-            var mensajeDTO = new MensajeTextoPrueba
+            var mensajeDTO = new TestMensajeTexto
             {
                 ChatId = chatId,
                 DateTime = DateTime.Now,
@@ -251,7 +251,9 @@ namespace SystemTests
             }
 
             // Assert
-            var chatDb = dbContext.Chats.Include(c => c.Mensajes).FirstOrDefault();
+            var chatDb = dbContext.Chats
+                .Include(c => c.Mensajes)
+                .FirstOrDefault();
             var mensajeUsuario = chatDb?.Mensajes.OrderBy(m => m.DateTime)
                 .SkipLast(1)
                 .LastOrDefault();
@@ -271,8 +273,7 @@ namespace SystemTests
                     Assert.That(
                         mensajeIA,
                         Is.TypeOf<MensajeIA>().And
-                                .Matches<MensajeIA>(
-                                    m => m.Texto == "Chau"));
+                                .Matches<MensajeIA>(m => m.Texto == "Chau"));
                 });
 
             while (chatServer.FindLogEntries(
@@ -287,8 +288,7 @@ namespace SystemTests
                 .HaveReceivedACall()
                 .AtUrl($"http://localhost:{chatServer.Port}/Chat")
                 .And
-                .WithBody(
-                    new RegexMatcher("\"texto\":\\s*\"Chau\""));
+                .WithBody(new RegexMatcher("\"texto\":\\s*\"Chau\""));
         }
 
         [Test, Timeout(15000)]
@@ -535,7 +535,7 @@ namespace SystemTests
 
             var client = apiFactory.CreateClient();
 
-            var mensajeDTO = new MensajeTextoPrueba
+            var mensajeDTO = new TestMensajeTexto
             {
                 ChatId = Guid.NewGuid(),
                 DateTime = DateTime.Now,

@@ -10,11 +10,12 @@ namespace Controllers
     [Route("[controller]")]
     public class TestController(
         ILogger<TestController> _logger,
-        IRecibidorMensajes _recibidorMensajes)
+        IRecibidorMensajes _recibidorMensajes,
+        ICalificadorMensajes _calificadorMensajes)
         : ControllerBase
     {
-        [HttpPost]
-        public async Task Post(MensajeTextoPrueba mensaje)
+        [HttpPost("texto")]
+        public async Task PostMensajeTexto(TestMensajeTexto mensaje)
         {
             await _recibidorMensajes.RecibirMensajeTextoAsync(
                 new MensajeTextoRecibidoDTO
@@ -33,6 +34,28 @@ Texto: {Texto}
 Plataforma: {Plataforma}",
                 mensaje.Texto,
                 Platforms.Test);
+        }
+
+        [HttpGet("calificacion")]
+        public async Task PostCalificacion(TestCalificacionMensaje calificacion)
+        {
+            await _calificadorMensajes.CalificarMensajeAsync(
+                new CalificacionMensajeDTO
+                {
+                    Calificacion = calificacion.Calificacion,
+                    MensajePlataformaId = calificacion.MensajeId,
+                    Plataforma = Platforms.Test
+                });
+
+            _logger.LogInformation(
+                @"
+CALIFICACION RECIBIDA
+Calificación: {Calificacion}
+Plataforma: {Plataforma}
+MensajePlataformaId: {Id}",
+                calificacion.Calificacion,
+                Platforms.Test,
+                calificacion.MensajeId);
         }
     }
 }

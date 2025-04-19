@@ -10,7 +10,7 @@ namespace API.Controllers.Tests
         public void PostTest()
         {
             // Arrange
-            var mensaje = new MensajeTextoPrueba
+            var mensaje = new TestMensajeTexto
             {
                 ChatId = new Guid(),
                 Texto = "Test",
@@ -19,13 +19,15 @@ namespace API.Controllers.Tests
 
             var loggerMock = new Mock<ILogger<TestController>>();
             var recibidorMensajesMock = new Mock<IRecibidorMensajes>();
+            var calificadorMensajesMock = new Mock<ICalificadorMensajes>();
 
             var testController = new TestController(
                 loggerMock.Object,
-                recibidorMensajesMock.Object);
+                recibidorMensajesMock.Object,
+                calificadorMensajesMock.Object);
 
             // Act
-            var result = testController.Post(mensaje);
+            var result = testController.PostMensajeTexto(mensaje);
 
             // Assert
             loggerMock.VerifyLog()
