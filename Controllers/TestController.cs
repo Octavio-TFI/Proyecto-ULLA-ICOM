@@ -15,7 +15,7 @@ namespace Controllers
         : ControllerBase
     {
         [HttpPost("texto")]
-        public async Task PostMensajeTexto(TestMensajeTexto mensaje)
+        public async Task PostMensajeTextoAsync(TestMensajeTexto mensaje)
         {
             await _recibidorMensajes.RecibirMensajeTextoAsync(
                 new MensajeTextoRecibidoDTO
@@ -37,7 +37,7 @@ Plataforma: {Plataforma}",
         }
 
         [HttpGet("calificacion")]
-        public async Task PostCalificacion(TestCalificacionMensaje calificacion)
+        public async Task PostCalificacionAsync(TestCalificacionMensaje calificacion)
         {
             await _calificadorMensajes.CalificarMensajeAsync(
                 new CalificacionMensajeDTO
