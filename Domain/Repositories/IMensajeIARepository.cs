@@ -13,10 +13,10 @@ namespace Domain.Repositories
         /// <summary>
         /// Obtiene un mensaje IA por su ID en la plataforma y plataforma.
         /// </summary>
-        /// <param name="mensajePlataformaId">Id del mensaje en la plataforma</param>
+        /// <param name="plataformaMensajeId">Id del mensaje en la plataforma</param>
         /// <param name="plataforma">Plataforma</param>
         /// <returns>MensajeIA con el ID en la plataforma</returns>
         /// <exception cref="NotFoundException"/>
-        Task<MensajeIA> GetAsync(string mensajePlataformaId, string plataforma);
+        Task<MensajeIA> GetAsync(string plataformaMensajeId, string plataforma);
     }
 }

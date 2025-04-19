@@ -15,7 +15,7 @@ namespace Domain.Entities.ChatAgregado
         {
         }
 
-        public string Texto { get; init; }
+        public required string Texto { get; init; }
 
         public bool? Calificacion { get; set; }
 

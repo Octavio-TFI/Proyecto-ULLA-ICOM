@@ -1,5 +1,7 @@
 ﻿using Domain.Entities.ChatAgregado;
+using Domain.Exceptions;
 using Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +10,25 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database.Repositories
 {
-    internal class MensajeIARepository
+    internal class MensajeIARepository(ChatContext context)
         : IMensajeIARepository
     {
-        public Task<MensajeIA> GetAsync(
-            string mensajePlataformaId,
+        readonly ChatContext _context = context;
+
+        public async Task<MensajeIA> GetAsync(
+            string plataformaMensajeId,
             string plataforma)
         {
-            throw new NotImplementedException();
+            return await _context.Set<MensajeIA>()
+                    .Where(
+                        m => m.PlataformaMensajeId == plataformaMensajeId &&
+                                _context.Chats
+                                    .First(c => c.Mensajes.Contains(m))
+                                    .Plataforma ==
+                                plataforma)
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false) ??
+                throw new NotFoundException();
         }
     }
 }

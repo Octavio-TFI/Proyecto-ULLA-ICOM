@@ -39,7 +39,7 @@ namespace Infrastructure.Database.Migrations
                     b.HasIndex("UsuarioId", "ChatPlataformaId", "Plataforma")
                         .IsUnique();
 
-                    b.ToTable("Chats");
+                    b.ToTable("Chats", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ChatAgregado.ConsultaRecuperada", b =>
@@ -62,7 +62,7 @@ namespace Infrastructure.Database.Migrations
 
                     b.HasIndex("MensajeIAId");
 
-                    b.ToTable("ConsultaRecuperada");
+                    b.ToTable("ConsultaRecuperada", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ChatAgregado.DocumentoRecuperado", b =>
@@ -85,7 +85,7 @@ namespace Infrastructure.Database.Migrations
 
                     b.HasIndex("MensajeIAId");
 
-                    b.ToTable("DocumentoRecuperado");
+                    b.ToTable("DocumentoRecuperado", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ChatAgregado.Mensaje", b =>
@@ -141,7 +141,7 @@ namespace Infrastructure.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Consultas");
+                    b.ToTable("Consultas", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.DocumentoAgregado.Document", b =>
@@ -162,7 +162,7 @@ namespace Infrastructure.Database.Migrations
                     b.HasIndex("Filename")
                         .IsUnique();
 
-                    b.ToTable("Documents");
+                    b.ToTable("Documents", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.DocumentoAgregado.DocumentChunk", b =>
@@ -185,7 +185,7 @@ namespace Infrastructure.Database.Migrations
 
                     b.HasIndex("DocumentId");
 
-                    b.ToTable("DocumentChunk");
+                    b.ToTable("DocumentChunk", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Outbox.OutboxEvent", b =>
@@ -213,7 +213,7 @@ namespace Infrastructure.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OutboxEvents");
+                    b.ToTable("OutboxEvents", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ChatAgregado.MensajeIA", b =>
@@ -227,7 +227,7 @@ namespace Infrastructure.Database.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.ToTable("MensajeIA");
+                    b.ToTable("MensajeIA", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ChatAgregado.MensajeTextoUsuario", b =>
@@ -238,7 +238,7 @@ namespace Infrastructure.Database.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.ToTable("MensajeTextoUsuario");
+                    b.ToTable("MensajeTextoUsuario", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ChatAgregado.ConsultaRecuperada", b =>
