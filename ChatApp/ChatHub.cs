@@ -36,7 +36,7 @@ Sending message to API: {}",
             try
             {
                 var response = await client.PostAsJsonAsync(
-                    "/Test",
+                    "/Test/texto",
                     messageToSend);
 
                 if (response.IsSuccessStatusCode)
