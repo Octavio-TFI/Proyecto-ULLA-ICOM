@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.ChatAgregado
 {
-    public class MensajeIA : Mensaje, IMensajeTexto
+    public class MensajeIA
+        : Mensaje
+        , IMensajeTexto
     {
         internal MensajeIA()
         {
