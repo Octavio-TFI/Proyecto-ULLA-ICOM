@@ -16,10 +16,10 @@ namespace Infrastructure.Clients
     internal class TestClient(IHttpClientFactory _httpClientFactory)
         : IClient
     {
-        public async Task EnviarMensajeAsync(
+        public async Task<string> EnviarMensajeAsync(
             string chatPlataformaId,
             string usuarioId,
-            Mensaje mensaje)
+            MensajeIA mensaje)
         {
             try
             {
@@ -35,6 +35,8 @@ namespace Infrastructure.Clients
                     throw new ErrorEnviandoMensajeException(
                         $"Status code no exitoso: {response.StatusCode}");
                 }
+
+                return await response.Content.ReadAsStringAsync();
             }
             catch (Exception ex)
             {

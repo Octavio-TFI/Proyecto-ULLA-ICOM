@@ -64,8 +64,13 @@ namespace SystemTests
   ]
 }"));
 
+            string mensajePlataformaId = Guid.NewGuid().ToString();
+
             chatServer.Given(Request.Create().WithPath("/Chat").UsingPost())
-                .RespondWith(Response.Create().WithSuccess());
+                .RespondWith(
+                    Response.Create()
+                        .WithSuccess()
+                        .WithBody(mensajePlataformaId));
 
             var apiFactory = CreateAPIFactory(
                 localLLMServer.Port,
@@ -73,7 +78,7 @@ namespace SystemTests
 
             var client = apiFactory.CreateClient();
 
-            var mensajeDTO = new MensajeTextoPrueba
+            var mensajeDTO = new TestMensajeTexto
             {
                 ChatId = Guid.NewGuid(),
                 DateTime = DateTime.Now,
@@ -81,18 +86,24 @@ namespace SystemTests
             };
 
             // Act
-            var httpResponse = await client.PostAsJsonAsync("/Test", mensajeDTO)
+            var httpResponse = await client.PostAsJsonAsync(
+                "/Test/texto",
+                mensajeDTO)
                 .ConfigureAwait(false);
 
-            var dbContext = apiFactory.Services.CreateScope().ServiceProvider
-                .GetRequiredService<ChatContext>();
-
-            while (dbContext.Set<Mensaje>().Count() < 2)
+            while (apiFactory.Services.CreateScope().ServiceProvider
+                    .GetRequiredService<ChatContext>()
+                    .Set<Mensaje>()
+                    .Count() <
+                2)
             {
                 await Task.Delay(100).ConfigureAwait(false);
             }
 
             // Assert
+            var dbContext = apiFactory.Services.CreateScope().ServiceProvider
+                .GetRequiredService<ChatContext>();
+
             var chat = dbContext.Chats.Include(c => c.Mensajes).FirstOrDefault();
             var mensajeUsuario = chat?.Mensajes.OrderBy(m => m.DateTime)
                 .FirstOrDefault();
@@ -131,10 +142,27 @@ namespace SystemTests
                 .And
                 .WithBody(
                     new RegexMatcher("\"texto\":\\s*\"Hola soy el test\""));
+
+            var updatedDbContext = apiFactory.Services.CreateScope()
+                .ServiceProvider
+                .GetRequiredService<ChatContext>();
+
+            var updatedChat = updatedDbContext.Chats
+                .Include(c => c.Mensajes)
+                .FirstOrDefault(c => c.Id == chat.Id);
+            var updatedMensajeIA = updatedChat?.Mensajes
+                .OrderBy(m => m.DateTime)
+                .Skip(1)
+                .FirstOrDefault();
+
+            Assert.That(
+                updatedMensajeIA,
+                Has.Property(nameof(Mensaje.PlataformaMensajeId))
+                    .EqualTo(mensajePlataformaId));
         }
 
         [Test, Timeout(25000)]
-        public async Task Mensaje_ConHistoriaYSinHerramienta_Test()
+        public async Task Mensaje_ConHistoriaYSinTool_Test()
         {
             // Arrange
             using var localLLMServer = WireMockServer.Start();
@@ -226,12 +254,17 @@ namespace SystemTests
   ]
 }"));
 
+            string mensajePlataformaId = Guid.NewGuid().ToString();
+
             chatServer.Given(Request.Create().WithPath("/Chat").UsingPost())
-                .RespondWith(Response.Create().WithSuccess());
+                .RespondWith(
+                    Response.Create()
+                        .WithSuccess()
+                        .WithBody(mensajePlataformaId));
 
             var client = apiFactory.CreateClient();
 
-            var mensajeDTO = new MensajeTextoPrueba
+            var mensajeDTO = new TestMensajeTexto
             {
                 ChatId = chatId,
                 DateTime = DateTime.Now,
@@ -239,19 +272,27 @@ namespace SystemTests
             };
 
             // Act
-            var httpResponse = await client.PostAsJsonAsync("/Test", mensajeDTO)
+            var httpResponse = await client.PostAsJsonAsync(
+                "/Test/texto",
+                mensajeDTO)
                 .ConfigureAwait(false);
 
-            var dbContext = apiFactory.Services.CreateScope().ServiceProvider
-                .GetRequiredService<ChatContext>();
-
-            while (dbContext.Set<Mensaje>().Count() < 4)
+            while (apiFactory.Services.CreateScope().ServiceProvider
+                    .GetRequiredService<ChatContext>()
+                    .Set<Mensaje>()
+                    .Count() <
+                4)
             {
                 await Task.Delay(100).ConfigureAwait(false);
             }
 
             // Assert
-            var chatDb = dbContext.Chats.Include(c => c.Mensajes).FirstOrDefault();
+            var dbContext = apiFactory.Services.CreateScope().ServiceProvider
+                .GetRequiredService<ChatContext>();
+
+            var chatDb = dbContext.Chats
+                .Include(c => c.Mensajes)
+                .FirstOrDefault();
             var mensajeUsuario = chatDb?.Mensajes.OrderBy(m => m.DateTime)
                 .SkipLast(1)
                 .LastOrDefault();
@@ -271,8 +312,7 @@ namespace SystemTests
                     Assert.That(
                         mensajeIA,
                         Is.TypeOf<MensajeIA>().And
-                                .Matches<MensajeIA>(
-                                    m => m.Texto == "Chau"));
+                                .Matches<MensajeIA>(m => m.Texto == "Chau"));
                 });
 
             while (chatServer.FindLogEntries(
@@ -287,8 +327,23 @@ namespace SystemTests
                 .HaveReceivedACall()
                 .AtUrl($"http://localhost:{chatServer.Port}/Chat")
                 .And
-                .WithBody(
-                    new RegexMatcher("\"texto\":\\s*\"Chau\""));
+                .WithBody(new RegexMatcher("\"texto\":\\s*\"Chau\""));
+
+            var updatedDbContext = apiFactory.Services.CreateScope()
+                .ServiceProvider
+                .GetRequiredService<ChatContext>();
+
+            var updatedChat = updatedDbContext.Chats
+                .Include(c => c.Mensajes)
+                .FirstOrDefault(c => c.Id == chat.Id);
+            var updatedMensajeIA = updatedChat?.Mensajes.OrderBy(
+                m => m.DateTime)
+                .LastOrDefault();
+
+            Assert.That(
+                updatedMensajeIA,
+                Has.Property(nameof(Mensaje.PlataformaMensajeId))
+                    .EqualTo(mensajePlataformaId));
         }
 
         [Test, Timeout(15000)]
@@ -530,12 +585,17 @@ namespace SystemTests
               ]
             }"));
 
+            string mensajePlataformaId = Guid.NewGuid().ToString();
+
             chatServer.Given(Request.Create().WithPath("/Chat").UsingPost())
-                .RespondWith(Response.Create().WithSuccess());
+                .RespondWith(
+                    Response.Create()
+                        .WithSuccess()
+                        .WithBody(mensajePlataformaId));
 
             var client = apiFactory.CreateClient();
 
-            var mensajeDTO = new MensajeTextoPrueba
+            var mensajeDTO = new TestMensajeTexto
             {
                 ChatId = Guid.NewGuid(),
                 DateTime = DateTime.Now,
@@ -543,18 +603,24 @@ namespace SystemTests
             };
 
             // Act
-            var httpResponse = await client.PostAsJsonAsync("/Test", mensajeDTO)
+            var httpResponse = await client.PostAsJsonAsync(
+                "/Test/texto",
+                mensajeDTO)
                 .ConfigureAwait(false);
 
-            context = apiFactory.Services.CreateScope().ServiceProvider
-                .GetRequiredService<ChatContext>();
-
-            while (context.Set<Mensaje>().Count() < 2)
+            while (apiFactory.Services.CreateScope().ServiceProvider
+                    .GetRequiredService<ChatContext>()
+                    .Set<Mensaje>()
+                    .Count() <
+                2)
             {
                 await Task.Delay(100).ConfigureAwait(false);
             }
 
             // Assert
+            context = apiFactory.Services.CreateScope().ServiceProvider
+                .GetRequiredService<ChatContext>();
+
             var chat = context.Chats.Include(c => c.Mensajes).FirstOrDefault();
             var mensajeUsuario = chat?.Mensajes.OrderBy(m => m.DateTime)
                 .FirstOrDefault();
@@ -609,6 +675,23 @@ namespace SystemTests
             chatServer.Should()
                 .HaveReceivedACall()
                 .AtUrl($"http://localhost:{chatServer.Port}/Chat");
+
+            var updatedDbContext = apiFactory.Services.CreateScope()
+                .ServiceProvider
+                .GetRequiredService<ChatContext>();
+
+            var updatedChat = updatedDbContext.Chats
+                .Include(c => c.Mensajes)
+                .FirstOrDefault(c => c.Id == chat.Id);
+            var updatedMensajeIA = updatedChat?.Mensajes
+                .OrderBy(m => m.DateTime)
+                .Skip(1)
+                .FirstOrDefault();
+
+            Assert.That(
+                updatedMensajeIA,
+                Has.Property(nameof(Mensaje.PlataformaMensajeId))
+                    .EqualTo(mensajePlataformaId));
         }
     }
 }

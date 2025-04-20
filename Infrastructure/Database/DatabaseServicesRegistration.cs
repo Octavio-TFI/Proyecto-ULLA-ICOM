@@ -35,6 +35,7 @@ namespace Infrastructure.Database
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IChatRepository, ChatRepository>();
+            services.AddScoped<IMensajeIARepository, MensajeIARepository>();
 
             services.AddScoped<IConsultaRepository, ConsultaRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();

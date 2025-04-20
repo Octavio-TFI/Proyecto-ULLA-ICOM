@@ -1,5 +1,12 @@
 ﻿using AppServices.Abstractions;
 using AppServices.Abstractions.DTOs;
+using Controllers;
+using Controllers.DTOs;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using System;
+using System.Threading.Tasks;
 
 namespace API.Controllers.Tests
 {
@@ -7,10 +14,10 @@ namespace API.Controllers.Tests
     public class TestControllerTests
     {
         [Test()]
-        public void PostTest()
+        public void PostMensajeTextoAsync()
         {
             // Arrange
-            var mensaje = new MensajeTextoPrueba
+            var mensaje = new TestMensajeTexto
             {
                 ChatId = new Guid(),
                 Texto = "Test",
@@ -19,13 +26,15 @@ namespace API.Controllers.Tests
 
             var loggerMock = new Mock<ILogger<TestController>>();
             var recibidorMensajesMock = new Mock<IRecibidorMensajes>();
+            var calificadorMensajesMock = new Mock<ICalificadorMensajes>();
 
             var testController = new TestController(
                 loggerMock.Object,
-                recibidorMensajesMock.Object);
+                recibidorMensajesMock.Object,
+                calificadorMensajesMock.Object);
 
             // Act
-            var result = testController.Post(mensaje);
+            var result = testController.PostMensajeTextoAsync(mensaje);
 
             // Assert
             loggerMock.VerifyLog()
@@ -48,6 +57,51 @@ Plataforma: Test")
                 Times.Once);
 
             Assert.That(result, Is.EqualTo(Task.CompletedTask));
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task PostCalificacionAsync(bool calificacion)
+        {
+            // Arrange
+            var calificacionMensaje = new TestCalificacionMensaje
+            {
+                MensajeId = "test-message-id",
+                Calificacion = calificacion
+            };
+
+            var loggerMock = new Mock<ILogger<TestController>>();
+            var recibidorMensajesMock = new Mock<IRecibidorMensajes>();
+            var calificadorMensajesMock = new Mock<ICalificadorMensajes>();
+
+            var testController = new TestController(
+                loggerMock.Object,
+                recibidorMensajesMock.Object,
+                calificadorMensajesMock.Object);
+
+            // Act
+            await testController.PostCalificacionAsync(calificacionMensaje);
+
+            // Assert
+            loggerMock.VerifyLog()
+                .InformationWasCalled()
+                .MessageEquals(
+                    $@"
+CALIFICACION RECIBIDA
+Calificación: {calificacion}
+Plataforma: Test
+MensajePlataformaId: test-message-id")
+                .Times(1);
+
+            calificadorMensajesMock.Verify(
+                x => x.CalificarMensajeAsync(
+                    It.Is<CalificacionMensajeDTO>(
+                        m => m.MensajePlataformaId ==
+                            calificacionMensaje.MensajeId &&
+                            m.Calificacion == calificacionMensaje.Calificacion &&
+                            m.Plataforma == "Test")),
+                Times.Once);
         }
     }
 }
