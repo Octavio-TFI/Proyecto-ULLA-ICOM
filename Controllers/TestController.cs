@@ -36,8 +36,9 @@ Plataforma: {Plataforma}",
                 Platforms.Test);
         }
 
-        [HttpGet("calificacion")]
-        public async Task PostCalificacionAsync(TestCalificacionMensaje calificacion)
+        [HttpPost("calificacion")]
+        public async Task PostCalificacionAsync(
+            TestCalificacionMensaje calificacion)
         {
             await _calificadorMensajes.CalificarMensajeAsync(
                 new CalificacionMensajeDTO
