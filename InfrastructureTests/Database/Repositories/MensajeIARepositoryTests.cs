@@ -12,7 +12,7 @@ namespace Infrastructure.Database.Repositories.Tests
     internal class MensajeIARepositoryTests
     {
         [Test]
-        public async Task GetAsync_Found_ReturnsMensajeIA()
+        public async Task GetAsyncPlataformaId_Found_ReturnsMensajeIA()
         {
             // Arrange
             var context = DatabaseTestsHelper.CreateInMemoryChatContext();
@@ -47,7 +47,7 @@ namespace Infrastructure.Database.Repositories.Tests
         [TestCase("wrongId", "Telegram")]
         [TestCase("msg123", "WhatsApp")]
         [TestCase("wrongId", "WhatsApp")]
-        public async Task GetAsync_NotFound_ThrowsNotFoundException(
+        public async Task GetAsyncPlataformaId_NotFound_ThrowsNotFoundException(
             string plataformaMensajeId,
             string plataforma)
         {

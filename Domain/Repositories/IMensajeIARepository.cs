@@ -11,6 +11,13 @@ namespace Domain.Repositories
     public interface IMensajeIARepository
     {
         /// <summary>
+        /// Obtiene un mensaje IA por su ID.
+        /// </summary>
+        /// <param name="id">ID del mensaje IA</param>
+        /// <returns>MensajeIA con ese ID</returns>
+        Task<MensajeIA> GetAsync(Guid id);
+
+        /// <summary>
         /// Obtiene un mensaje IA por su ID en la plataforma y plataforma.
         /// </summary>
         /// <param name="plataformaMensajeId">Id del mensaje en la plataforma</param>

@@ -15,17 +15,6 @@ namespace AppServices.EventHandlers.Tests
         public async Task HandleTest()
         {
             // Arrange
-            var msjGeneradoEvent = new MensajeGeneradoEvent
-            {
-                EntityId = Guid.NewGuid(),
-                Mensaje =
-                    new MensajeTextoUsuario
-                    {
-                        Texto = "Texto",
-                        DateTime = DateTime.Now
-                    }
-            };
-
             var chat = new Chat
             {
                 ChatPlataformaId = "1",
@@ -33,7 +22,20 @@ namespace AppServices.EventHandlers.Tests
                 Plataforma = "Test"
             };
 
+            var mensaje = new MensajeIA
+            {
+                Texto = "Hola",
+                DateTime = DateTime.Now,
+            };
+
+            var msjGeneradoEvent = new MensajeGeneradoEvent
+            {
+                EntityId = chat.Id,
+                MensajeId = mensaje.Id,
+            };
+
             var chatRepositoryMock = new Mock<IChatRepository>();
+            var mensajeIARepositoryMock = new Mock<IMensajeIARepository>();
             var loggerMock = new Mock<ILogger<MensajeGeneradoHandler>>();
             var clientFactoryMock = new Mock<Func<string, IClient>>();
             var clientMock = new Mock<IClient>();
@@ -42,11 +44,23 @@ namespace AppServices.EventHandlers.Tests
                 .Setup(x => x.GetAsync(msjGeneradoEvent.EntityId))
                 .ReturnsAsync(chat);
 
+            mensajeIARepositoryMock
+                .Setup(x => x.GetAsync(msjGeneradoEvent.MensajeId))
+                .ReturnsAsync(mensaje);
+
+            clientMock.Setup(
+                x => x.EnviarMensajeAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<MensajeIA>()))
+                .ReturnsAsync("2");
+
             clientFactoryMock.Setup(x => x.Invoke("Test"))
                 .Returns(clientMock.Object);
 
             var handler = new MensajeGeneradoHandler(
                 chatRepositoryMock.Object,
+                mensajeIARepositoryMock.Object,
                 clientFactoryMock.Object,
                 loggerMock.Object);
 
@@ -55,11 +69,13 @@ namespace AppServices.EventHandlers.Tests
                 .ConfigureAwait(false);
 
             // Assert
+            Assert.That(mensaje.PlataformaMensajeId, Is.EqualTo("2"));
+
             clientMock.Verify(
                 x => x.EnviarMensajeAsync(
                     chat.ChatPlataformaId,
                     chat.UsuarioId,
-                    msjGeneradoEvent.Mensaje),
+                    mensaje),
                 Times.Once);
 
             loggerMock.VerifyLog()
@@ -67,7 +83,7 @@ namespace AppServices.EventHandlers.Tests
                 .MessageEquals(
                     $@"
 MENSAJE ENVIADO
-Texto: {msjGeneradoEvent.Mensaje}
+Texto: {mensaje.Texto}
 ChatId: {msjGeneradoEvent.EntityId}")
                 .Times(1);
         }

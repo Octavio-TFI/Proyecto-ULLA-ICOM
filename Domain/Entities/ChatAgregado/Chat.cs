@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.ChatAgregado
 {
-    public class Chat : Entity
+    public class Chat
+        : Entity
     {
         /// <summary>
         /// Id del usuario en la plataforma que envia el mensaje
@@ -57,8 +58,7 @@ namespace Domain.Entities.ChatAgregado
         /// </summary>
         /// <param name="agente">Agente</param>
         /// <returns>Mensaje de respuesta generado</returns>
-        public virtual async Task<Mensaje> GenerarMensajeAsync(
-            IAgent agente)
+        public virtual async Task<Mensaje> GenerarMensajeAsync(IAgent agente)
         {
             var agentResult = await agente
                 .GenerarRespuestaAsync(Mensajes)
@@ -84,7 +84,11 @@ namespace Domain.Entities.ChatAgregado
 
             Mensajes.Add(respuesta);
             Events.Add(
-                new MensajeGeneradoEvent { EntityId = Id, Mensaje = respuesta });
+                new MensajeGeneradoEvent
+                {
+                    EntityId = Id,
+                    MensajeId = respuesta.Id
+                });
 
             return respuesta;
         }

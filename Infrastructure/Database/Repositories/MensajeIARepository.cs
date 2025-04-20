@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 namespace Infrastructure.Database.Repositories
 {
     internal class MensajeIARepository(ChatContext context)
-        : IMensajeIARepository
+        : Repository<MensajeIA>(context)
+        , IMensajeIARepository
     {
         readonly ChatContext _context = context;
 
