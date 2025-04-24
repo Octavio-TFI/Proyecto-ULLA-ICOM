@@ -162,7 +162,7 @@ namespace SystemTests
         }
 
         [Test, Timeout(25000)]
-        public async Task Mensaje_ConHistoriaYSinTool_Test()
+        public async Task Mensaje_ConHistoriaYSinHerramienta_Test()
         {
             // Arrange
             using var localLLMServer = WireMockServer.Start();
@@ -347,7 +347,7 @@ namespace SystemTests
         }
 
         [Test, Timeout(15000)]
-        public async Task Mensaje_InformacionTool_Test()
+        public async Task Mensaje_ConHerramienta_Test()
         {
             // Arrange
             using var localLLMServer = WireMockServer.Start();
