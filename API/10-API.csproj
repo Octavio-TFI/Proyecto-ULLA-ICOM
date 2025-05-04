@@ -8,6 +8,7 @@
 	  <AssemblyName>API</AssemblyName>
 	  <NoWarn>SKEXP0010</NoWarn>
 	  <UserSecretsId>a05b925d-6097-46b6-adb8-a57ded8cf121</UserSecretsId>
+	  <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
   </PropertyGroup>
 
   <ItemGroup>
