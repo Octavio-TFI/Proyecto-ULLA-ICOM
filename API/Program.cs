@@ -6,6 +6,7 @@ using Infrastructure.Database;
 using Infrastructure.FileSystem;
 using Infrastructure.LLM;
 using Infrastructure.Outbox;
+using Microsoft.Extensions.FileProviders;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,10 @@ builder.Services.AddFileManagerServices();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Para poder correr como servicio de Windows
+Directory.SetCurrentDirectory(AppContext.BaseDirectory);
+builder.Services.AddWindowsService();
 
 var app = builder.Build();
 
