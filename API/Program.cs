@@ -45,9 +45,6 @@ if (builder.Environment.IsProduction())
             {
                 x.LogName = "Application";
                 x.SourceName = "LLM API";
-                x.Filter = (_, level) => level == LogLevel.Error ||
-                    level == LogLevel.Warning ||
-                    level == LogLevel.Information;
             });
 
     builder.WebHost
