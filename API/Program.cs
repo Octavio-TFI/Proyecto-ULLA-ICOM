@@ -7,6 +7,7 @@ using Infrastructure.FileSystem;
 using Infrastructure.LLM;
 using Infrastructure.Outbox;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging.EventLog;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,11 +33,22 @@ builder.Services.AddFileManagerServices();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Para poder correr como servicio de Windows
+// Configuracion de deployment como windows service
 if (builder.Environment.IsProduction())
 {
     Directory.SetCurrentDirectory(AppContext.BaseDirectory);
     builder.Services.AddWindowsService();
+
+    builder.Logging
+        .AddEventLog(
+            x =>
+            {
+                x.LogName = "Application";
+                x.SourceName = "LLM API";
+                x.Filter = (_, level) => level == LogLevel.Error ||
+                    level == LogLevel.Warning ||
+                    level == LogLevel.Information;
+            });
 
     builder.WebHost
         .ConfigureKestrel(
