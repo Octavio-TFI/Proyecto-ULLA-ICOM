@@ -33,8 +33,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Para poder correr como servicio de Windows
-Directory.SetCurrentDirectory(AppContext.BaseDirectory);
-builder.Services.AddWindowsService();
+if (builder.Environment.IsProduction())
+{
+    Directory.SetCurrentDirectory(AppContext.BaseDirectory);
+    builder.Services.AddWindowsService();
+
+    builder.WebHost
+        .ConfigureKestrel(
+            options =>
+            {
+                options.ListenAnyIP(5000);
+            });
+}
 
 var app = builder.Build();
 

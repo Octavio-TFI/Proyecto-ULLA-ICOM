@@ -10,7 +10,7 @@ namespace ChatApp
         {
             HttpClient client = new()
             {
-                BaseAddress = new Uri("https://localhost:7160")
+                BaseAddress = new Uri("http://10.11.12.139:5000")
             };
 
             if (!Guid.TryParse(Context.UserIdentifier, out Guid chatId))
