@@ -23,14 +23,14 @@ if (builder.Environment.IsProduction())
             x =>
             {
                 x.LogName = "Application";
-                x.SourceName = "LLM API";
+                x.SourceName = "LLM UI";
             });
 
     builder.WebHost
         .ConfigureKestrel(
             options =>
             {
-                options.ListenAnyIP(5000);
+                options.ListenAnyIP(80);
             });
 }
 
