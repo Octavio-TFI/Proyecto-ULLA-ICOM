@@ -27,6 +27,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Prompts\Chat\Instructions.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Prompts\ProcesadorConsulta\Instructions.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Prompts\Ranker\Instructions.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="vec0.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
