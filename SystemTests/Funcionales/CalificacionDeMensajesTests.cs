@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WireMock.Server;
 
-namespace SystemTests
+namespace System.Tests.Funcionales
 {
     public class CalificacionDeMensajesTests
         : BaseTests

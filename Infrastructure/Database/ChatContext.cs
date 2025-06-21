@@ -14,11 +14,14 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Database
 {
-    internal class ChatContext : DbContext
+    internal class ChatContext
+        : DbContext
     {
         public DbSet<OutboxEvent> OutboxEvents { get; set; }
 
         public DbSet<Chat> Chats { get; set; }
+
+        public DbSet<MensajeIA> MensajesIA { get; set; }
 
         public DbSet<Document> Documents { get; set; }
 
@@ -69,7 +72,8 @@ namespace Infrastructure.Database
                 .IsRequired();
         }
 
-        static void ConfigureMensajeModel(EntityTypeBuilder<Mensaje> mensajeBuilder)
+        static void ConfigureMensajeModel(
+            EntityTypeBuilder<Mensaje> mensajeBuilder)
         {
             mensajeBuilder.UseTpcMappingStrategy();
         }

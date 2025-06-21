@@ -20,7 +20,7 @@ using WireMock.ResponseBuilders;
 using WireMock.Server;
 using WireMock.Util;
 
-namespace SystemTests
+namespace System.Tests.Funcionales
 {
     public class ReciboDeMensajesTests
         : BaseTests
