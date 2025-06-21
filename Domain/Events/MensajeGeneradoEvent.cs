@@ -12,6 +12,9 @@ namespace Domain.Events
     public record MensajeGeneradoEvent
         : EntityEvent
     {
-        public required Mensaje Mensaje { get; init; }
+        /// <summary>
+        /// Id del mensaje generado.
+        /// </summary>
+        public required Guid MensajeId { get; init; }
     }
 }

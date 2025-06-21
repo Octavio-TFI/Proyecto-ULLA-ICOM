@@ -6,6 +6,8 @@ using Infrastructure.Database;
 using Infrastructure.FileSystem;
 using Infrastructure.LLM;
 using Infrastructure.Outbox;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging.EventLog;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +32,28 @@ builder.Services.AddFileManagerServices();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Configuracion de deployment como windows service
+if (builder.Environment.IsProduction())
+{
+    Directory.SetCurrentDirectory(AppContext.BaseDirectory);
+    builder.Services.AddWindowsService();
+
+    builder.Logging
+        .AddEventLog(
+            x =>
+            {
+                x.LogName = "Application";
+                x.SourceName = "LLM API";
+            });
+
+    builder.WebHost
+        .ConfigureKestrel(
+            options =>
+            {
+                options.ListenAnyIP(5000);
+            });
+}
 
 var app = builder.Build();
 

@@ -3,14 +3,20 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace ChatApp
 {
-    public class ChatHub(ILogger<ChatHub> _logger)
+    public class ChatHub(
+        ILogger<ChatHub> _logger,
+        IConfiguration _configuration)
         : Hub
     {
         public async Task SendMessageAsync(string text)
         {
             HttpClient client = new()
             {
-                BaseAddress = new Uri("https://localhost:7160")
+                BaseAddress =
+                    new Uri(
+                        _configuration.GetValue<string>("ApiURL") ??
+                            throw new Exception(
+                                "Se debe configurar la URL de la api en ApiURL"))
             };
 
             if (!Guid.TryParse(Context.UserIdentifier, out Guid chatId))
@@ -36,7 +42,7 @@ Sending message to API: {}",
             try
             {
                 var response = await client.PostAsJsonAsync(
-                    "/Test",
+                    "/Test/texto",
                     messageToSend);
 
                 if (response.IsSuccessStatusCode)

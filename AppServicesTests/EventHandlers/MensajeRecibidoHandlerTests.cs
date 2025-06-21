@@ -19,7 +19,6 @@ namespace AppServices.EventHandlers.Tests
             // Arrange
             var chatRepositoryMock = new Mock<IChatRepository>();
             var agentMock = new Mock<IAgent>();
-            var unitOfWorkMock = new Mock<IUnitOfWork>();
             var loggerMock = new Mock<ILogger<MensajeGeneradoHandler>>();
 
             var cancellationToken = new CancellationToken();
@@ -43,7 +42,6 @@ namespace AppServices.EventHandlers.Tests
             var handler = new MensajeRecibidoHandler(
                 chatRepositoryMock.Object,
                 agentMock.Object,
-                unitOfWorkMock.Object,
                 loggerMock.Object);
 
             var notification = new MensajeRecibidoEvent { EntityId = chatId };
@@ -53,9 +51,9 @@ namespace AppServices.EventHandlers.Tests
                 .ConfigureAwait(false);
 
             // Assert
-            chatMock.Verify(x => x.GenerarMensajeAsync(agentMock.Object), Times.Once);
-
-            unitOfWorkMock.Verify(x => x.SaveChangesAsync(), Times.Once);
+            chatMock.Verify(
+                x => x.GenerarMensajeAsync(agentMock.Object),
+                Times.Once);
 
             loggerMock.VerifyLog()
                 .InformationWasCalled()
