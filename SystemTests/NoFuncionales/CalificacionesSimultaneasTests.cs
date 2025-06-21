@@ -77,7 +77,7 @@ namespace System.Tests.NoFuncionales
             Assert.That(
                 responses.Select(x => x.IsSuccessStatusCode),
                 Is.All.True,
-                "Todas los requests deben ser exitosos");
+                "Todos los requests deben ser exitosos");
 
             var updatedDbContext = apiFactory.Services.CreateScope()
                 .ServiceProvider
