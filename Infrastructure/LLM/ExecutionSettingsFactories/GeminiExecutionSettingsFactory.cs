@@ -41,7 +41,7 @@ namespace Infrastructure.LLM.ExecutionSettingsFactories
                 ToolCallBehavior = geminiToolCallBehavior,
                 ResponseSchema = schema,
                 ResponseMimeType = mimeType,
-                Temperature = temperature
+                Temperature = temperature,
             };
         }
     }

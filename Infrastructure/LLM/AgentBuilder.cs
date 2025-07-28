@@ -88,7 +88,8 @@ namespace Infrastructure.LLM
 
             Tools.Add(KernelPluginFactory.CreateFromFunctions(name, functions));
 
-            FunctionChoiceBehavior = FunctionChoiceBehavior.Auto();
+            FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(
+                autoInvoke: false);
 
             return this;
         }

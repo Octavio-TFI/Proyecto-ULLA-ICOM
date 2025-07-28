@@ -64,33 +64,60 @@ namespace Domain.Entities.ChatAgregado
                 .GenerarRespuestaAsync(Mensajes)
                 .ConfigureAwait(false);
 
-            var respuesta = new MensajeIA()
+            Mensaje mensaje = null!;
+
+            if (agentResult is AgentTextResult textResult)
             {
-                Texto = agentResult.Texto,
+                mensaje = BuildMensajeIA(textResult);
+
+                Events.Add(
+                    new MensajeGeneradoEvent
+                    {
+                        EntityId = Id,
+                        MensajeId = mensaje.Id
+                    });
+            }
+            else if (agentResult is AgentFunctionCall functionCall)
+            {
+                mensaje = BuildMensajeLlamadaHerramienta(functionCall);
+            }
+
+            Mensajes.Add(mensaje);
+
+            return mensaje;
+        }
+
+        static MensajeIA BuildMensajeIA(AgentTextResult agentTextResult)
+        {
+            var mensajeIA = new MensajeIA()
+            {
+                Texto = agentTextResult.Texto,
                 DateTime = DateTime.Now
             };
 
-            respuesta.DocumentosRecuperados
+            mensajeIA.DocumentosRecuperados
                 .AddRange(
-                    agentResult.AgentData.InformacionRecuperada
-                        .Where(ir => ir is DocumentoRecuperado)
-                        .Cast<DocumentoRecuperado>());
+                    agentTextResult.AgentData.InformacionRecuperada
+                        .OfType<DocumentoRecuperado>());
 
-            respuesta.ConsultasRecuperadas
+            mensajeIA.ConsultasRecuperadas
                 .AddRange(
-                    agentResult.AgentData.InformacionRecuperada
-                        .Where(ir => ir is ConsultaRecuperada)
-                        .Cast<ConsultaRecuperada>());
+                    agentTextResult.AgentData.InformacionRecuperada
+                        .OfType<ConsultaRecuperada>());
 
-            Mensajes.Add(respuesta);
-            Events.Add(
-                new MensajeGeneradoEvent
-                {
-                    EntityId = Id,
-                    MensajeId = respuesta.Id
-                });
+            return mensajeIA;
+        }
 
-            return respuesta;
+        static MensajeLlamadaHerramienta BuildMensajeLlamadaHerramienta(
+            AgentFunctionCall functionCall)
+        {
+            return new MensajeLlamadaHerramienta
+            {
+                DateTime = DateTime.Now,
+                PluginName = functionCall.PluginName,
+                FunctionName = functionCall.FunctionName,
+                Argumentos = functionCall.Arguments
+            };
         }
     }
 }

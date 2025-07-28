@@ -29,5 +29,13 @@ namespace Domain.Abstractions
         Task<AgentResult> GenerarRespuestaAsync(
             string mensaje,
             Dictionary<string, object?>? arguments = null);
+
+        /// <summary>
+        /// Llama a una herramienta específica del agente.
+        /// </summary>
+        /// <param name="llamadaHerramienta">Herramienta a llamar</param>
+        /// <returns>Resultado de la herramienta</returns>
+        Task<AgentResult> LlamarHerramientaAsync(
+            MensajeLlamadaHerramienta llamadaHerramienta);
     }
 }

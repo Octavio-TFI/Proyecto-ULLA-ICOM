@@ -56,7 +56,40 @@ namespace Infrastructure.LLM
                 .FirstAsync()
                 .ConfigureAwait(false);
 
-            return new AgentResult
+            var functions = FunctionCallContent.GetFunctionCalls(result);
+
+            if (functions.Any())
+            {
+                var functionCall = functions.First();
+                return new AgentFunctionCall
+                {
+                    PluginName = functionCall.PluginName,
+                    FunctionName = functionCall.FunctionName,
+                    Arguments = functionCall.Arguments?.ToDictionary(),
+                    AgentData = _data,
+                };
+            }
+
+            return new AgentTextResult
+            {
+                Texto = result.ToString(),
+                AgentData = _data,
+            };
+        }
+
+        public async Task<AgentResult> LlamarHerramientaAsync(
+            MensajeLlamadaHerramienta llamadaHerramienta)
+        {
+            var kernelArguments = new KernelArguments(
+                llamadaHerramienta.Argumentos ?? []);
+
+            var result = await ChatCompletionAgent.Kernel
+                .InvokeAsync(
+                    llamadaHerramienta.PluginName,
+                    llamadaHerramienta.FunctionName,
+                    kernelArguments);
+
+            return new AgentTextResult
             {
                 Texto = result.ToString(),
                 AgentData = _data,
