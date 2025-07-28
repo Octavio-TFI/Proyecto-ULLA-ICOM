@@ -20,5 +20,7 @@ namespace Domain.Entities.ChatAgregado
         /// DateTime de cuando se recibio el mensaje
         /// </summary>
         public required DateTime DateTime { get; set; }
+
+        public override abstract string ToString();
     }
 }

@@ -19,7 +19,7 @@ namespace AppServices.EventHandlers.Tests
             // Arrange
             var chatRepositoryMock = new Mock<IChatRepository>();
             var agentMock = new Mock<IAgent>();
-            var loggerMock = new Mock<ILogger<MensajeGeneradoHandler>>();
+            var loggerMock = new Mock<ILogger<MensajeIAGeneradoHandler>>();
 
             var cancellationToken = new CancellationToken();
 

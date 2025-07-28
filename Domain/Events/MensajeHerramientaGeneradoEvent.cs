@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Domain.Events
+{
+    public record MensajeHerramientaGeneradoEvent
+        : EntityEvent
+    {
+        /// <summary>
+        /// Id del mensaje generado por la herramienta
+        /// </summary>
+        public required Guid MensajeHerramientaId { get; init; }
+    }
+}

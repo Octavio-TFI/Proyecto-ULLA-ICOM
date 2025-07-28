@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,5 +24,16 @@ namespace Domain.Entities.ChatAgregado
         /// Argumentos que se pasan a la función
         /// </summary>
         public required Dictionary<string, object?>? Argumentos { get; init; }
+
+        public override string ToString()
+        {
+            var plugin = PluginName ?? "N/A";
+
+            var args = Argumentos != null
+                ? JsonConvert.SerializeObject(Argumentos)
+                : "N/A";
+
+            return $"Plugin: {plugin}, Function: {FunctionName}, Args: {args}";
+        }
     }
 }

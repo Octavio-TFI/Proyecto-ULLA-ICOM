@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 
 namespace Domain.ValueObjects
 {
-    public abstract record AgentResult
+    public record AgentResult
     {
         /// <summary>
-        /// Datos del agente
+        /// Texto generado por el agente.
         /// </summary>
-        public required AgentData AgentData { get; init; }
+        public required string Texto { get; init; }
+
+        /// <summary>
+        /// Funciones llamadas por el agente.
+        /// </summary>
+        public required List<AgentFunctionCall> FunctionCalls { get; init; }
     }
 }

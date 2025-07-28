@@ -35,7 +35,7 @@ namespace Domain.Abstractions
         /// </summary>
         /// <param name="llamadaHerramienta">Herramienta a llamar</param>
         /// <returns>Resultado de la herramienta</returns>
-        Task<AgentResult> LlamarHerramientaAsync(
+        Task<ToolResult> LlamarHerramientaAsync(
             MensajeLlamadaHerramienta llamadaHerramienta);
     }
 }

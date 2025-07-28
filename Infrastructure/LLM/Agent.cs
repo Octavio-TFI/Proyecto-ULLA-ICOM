@@ -17,13 +17,11 @@ namespace Infrastructure.LLM
 {
     internal class Agent(
         ChatCompletionAgent agent,
-        AgentData agentData,
         IChatHistoryAdapter chatHistoryFactory)
         : IAgent
     {
         public ChatCompletionAgent ChatCompletionAgent { get; } = agent;
 
-        readonly AgentData _data = agentData;
         readonly IChatHistoryAdapter _chatHistoryFactory = chatHistoryFactory;
 
         public Task<AgentResult> GenerarRespuestaAsync(
@@ -56,28 +54,23 @@ namespace Infrastructure.LLM
                 .FirstAsync()
                 .ConfigureAwait(false);
 
-            var functions = FunctionCallContent.GetFunctionCalls(result);
+            var functionCalls = FunctionCallContent.GetFunctionCalls(result)
+                .Select(
+                    f => new AgentFunctionCall
+                    {
+                        PluginName = f.PluginName,
+                        FunctionName = f.FunctionName,
+                        Arguments = f.Arguments?.ToDictionary()
+                    });
 
-            if (functions.Any())
-            {
-                var functionCall = functions.First();
-                return new AgentFunctionCall
-                {
-                    PluginName = functionCall.PluginName,
-                    FunctionName = functionCall.FunctionName,
-                    Arguments = functionCall.Arguments?.ToDictionary(),
-                    AgentData = _data,
-                };
-            }
-
-            return new AgentTextResult
+            return new AgentResult
             {
                 Texto = result.ToString(),
-                AgentData = _data,
+                FunctionCalls = [.. functionCalls]
             };
         }
 
-        public async Task<AgentResult> LlamarHerramientaAsync(
+        public async Task<ToolResult> LlamarHerramientaAsync(
             MensajeLlamadaHerramienta llamadaHerramienta)
         {
             var kernelArguments = new KernelArguments(
@@ -89,11 +82,9 @@ namespace Infrastructure.LLM
                     llamadaHerramienta.FunctionName,
                     kernelArguments);
 
-            return new AgentTextResult
-            {
-                Texto = result.ToString(),
-                AgentData = _data,
-            };
+            return result.GetValue<ToolResult>() ??
+                throw new Exception(
+                    "No se pudo obtener el resultado de la herramienta");
         }
     }
 }

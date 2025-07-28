@@ -1,17 +1,16 @@
-﻿using System;
+﻿using Domain.Abstractions.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.ValueObjects
+namespace Domain.Entities.ChatAgregado
 {
-    public record AgentTextResult
-        : AgentResult
+    public class MensajeHerramienta
+        : Mensaje
+        , IMensajeTexto
     {
-        /// <summary>
-        /// Texto generado por el agente.
-        /// </summary>
         public required string Texto { get; init; }
 
         public override string ToString()

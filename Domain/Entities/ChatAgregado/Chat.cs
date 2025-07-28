@@ -32,6 +32,12 @@ namespace Domain.Entities.ChatAgregado
         /// </summary>
         public List<Mensaje> Mensajes { get; } = [];
 
+        public Mensaje UltimoMensaje
+            => Mensajes.OrderBy(m => m.DateTime).Last();
+
+        public bool UltimoMensajeEsLlamadoHerramienta
+            => UltimoMensaje is MensajeLlamadaHerramienta;
+
         /// <summary>
         /// Añade un mensaje de texto recibido
         /// </summary>
@@ -60,26 +66,46 @@ namespace Domain.Entities.ChatAgregado
         /// <returns>Mensaje de respuesta generado</returns>
         public virtual async Task<Mensaje> GenerarMensajeAsync(IAgent agente)
         {
+            Mensaje mensaje;
+
             var agentResult = await agente
-                .GenerarRespuestaAsync(Mensajes)
+                    .GenerarRespuestaAsync(Mensajes)
                 .ConfigureAwait(false);
 
-            Mensaje mensaje = null!;
-
-            if (agentResult is AgentTextResult textResult)
+            if (agentResult.FunctionCalls.Count != 0)
             {
-                mensaje = BuildMensajeIA(textResult);
+                // Por el momento solo soporta un llamado a la vez
+                var functionCall = agentResult.FunctionCalls.First();
+
+                mensaje = new MensajeLlamadaHerramienta
+                {
+                    DateTime = DateTime.Now,
+                    PluginName = functionCall.PluginName,
+                    FunctionName = functionCall.FunctionName,
+                    Argumentos = functionCall.Arguments
+                };
 
                 Events.Add(
-                    new MensajeGeneradoEvent
+                    new LlamadaHerramientaGeneradaEvent
+                    {
+                        EntityId = Id,
+                        MensajeLlamadaHerramientaGeneradaId = mensaje.Id
+                    });
+            }
+            else
+            {
+                mensaje = new MensajeIA
+                {
+                    DateTime = DateTime.Now,
+                    Texto = agentResult.Texto
+                };
+
+                Events.Add(
+                    new MensajeIAGeneradoEvent
                     {
                         EntityId = Id,
                         MensajeId = mensaje.Id
                     });
-            }
-            else if (agentResult is AgentFunctionCall functionCall)
-            {
-                mensaje = BuildMensajeLlamadaHerramienta(functionCall);
             }
 
             Mensajes.Add(mensaje);
@@ -87,37 +113,30 @@ namespace Domain.Entities.ChatAgregado
             return mensaje;
         }
 
-        static MensajeIA BuildMensajeIA(AgentTextResult agentTextResult)
+        public async Task<MensajeHerramienta> LlamarHerramientaAsyn(
+            IAgent agent)
         {
-            var mensajeIA = new MensajeIA()
+            if (!UltimoMensajeEsLlamadoHerramienta)
             {
-                Texto = agentTextResult.Texto,
-                DateTime = DateTime.Now
-            };
+                throw new InvalidOperationException(
+                    "No se puede llamar herramienta porque ultimo mensaje no es una llamda de herramienta");
+            }
 
-            mensajeIA.DocumentosRecuperados
-                .AddRange(
-                    agentTextResult.AgentData.InformacionRecuperada
-                        .OfType<DocumentoRecuperado>());
+            var result = await agent.LlamarHerramientaAsync(
+                (UltimoMensaje as MensajeLlamadaHerramienta)!);
 
-            mensajeIA.ConsultasRecuperadas
-                .AddRange(
-                    agentTextResult.AgentData.InformacionRecuperada
-                        .OfType<ConsultaRecuperada>());
-
-            return mensajeIA;
-        }
-
-        static MensajeLlamadaHerramienta BuildMensajeLlamadaHerramienta(
-            AgentFunctionCall functionCall)
-        {
-            return new MensajeLlamadaHerramienta
+            var mensaje = new MensajeHerramienta
             {
                 DateTime = DateTime.Now,
-                PluginName = functionCall.PluginName,
-                FunctionName = functionCall.FunctionName,
-                Argumentos = functionCall.Arguments
+                Texto = result.Texto
             };
+
+            Mensajes.Add(mensaje);
+            // Que la herramienta se ejecute es como un mensaje recibido para el LLM
+            // Se realiza la misma accion en ambos casos (Generar una respuesta)
+            Events.Add(new MensajeRecibidoEvent { EntityId = Id });
+
+            return mensaje;
         }
     }
 }

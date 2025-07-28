@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace Domain.ValueObjects
 {
     public record AgentFunctionCall
-        : AgentResult
     {
         public required string? PluginName { get; init; }
 

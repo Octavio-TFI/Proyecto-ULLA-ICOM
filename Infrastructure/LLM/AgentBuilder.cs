@@ -25,8 +25,6 @@ namespace Infrastructure.LLM
         readonly IFileManager _fileManager = fileManager;
         readonly IChatHistoryAdapter _chatHistoryFactory = chatHistoryFactory;
 
-        readonly AgentData AgentData = new();
-
         public Type? Schema { get; private set; }
 
         public FunctionChoiceBehavior? FunctionChoiceBehavior { get; private set; }
@@ -70,9 +68,7 @@ namespace Infrastructure.LLM
                 functions.Add(
                     KernelFunctionFactory.CreateFromMethod(
                         method,
-                        ActivatorUtilities.CreateInstance<T>(
-                            _serviceProvider,
-                            AgentData),
+                        ActivatorUtilities.CreateInstance<T>(_serviceProvider),
                         new KernelFunctionFromMethodOptions
                     {
                         FunctionName = functionName,
@@ -131,7 +127,7 @@ namespace Infrastructure.LLM
                 Arguments = new KernelArguments(executionSettings)
             };
 
-            return new Agent(chatAgent, AgentData, _chatHistoryFactory);
+            return new Agent(chatAgent, _chatHistoryFactory);
         }
     }
 }

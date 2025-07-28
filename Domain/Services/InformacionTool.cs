@@ -1,5 +1,6 @@
 ﻿using AppServices.Abstractions;
 using Domain.Abstractions;
+using Domain.Abstractions.Entities;
 using Domain.Entities;
 using Domain.Entities.ChatAgregado;
 using Domain.Repositories;
@@ -20,13 +21,12 @@ namespace Domain.Services
         IEmbeddingService _embeddingService,
         IConsultaRepository _consultaRepository,
         IDocumentRepository _documentRepository,
-        IRanker _ranker,
-        AgentData _agentData)
+        IRanker _ranker)
     {
         [DisplayName("informacion")]
         [Description(
             "Busca documentación relacionada a la pregunta del usuario y soluciones a preguntas similares")]
-        public async Task<string> BuscarInformacionAsync(
+        public async Task<ToolResult> BuscarInformacionAsync(
             [Description("Pregunta o problema que tiene el usuario")] string pregunta)
         {
             _logger.LogInformation(
@@ -114,27 +114,27 @@ INFORMACION PARA QUERY: {query}
                 pregunta,
                 info);
 
-            // Guardar metadata de los datos recuperados
-            _agentData.InformacionRecuperada
-                .AddRange(
-                    consultas.Select(
-                        c => new ConsultaRecuperada
-                        {
-                            ConsultaId = c.Id,
-                            Rank = rankedConsultas.Contains(c)
-                        }));
+            var documentosRecuperadoss = documents.Select(
+                d => new DocumentoRecuperado
+                {
+                    DocumentoId = d.Id,
+                    Rank = rankedDocuments.Contains(d)
+                });
 
-            _agentData.InformacionRecuperada
-                .AddRange(
-                    documents.Select(
-                        d => new DocumentoRecuperado
-                        {
-                            DocumentoId = d.Id,
-                            Rank = rankedDocuments.Contains(d)
-                        }));
+            var consultasRecuperadas = consultas.Select(
+                c => new ConsultaRecuperada
+                {
+                    ConsultaId = c.Id,
+                    Rank = rankedConsultas.Contains(c)
+                });
 
+            var datos = new Dictionary<string, object>
+            {
+                { "DocumentosRecuperados", documentosRecuperadoss },
+                { "ConsultasRecuperadas", consultasRecuperadas }
+            };
 
-            return info;
+            return new ToolResult { Texto = info, Datos = datos.AsReadOnly() };
         }
     }
 }

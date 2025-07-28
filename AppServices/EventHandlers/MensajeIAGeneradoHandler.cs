@@ -11,15 +11,15 @@ using System.Threading.Tasks;
 
 namespace AppServices.EventHandlers
 {
-    internal class MensajeGeneradoHandler(
+    internal class MensajeIAGeneradoHandler(
         IChatRepository _chatRepository,
         IMensajeIARepository _mensajeIARepository,
         Func<string, IClient> _clientFactory,
-        ILogger<MensajeGeneradoHandler> _logger)
-        : INotificationHandler<MensajeGeneradoEvent>
+        ILogger<MensajeIAGeneradoHandler> _logger)
+        : INotificationHandler<MensajeIAGeneradoEvent>
     {
         public async Task Handle(
-            MensajeGeneradoEvent mensajeGeneradoEvent,
+            MensajeIAGeneradoEvent mensajeGeneradoEvent,
             CancellationToken cancellationToken)
         {
             var chat = await _chatRepository
