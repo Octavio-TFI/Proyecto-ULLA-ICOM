@@ -82,7 +82,7 @@ namespace Infrastructure.Database
             EntityTypeBuilder<DocumentoRecuperado> documentoRecuperadoBuilder)
         {
             documentoRecuperadoBuilder
-                .HasOne<MensajeIA>()
+                .HasOne<MensajeHerramienta>()
                 .WithMany(m => m.DocumentosRecuperados)
                 .IsRequired();
 
@@ -97,7 +97,7 @@ namespace Infrastructure.Database
             EntityTypeBuilder<ConsultaRecuperada> consultaRecuperadaBuilder)
         {
             consultaRecuperadaBuilder
-                .HasOne<MensajeIA>()
+                .HasOne<MensajeHerramienta>()
                 .WithMany(m => m.ConsultasRecuperadas)
                 .IsRequired();
 

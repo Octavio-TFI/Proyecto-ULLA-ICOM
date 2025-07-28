@@ -128,7 +128,7 @@ namespace Domain.Entities.ChatAgregado
             var mensaje = new MensajeHerramienta
             {
                 DateTime = DateTime.Now,
-                Texto = result.Texto
+                Texto = result.Texto,
             };
 
             Mensajes.Add(mensaje);

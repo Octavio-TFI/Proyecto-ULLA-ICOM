@@ -13,6 +13,10 @@ namespace Domain.Entities.ChatAgregado
     {
         public required string Texto { get; init; }
 
+        public List<DocumentoRecuperado> DocumentosRecuperados { get; } = [];
+
+        public List<ConsultaRecuperada> ConsultasRecuperadas { get; } = [];
+
         public override string ToString()
         {
             return Texto;
