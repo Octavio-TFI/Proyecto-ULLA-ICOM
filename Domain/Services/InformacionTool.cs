@@ -77,9 +77,7 @@ SE ENCONTRARON {rankedDocuments} DOCUMENTOS PARA QUERY:
             if (rankedDocuments.Count > 0)
             {
                 stringBuilder
-                    .AppendJoin(
-                        "\r\n",
-                        rankedDocuments.Select(d => d.ToString()));
+                    .AppendJoin("\r\n", rankedDocuments.Select(d => d.Texto));
             }
             else
             {

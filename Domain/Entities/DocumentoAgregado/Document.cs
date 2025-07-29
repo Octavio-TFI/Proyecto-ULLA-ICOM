@@ -21,7 +21,8 @@ namespace Domain.Entities.DocumentoAgregado
 
         public override string ToString()
         {
-            return Texto;
+            // Para no hacer context overflow
+            return Texto[..int.Min(20000, Texto.Length)];
         }
     }
 }
