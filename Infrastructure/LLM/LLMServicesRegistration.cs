@@ -3,6 +3,7 @@ using Domain.Abstractions;
 using Domain.ValueObjects;
 using Infrastructure.LLM.Abstractions;
 using Infrastructure.LLM.ExecutionSettingsFactories;
+using Infrastructure.LLM.ToolCallExtractor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
@@ -59,13 +60,12 @@ namespace Infrastructure.LLM
                                 "Se debe configurar el modelo del LLM Local en LLMLocal:Model");
 
                     var kernelBuilder = Kernel.CreateBuilder()
-                        .AddOpenAIChatCompletion(
-                            model,
-                            openAiClient);
+                        .AddOpenAIChatCompletion(model, openAiClient);
 
                     kernelBuilder.Services
                         .AddSingleton<IExecutionSettingsFactory, OpenAiExecutionSettingsFactory>(
-                            );
+                            )
+                        .AddSingleton<IToolCallExtractor, OpenAiToolExtractor>();
 
                     return kernelBuilder.Build();
                 });
@@ -103,15 +103,19 @@ namespace Infrastructure.LLM
 
                         kernelBuilder.Services
                             .AddSingleton<IExecutionSettingsFactory, OpenAiExecutionSettingsFactory>(
+                                )
+                            .AddSingleton<IToolCallExtractor, GeminiToolCallExtractor>(
                                 );
                     }
                     else
                     {
-                        string apiKey = config.GetValue<string>("LLMGoogle:ApiKey") ??
+                        string apiKey = config.GetValue<string>(
+                                "LLMGoogle:ApiKey") ??
                             throw new Exception(
                                 "Se debe configurar GeminiApiKey en LLMGoogle:ApiKey");
 
-                        string model = config.GetValue<string>("LLMGoogle:Model") ??
+                        string model = config.GetValue<string>(
+                                "LLMGoogle:Model") ??
                             throw new Exception(
                                 "Se debe configurar GeminiModel en LLMGoogle:Model");
 
@@ -121,6 +125,8 @@ namespace Infrastructure.LLM
 
                         kernelBuilder.Services
                             .AddSingleton<IExecutionSettingsFactory, GeminiExecutionSettingsFactory>(
+                                )
+                            .AddSingleton<IToolCallExtractor, GeminiToolCallExtractor>(
                                 );
                     }
 

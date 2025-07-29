@@ -38,7 +38,7 @@ namespace Domain.Services
                     .ConfigureAwait(false);
 
                 var result = JsonConvert.DeserializeObject<RankerResult>(
-                    agentResult.ToString());
+                    agentResult.Texto);
 
                 if (result?.Score is true)
                 {

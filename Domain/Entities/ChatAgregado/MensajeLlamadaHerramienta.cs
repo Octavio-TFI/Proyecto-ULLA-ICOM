@@ -23,7 +23,7 @@ namespace Domain.Entities.ChatAgregado
         /// <summary>
         /// Argumentos que se pasan a la función
         /// </summary>
-        public required Dictionary<string, object?>? Argumentos { get; init; }
+        public required IReadOnlyDictionary<string, object?>? Argumentos { get; init; }
 
         public override string ToString()
         {

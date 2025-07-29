@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace Domain.ValueObjects
 
         public required string FunctionName { get; init; }
 
-        public required Dictionary<string, object?>? Arguments { get; init; }
+        public required IReadOnlyDictionary<string, object?>? Arguments { get; init; }
 
         public override string ToString()
         {

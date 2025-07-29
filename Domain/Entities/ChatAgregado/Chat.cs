@@ -69,7 +69,7 @@ namespace Domain.Entities.ChatAgregado
             Mensaje mensaje;
 
             var agentResult = await agente
-                    .GenerarRespuestaAsync(Mensajes)
+                .GenerarRespuestaAsync(Mensajes)
                 .ConfigureAwait(false);
 
             if (agentResult.FunctionCalls.Count != 0)

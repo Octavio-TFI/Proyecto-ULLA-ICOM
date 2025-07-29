@@ -21,24 +21,16 @@ namespace Infrastructure.LLM.ExecutionSettingsFactories
             GeminiToolCallBehavior? geminiToolCallBehavior = null;
             string? mimeType = null;
 
-            if (functionChoiceBehavior is AutoFunctionChoiceBehavior)
-            {
-                geminiToolCallBehavior = GeminiToolCallBehavior.AutoInvokeKernelFunctions;
-            }
-            else if (functionChoiceBehavior is RequiredFunctionChoiceBehavior)
-            {
-                geminiToolCallBehavior = GeminiToolCallBehavior.EnableKernelFunctions;
-            }
-
             if (schema is not null)
             {
                 mimeType = "application/json";
             }
 
+            // TODO: Ver de arreglar
             return new GeminiPromptExecutionSettings
             {
                 FunctionChoiceBehavior = functionChoiceBehavior,
-                ToolCallBehavior = geminiToolCallBehavior,
+                ToolCallBehavior = GeminiToolCallBehavior.EnableKernelFunctions,
                 ResponseSchema = schema,
                 ResponseMimeType = mimeType,
                 Temperature = temperature,

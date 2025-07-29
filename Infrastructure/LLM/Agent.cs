@@ -7,8 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.Google;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using OpenAI.Assistants;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,14 +58,9 @@ namespace Infrastructure.LLM
                 .FirstAsync()
                 .ConfigureAwait(false);
 
-            var functionCalls = FunctionCallContent.GetFunctionCalls(result)
-                .Select(
-                    f => new AgentFunctionCall
-                    {
-                        PluginName = f.PluginName,
-                        FunctionName = f.FunctionName,
-                        Arguments = f.Arguments?.ToDictionary()
-                    });
+            var functionCalls = ChatCompletionAgent.Kernel
+                .GetRequiredService<IToolCallExtractor>()
+                .Extract(result);
 
             return new AgentResult
             {
@@ -74,7 +73,7 @@ namespace Infrastructure.LLM
             MensajeLlamadaHerramienta llamadaHerramienta)
         {
             var kernelArguments = new KernelArguments(
-                llamadaHerramienta.Argumentos ?? []);
+                llamadaHerramienta.Argumentos?.ToDictionary() ?? []);
 
             var result = await ChatCompletionAgent.Kernel
                 .InvokeAsync(
