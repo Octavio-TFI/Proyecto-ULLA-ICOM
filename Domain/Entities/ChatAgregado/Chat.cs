@@ -82,7 +82,11 @@ namespace Domain.Entities.ChatAgregado
                     DateTime = DateTime.Now,
                     PluginName = functionCall.PluginName,
                     FunctionName = functionCall.FunctionName,
-                    Argumentos = functionCall.Arguments
+                    Argumentos =
+                        functionCall.Arguments?
+                            .ToDictionary(
+                            x => x.Key,
+                            x => x.Value?.ToString() as object)
                 };
 
                 Events.Add(

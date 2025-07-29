@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.ChatAgregado;
+using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using System;
 using System.Collections.Generic;

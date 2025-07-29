@@ -32,6 +32,8 @@ namespace AppServices.EventHandlers
                 .GetWithUltimosMensajesAsync(notification.EntityId)
                 .ConfigureAwait(false);
 
+            var llamada = chat.UltimoMensaje;
+
             var mensajeHerramienta = await chat
                 .LlamarHerramientaAsyn(_agent)
                 .ConfigureAwait(false);
@@ -42,7 +44,7 @@ Herramienta Llamada
 Herramienta: {Herramienta}
 Resultado: {Resultado}
 ChatId: {ChatId}",
-                chat.UltimoMensaje.ToString(),
+                llamada.ToString(),
                 mensajeHerramienta.ToString(),
                 notification.EntityId);
         }
