@@ -119,14 +119,23 @@ namespace Infrastructure.LLM
                             throw new Exception(
                                 "Se debe configurar GeminiModel en LLMGoogle:Model");
 
-                        kernelBuilder.AddGoogleAIGeminiChatCompletion(
+                        var openAiClient = new OpenAIClient(
+                            new ApiKeyCredential(apiKey),
+                            new OpenAIClientOptions
+                            {
+                                Endpoint =
+                                    new Uri(
+                                            "https://generativelanguage.googleapis.com/v1beta/openai/")
+                            });
+
+                        kernelBuilder.AddOpenAIChatCompletion(
                             model,
-                            apiKey);
+                            openAiClient);
 
                         kernelBuilder.Services
-                            .AddSingleton<IExecutionSettingsFactory, GeminiExecutionSettingsFactory>(
+                            .AddSingleton<IExecutionSettingsFactory, OpenAiExecutionSettingsFactory>(
                                 )
-                            .AddSingleton<IToolCallExtractor, GeminiToolCallExtractor>(
+                            .AddSingleton<IToolCallExtractor, OpenAiToolExtractor>(
                                 );
                     }
 
