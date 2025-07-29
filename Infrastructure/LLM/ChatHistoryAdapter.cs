@@ -34,6 +34,20 @@ namespace Infrastructure.LLM
                 }
                 else if (mensaje is MensajeLlamadaHerramienta llamadaHerramienta)
                 {
+                    //var a = new ChatMessageContent()
+                    //{
+                    //    Role = AuthorRole.Assistant,
+                    //    Items =
+                    //        [new FunctionCallContent(
+                    //            llamadaHerramienta.FunctionName,
+                    //            llamadaHerramienta.PluginName,
+                    //            arguments: new KernelArguments(
+                    //                llamadaHerramienta.Argumentos!.ToDictionary(
+                    //                    )))]
+                    //};
+
+                    //chatHistory.Add(a);
+
                     // TODO: ESTA MAL PERO FUNCIONA
                     chatHistory.AddAssistantMessage(
                         "Tool call: " + llamadaHerramienta.ToString());

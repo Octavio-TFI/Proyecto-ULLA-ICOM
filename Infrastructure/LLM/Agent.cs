@@ -28,15 +28,13 @@ namespace Infrastructure.LLM
 
         readonly IChatHistoryAdapter _chatHistoryFactory = chatHistoryFactory;
 
-        public async Task<AgentResult> GenerarRespuestaAsync(
+        public Task<AgentResult> GenerarRespuestaAsync(
             List<Mensaje> mensajes,
             Dictionary<string, object?>? arguments = null)
         {
-            var chatHistory = await _chatHistoryFactory.Adapt(
-                mensajes,
-                ChatCompletionAgent.Kernel);
+            var chatHistory = _chatHistoryFactory.Adapt(mensajes);
 
-            return await GenerarRespuestaAsync(chatHistory, arguments);
+            return GenerarRespuestaAsync(chatHistory, arguments);
         }
 
         public Task<AgentResult> GenerarRespuestaAsync(
