@@ -11,6 +11,7 @@ namespace Domain.Entities.ChatAgregado
         : Mensaje
         , IMensajeTexto
     {
+        // Este texto no es necesario con la lista de documentos generados en suficiente
         public required string Texto { get; init; }
 
         public List<DocumentoRecuperado> DocumentosRecuperados { get; } = [];
