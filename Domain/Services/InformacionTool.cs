@@ -26,8 +26,9 @@ namespace Domain.Services
         [DisplayName("informacion")]
         [Description(
             "Busca documentación relacionada a la pregunta del usuario y soluciones a preguntas similares")]
-        public async Task<ToolResult> BuscarInformacionAsync(
-            [Description("Pregunta o problema que tiene el usuario")] string pregunta)
+        public async Task<MensajeHerramientaInfo> BuscarInformacionAsync(
+            [Description("Pregunta o problema que tiene el usuario")] string pregunta,
+            MensajeLlamadaHerramienta llamada)
         {
             _logger.LogInformation(
                 @"
@@ -70,69 +71,29 @@ SE ENCONTRARON {rankedDocuments} DOCUMENTOS PARA QUERY:
                 rankedDocuments.Count,
                 pregunta);
 
-            var stringBuilder = new StringBuilder();
-
-            stringBuilder.Append("[Documentación]").AppendLine();
-
-            if (rankedDocuments.Count > 0)
-            {
-                stringBuilder
-                    .AppendJoin("\r\n", rankedDocuments.Select(d => d.Texto));
-            }
-            else
-            {
-                stringBuilder.AppendLine(
-                    "No se encontro documentación relacionada");
-            }
-
-            stringBuilder.AppendLine();
-            stringBuilder.Append("[Consultas Históricas]").AppendLine();
-
-            if (rankedConsultas.Count > 0)
-            {
-                stringBuilder
-                    .AppendJoin(
-                        "\r\n",
-                        rankedConsultas.Select(c => c.ToString()));
-            }
-            else
-            {
-                stringBuilder.AppendLine(
-                    "No se encontraron consultas históricas similares");
-            }
-
-            string info = stringBuilder.ToString();
-
-            _logger.LogInformation(
-                @"
-INFORMACION PARA QUERY: {query}
-
-{info}
-",
-                pregunta,
-                info);
-
             var documentosRecuperadoss = documents.Select(
                 d => new DocumentoRecuperado
                 {
                     DocumentoId = d.Id,
                     Rank = rankedDocuments.Contains(d)
-                });
+                })
+                .ToList();
 
             var consultasRecuperadas = consultas.Select(
                 c => new ConsultaRecuperada
                 {
                     ConsultaId = c.Id,
                     Rank = rankedConsultas.Contains(c)
-                });
+                })
+                .ToList();
 
-            var datos = new Dictionary<string, object>
+            return new MensajeHerramientaInfo(
+                documentosRecuperadoss,
+                consultasRecuperadas)
             {
-                { "DocumentosRecuperados", documentosRecuperadoss },
-                { "ConsultasRecuperadas", consultasRecuperadas }
+                DateTime = DateTime.Now,
+                Llamada = llamada
             };
-
-            return new ToolResult { Texto = info, Datos = datos.AsReadOnly() };
         }
     }
 }

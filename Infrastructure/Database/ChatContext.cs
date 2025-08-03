@@ -51,6 +51,8 @@ namespace Infrastructure.Database
             ConfigureMensajeModel(modelBuilder.Entity<Mensaje>());
             ConfigureMensajeLlamadaHerramientaModel(
                 modelBuilder.Entity<MensajeLlamadaHerramienta>());
+            ConfigureMensajeHerramientaInfoModel(
+                modelBuilder.Entity<MensajeHerramientaInfo>());
             ConfigureDocumentoRecuperadoModel(
                 modelBuilder.Entity<DocumentoRecuperado>());
             ConfigureConsultaRecuperadaModel(
@@ -100,14 +102,23 @@ namespace Infrastructure.Database
                 .IsRequired();
         }
 
+        static void ConfigureMensajeHerramientaInfoModel(
+            EntityTypeBuilder<MensajeHerramientaInfo> mensajeHerramientaBuilder)
+        {
+            mensajeHerramientaBuilder
+                .HasMany(m => m.DocumentosRecuperados)
+                .WithOne()
+                .IsRequired();
+
+            mensajeHerramientaBuilder
+                .HasMany(m => m.ConsultasRecuperadas)
+                .WithOne()
+                .IsRequired();
+        }
+
         static void ConfigureDocumentoRecuperadoModel(
             EntityTypeBuilder<DocumentoRecuperado> documentoRecuperadoBuilder)
         {
-            documentoRecuperadoBuilder
-                .HasOne<MensajeHerramienta>()
-                .WithMany(m => m.DocumentosRecuperados)
-                .IsRequired();
-
             documentoRecuperadoBuilder
                 .HasOne<Document>()
                 .WithMany()
@@ -118,11 +129,6 @@ namespace Infrastructure.Database
         static void ConfigureConsultaRecuperadaModel(
             EntityTypeBuilder<ConsultaRecuperada> consultaRecuperadaBuilder)
         {
-            consultaRecuperadaBuilder
-                .HasOne<MensajeHerramienta>()
-                .WithMany(m => m.ConsultasRecuperadas)
-                .IsRequired();
-
             consultaRecuperadaBuilder
                 .HasOne<Consulta>()
                 .WithMany()

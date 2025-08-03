@@ -30,7 +30,7 @@ namespace Domain.Entities.ChatAgregado
         /// <summary>
         /// Lista de mensajes
         /// </summary>
-        public List<Mensaje> Mensajes { get; } = [];
+        public virtual List<Mensaje> Mensajes { get; } = [];
 
         public Mensaje UltimoMensaje
             => Mensajes.OrderBy(m => m.DateTime).Last();
@@ -126,14 +126,10 @@ namespace Domain.Entities.ChatAgregado
                     "No se puede llamar herramienta porque ultimo mensaje no es una llamda de herramienta");
             }
 
-            var result = await agent.LlamarHerramientaAsync(
-                (UltimoMensaje as MensajeLlamadaHerramienta)!);
+            var llamadaHerramienta = UltimoMensaje as MensajeLlamadaHerramienta;
 
-            var mensaje = new MensajeHerramienta
-            {
-                DateTime = DateTime.Now,
-                Texto = result.Texto,
-            };
+            var mensaje = await agent.LlamarHerramientaAsync(
+                llamadaHerramienta!);
 
             Mensajes.Add(mensaje);
             // Que la herramienta se ejecute es como un mensaje recibido para el LLM

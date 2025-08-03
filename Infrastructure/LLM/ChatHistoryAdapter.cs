@@ -1,4 +1,5 @@
-﻿using Domain.Entities.ChatAgregado;
+﻿using Domain.Abstractions;
+using Domain.Entities.ChatAgregado;
 using Domain.ValueObjects;
 using Infrastructure.LLM.Abstractions;
 using Microsoft.SemanticKernel;
@@ -16,10 +17,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.LLM
 {
-    internal class ChatHistoryAdapter
+    internal class ChatHistoryAdapter(
+        Func<MensajeHerramienta, IMensajeHerramientaTextoBuilder> herramientaTextoBuilderFactory)
         : IChatHistoryAdapter
     {
-        public ChatHistory Adapt(List<Mensaje> mensajes)
+        public async Task<ChatHistory> AdaptAsync(List<Mensaje> mensajes)
         {
             ChatHistory chatHistory = [];
 
@@ -52,16 +54,17 @@ namespace Infrastructure.LLM
                 }
                 else if (mensaje is MensajeHerramienta mensajeHerramienta)
                 {
-                    // TODO: ESTA MAL PERO FUNCIONA
+                    var functionCall = mensajeHerramienta.Llamada;
 
-                    var functionCall = mensajes.ElementAt(
-                        mensajes.IndexOf(mensajeHerramienta) + 1) as MensajeLlamadaHerramienta;
+                    var herramientaTextoBuilder = herramientaTextoBuilderFactory(
+                        mensajeHerramienta);
 
                     var functionResult = new FunctionResultContent(
                         functionCall?.FunctionName,
                         functionCall?.PluginName,
                         functionCall?.Id.ToString(),
-                        mensajeHerramienta.Texto);
+                        await herramientaTextoBuilder.BuildAsync(
+                            mensajeHerramienta));
 
                     var chatMessage = new ChatMessageContent()
                     {

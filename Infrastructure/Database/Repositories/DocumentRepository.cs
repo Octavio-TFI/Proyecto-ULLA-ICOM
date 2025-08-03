@@ -35,5 +35,13 @@ namespace Infrastructure.Database.Repositories
                 .Distinct()
                 .ToListAsync();
         }
+
+        public Task<string> GetTextoAsync(Guid guid)
+        {
+            return _context.Documents
+                .Where(d => d.Id == guid)
+                .Select(d => d.Texto)
+                .FirstAsync();
+        }
     }
 }

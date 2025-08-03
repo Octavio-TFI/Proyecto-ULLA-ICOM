@@ -9,6 +9,7 @@ using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.Google;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.VisualBasic;
 using OpenAI.Assistants;
 using System;
 using System.Collections.Generic;
@@ -28,13 +29,13 @@ namespace Infrastructure.LLM
 
         readonly IChatHistoryAdapter _chatHistoryFactory = chatHistoryFactory;
 
-        public Task<AgentResult> GenerarRespuestaAsync(
+        public async Task<AgentResult> GenerarRespuestaAsync(
             List<Mensaje> mensajes,
             Dictionary<string, object?>? arguments = null)
         {
-            var chatHistory = _chatHistoryFactory.Adapt(mensajes);
+            var chatHistory = await _chatHistoryFactory.AdaptAsync(mensajes);
 
-            return GenerarRespuestaAsync(chatHistory, arguments);
+            return await GenerarRespuestaAsync(chatHistory, arguments);
         }
 
         public Task<AgentResult> GenerarRespuestaAsync(
@@ -69,11 +70,12 @@ namespace Infrastructure.LLM
             };
         }
 
-        public async Task<ToolResult> LlamarHerramientaAsync(
+        public async Task<MensajeHerramienta> LlamarHerramientaAsync(
             MensajeLlamadaHerramienta llamadaHerramienta)
         {
             var kernelArguments = new KernelArguments(
-                llamadaHerramienta.Argumentos?.ToDictionary() ?? []);
+                llamadaHerramienta.Argumentos?.ToDictionary() ?? [])
+            { { "llamada", llamadaHerramienta } };
 
             var result = await ChatCompletionAgent.Kernel
                 .InvokeAsync(
@@ -81,9 +83,9 @@ namespace Infrastructure.LLM
                     llamadaHerramienta.FunctionName,
                     kernelArguments);
 
-            return result.GetValue<ToolResult>() ??
+            return result.GetValue<MensajeHerramienta>() ??
                 throw new Exception(
-                    "No se pudo obtener el resultado de la herramienta");
+                    "No se pudo obtener el mensaje de la herramienta");
         }
     }
 }

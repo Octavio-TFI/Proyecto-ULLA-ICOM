@@ -17,7 +17,7 @@ namespace Domain.Entities.DocumentoAgregado
 
         public required string Texto { get; set; }
 
-        public ICollection<DocumentChunk> Chunks { get; set; } = [];
+        public virtual ICollection<DocumentChunk> Chunks { get; set; } = [];
 
         public override string ToString()
         {

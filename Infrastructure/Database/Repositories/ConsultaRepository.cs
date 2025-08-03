@@ -34,8 +34,16 @@ namespace Infrastructure.Database.Repositories
                         _context.CosineDistance(
                             x.EmbeddingDescripcion,
                             embeddingArray)))
-                .Take(5)
+                .Take(10)
                 .ToListAsync();
+        }
+
+        public Task<string> GetTextoAsync(Guid guid)
+        {
+            return _context.Consultas
+                .Where(c => c.Id == guid)
+                .Select(c => c.ToString())
+                .FirstAsync();
         }
     }
 }

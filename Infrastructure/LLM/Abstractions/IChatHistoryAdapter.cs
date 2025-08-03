@@ -16,6 +16,6 @@ namespace Infrastructure.LLM.Abstractions
         /// </summary>
         /// <param name="mensajes">Lista de mensajes</param>
         /// <returns>ChatHistory con mensajes</returns>
-        ChatHistory Adapt(List<Mensaje> mensajes);
+        Task<ChatHistory> AdaptAsync(List<Mensaje> mensajes);
     }
 }

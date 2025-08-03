@@ -11,11 +11,6 @@ namespace Domain.ValueObjects
     public record ToolResult
     {
         /// <summary>
-        /// Texto resultado de la herramienta
-        /// </summary>
-        public required string Texto { get; init; }
-
-        /// <summary>
         /// Datos sobre la ejecucion de la herramienta
         /// </summary>
         public required ReadOnlyDictionary<string, object> Datos { get; init; }
