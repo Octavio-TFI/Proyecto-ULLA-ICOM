@@ -25,8 +25,8 @@ namespace System.Tests
             var config = new ConfigurationBuilder().AddInMemoryCollection(
                 new Dictionary<string, string?>
                 {
-                { "Testing", "true" },
                 { "LLMLocal:URL", $"http://localhost:{localLLMPort}" },
+                { "LLMGoogle:URL", $"http://localhost:{localLLMPort}" },
                 { "ConnectionStrings:Default", _connectionString },
                 { "Clients:Test:URL", $"http://localhost:{testClientPort}" }
                 })

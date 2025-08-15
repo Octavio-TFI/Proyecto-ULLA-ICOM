@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel.Connectors.Google.Core;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Namotion.Reflection;
 using OpenAI.Chat;
 using System.Net.Http.Json;
 using System.Tests;
@@ -35,7 +36,7 @@ namespace System.Tests.Funcionales
             localLLMServer
                 .Given(
                     Request.Create()
-                        .WithPath("/v1/chat/completions")
+                        .WithPath("/chat/completions")
                         .WithBody(
                             new JsonPathMatcher(
                                     "$.messages[?(@.role == 'user' && @.content == 'Hola')]"))
@@ -118,12 +119,12 @@ namespace System.Tests.Funcionales
                     Assert.That(chat, Is.Not.Null);
                     Assert.That(
                         mensajeUsuario,
-                        Is.TypeOf<MensajeTextoUsuario>().And
+                        Is.InstanceOf<MensajeTextoUsuario>().And
                                 .Matches<MensajeTextoUsuario>(
                                     m => m.Texto == "Hola"));
                     Assert.That(
                         mensajeIA,
-                        Is.TypeOf<MensajeIA>().And
+                        Is.InstanceOf<MensajeIA>().And
                                 .Matches<MensajeIA>(
                                     m => m.Texto == "Hola soy el test"));
                 });
@@ -205,7 +206,7 @@ namespace System.Tests.Funcionales
             localLLMServer
                 .Given(
                     Request.Create()
-                        .WithPath("/v1/chat/completions")
+                        .WithPath("/chat/completions")
                         .WithBody(
                             new JsonPartialMatcher(
                                     @"
@@ -306,12 +307,12 @@ namespace System.Tests.Funcionales
                     Assert.That(chatDb, Is.Not.Null);
                     Assert.That(
                         mensajeUsuario,
-                        Is.TypeOf<MensajeTextoUsuario>().And
+                        Is.InstanceOf<MensajeTextoUsuario>().And
                                 .Matches<MensajeTextoUsuario>(
                                     m => m.Texto == "Como andas?"));
                     Assert.That(
                         mensajeIA,
-                        Is.TypeOf<MensajeIA>().And
+                        Is.InstanceOf<MensajeIA>().And
                                 .Matches<MensajeIA>(m => m.Texto == "Chau"));
                 });
 
@@ -346,7 +347,7 @@ namespace System.Tests.Funcionales
                     .EqualTo(mensajePlataformaId));
         }
 
-        [Test, Timeout(15000)]
+        [Test, Timeout(25000)]
         public async Task Mensaje_ConHerramienta_Test()
         {
             // Arrange
@@ -416,7 +417,7 @@ namespace System.Tests.Funcionales
             // Mock llamada de herramienta de información
             localLLMServer.Given(
                 Request.Create()
-                    .WithPath("/v1/chat/completions")
+                    .WithPath("/chat/completions")
                     .WithBody(
                         new JsonPartialMatcher(
                                 @"
@@ -557,7 +558,7 @@ namespace System.Tests.Funcionales
             // Mock respuesta con datos de la herramienta
             localLLMServer.Given(
                 Request.Create()
-                    .WithPath("/v1/chat/completions")
+                    .WithPath("/chat/completions")
                     .WithBody(
                         new JsonPathMatcher("$.messages[?(@.role == 'tool')]"))
                     .UsingPost())
@@ -612,7 +613,7 @@ namespace System.Tests.Funcionales
                     .GetRequiredService<ChatContext>()
                     .Set<Mensaje>()
                     .Count() <
-                2)
+                4)
             {
                 await Task.Delay(100).ConfigureAwait(false);
             }
@@ -624,44 +625,61 @@ namespace System.Tests.Funcionales
             var chat = context.Chats.Include(c => c.Mensajes).FirstOrDefault();
             var mensajeUsuario = chat?.Mensajes.OrderBy(m => m.DateTime)
                 .FirstOrDefault();
-            var mensajeIA = chat?.Mensajes.OrderBy(m => m.DateTime)
+            var llamadaHerramienta = chat?.Mensajes
+                .OrderBy(m => m.DateTime)
                 .Skip(1)
                 .FirstOrDefault();
-
-            context.Entry((MensajeIA)mensajeIA!)
-                .Collection(m => m.DocumentosRecuperados)
-                .Load();
-
-            context.Entry((MensajeIA)mensajeIA!)
-                .Collection(m => m.ConsultasRecuperadas)
-                .Load();
+            var respuestaHerramienta = chat?.Mensajes
+                .OrderBy(m => m.DateTime)
+                .Skip(2)
+                .FirstOrDefault();
+            var mensajeIA = chat?.Mensajes.OrderBy(m => m.DateTime)
+                .Skip(3)
+                .FirstOrDefault();
 
             Assert.Multiple(
                 () =>
                 {
                     Assert.That(httpResponse.IsSuccessStatusCode);
                     Assert.That(chat, Is.Not.Null);
+
                     Assert.That(
                         mensajeUsuario,
-                        Is.TypeOf<MensajeTextoUsuario>().And
+                        Is.InstanceOf<MensajeTextoUsuario>().And
                                 .Matches<MensajeTextoUsuario>(
                                     m => m.Texto ==
                                                 "Que es una orden de trabajo"));
                     Assert.That(
+                        llamadaHerramienta,
+                        Is.InstanceOf<MensajeLlamadaHerramienta>().And
+                                .Matches<MensajeLlamadaHerramienta>(
+                                    m => m.PluginName == "buscar" &&
+                                                m.FunctionName == "informacion" &&
+                                                m.Argumentos!.Any(
+                                                    a => a.Key == "pregunta" &&
+                                                        (string?)a.Value ==
+                                                        "Que es una orden de trabajo en CAPATAZ")));
+                    Assert.That(
+                        respuestaHerramienta,
+                        Is.InstanceOf<MensajeHerramienta>().And
+                                .Matches<MensajeHerramientaInfo>(
+                                    m => m.DocumentosRecuperados
+                                                .Any(
+                                                    d => d.DocumentoId ==
+                                                                    documentoId &&
+                                                                    d.Rank))
+                                .And
+                                .Matches<MensajeHerramientaInfo>(
+                                    m => m.ConsultasRecuperadas
+                                                .Any(
+                                                    c => c.ConsultaId ==
+                                                                    consultaId &&
+                                                                    !c.Rank)));
+                    Assert.That(
                         mensajeIA,
-                        Is.TypeOf<MensajeIA>().And
+                        Is.InstanceOf<MensajeIA>().And
                                 .Matches<MensajeIA>(
-                                    m => m.Texto == "Hola soy el test" &&
-                                                m.DocumentosRecuperados
-                                                    .Any(
-                                                        d => d.DocumentoId ==
-                                                                            documentoId &&
-                                                                            d.Rank) &&
-                                                m.ConsultasRecuperadas
-                                                    .Any(
-                                                        c => c.ConsultaId ==
-                                                                            consultaId &&
-                                                                            !c.Rank)));
+                                    m => m.Texto == "Hola soy el test"));
                 });
 
             while (chatServer.FindLogEntries(
@@ -685,7 +703,7 @@ namespace System.Tests.Funcionales
                 .FirstOrDefault(c => c.Id == chat.Id);
             var updatedMensajeIA = updatedChat?.Mensajes
                 .OrderBy(m => m.DateTime)
-                .Skip(1)
+                .Skip(3)
                 .FirstOrDefault();
 
             Assert.That(

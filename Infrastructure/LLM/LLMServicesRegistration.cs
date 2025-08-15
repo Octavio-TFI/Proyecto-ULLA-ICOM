@@ -76,68 +76,30 @@ namespace Infrastructure.LLM
                 {
                     var config = services.GetRequiredService<IConfiguration>();
 
-                    bool testing = config.GetValue<bool>("Testing");
-
                     var kernelBuilder = Kernel.CreateBuilder();
 
-                    if (testing)
-                    {
-                        string url = config.GetValue<string>("LLMLocal:URL") ??
-                            throw new Exception(
-                                "Se debe configurar URL del LLM Local en LLMLocal:URL");
+                    string url = config.GetValue<string>("LLMGoogle:URL") ??
+                        throw new Exception(
+                                "Se debe configurar URL del LLM de Google en LLMGoogle:URL");
 
-                        var openAiClient = new OpenAIClient(
-                            new ApiKeyCredential("lm-studio"),
-                            new OpenAIClientOptions
-                            {
-                                Endpoint = new Uri($"{url}/v1")
-                            });
-
-                        string model = config.GetValue<string>("LLMLocal:Model") ??
-                            throw new Exception(
-                                "Se debe configurar el modelo del LLM Local en LLMLocal:Model");
-
-                        kernelBuilder.AddOpenAIChatCompletion(
-                            model,
-                            openAiClient);
-
-                        kernelBuilder.Services
-                            .AddSingleton<IExecutionSettingsFactory, OpenAiExecutionSettingsFactory>(
-                                )
-                            .AddSingleton<IToolCallExtractor, GeminiToolCallExtractor>(
-                                );
-                    }
-                    else
-                    {
-                        string apiKey = config.GetValue<string>(
-                                "LLMGoogle:ApiKey") ??
-                            throw new Exception(
+                    string apiKey = config.GetValue<string>("LLMGoogle:ApiKey") ??
+                        throw new Exception(
                                 "Se debe configurar GeminiApiKey en LLMGoogle:ApiKey");
 
-                        string model = config.GetValue<string>(
-                                "LLMGoogle:Model") ??
-                            throw new Exception(
+                    string model = config.GetValue<string>("LLMGoogle:Model") ??
+                        throw new Exception(
                                 "Se debe configurar GeminiModel en LLMGoogle:Model");
 
-                        var openAiClient = new OpenAIClient(
-                            new ApiKeyCredential(apiKey),
-                            new OpenAIClientOptions
-                            {
-                                Endpoint =
-                                    new Uri(
-                                            "https://generativelanguage.googleapis.com/v1beta/openai/")
-                            });
+                    var openAiClient = new OpenAIClient(
+                        new ApiKeyCredential(apiKey),
+                        new OpenAIClientOptions { Endpoint = new Uri(url) });
 
-                        kernelBuilder.AddOpenAIChatCompletion(
-                            model,
-                            openAiClient);
+                    kernelBuilder.AddOpenAIChatCompletion(model, openAiClient);
 
-                        kernelBuilder.Services
-                            .AddSingleton<IExecutionSettingsFactory, OpenAiExecutionSettingsFactory>(
-                                )
-                            .AddSingleton<IToolCallExtractor, OpenAiToolExtractor>(
-                                );
-                    }
+                    kernelBuilder.Services
+                        .AddSingleton<IExecutionSettingsFactory, OpenAiExecutionSettingsFactory>(
+                            )
+                        .AddSingleton<IToolCallExtractor, OpenAiToolExtractor>();
 
                     return kernelBuilder.Build();
                 });
