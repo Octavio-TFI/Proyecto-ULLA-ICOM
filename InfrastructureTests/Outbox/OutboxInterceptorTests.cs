@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
+using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -24,18 +25,19 @@ namespace Infrastructure.Outbox.Tests
             )
         {
             // Arrange
-            List<INotification> domainEvents1 = [new MensajeRecibidoEvent
+            List<EntityEvent> domainEvents1 = [new MensajeRecibidoEvent
             {
                 EntityId = Guid.NewGuid()
             }];
-            List<INotification> domainEvents2 = [new MensajeRecibidoEvent
+            List<EntityEvent> domainEvents2 = [new MensajeRecibidoEvent
             {
                 EntityId = Guid.NewGuid()
             }];
 
             var jsonSettings = new JsonSerializerSettings
             {
-                TypeNameHandling = TypeNameHandling.All
+                TypeNameHandling = TypeNameHandling.All,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             };
 
             var event1Json = JsonConvert.SerializeObject(
@@ -71,7 +73,8 @@ namespace Infrastructure.Outbox.Tests
                 "1",
                 (_) => (_, e) => e?.ToString());
 
-            static string messageGenerator(EventDefinitionBase _, EventData __) => string.Empty;
+            static string messageGenerator(EventDefinitionBase _, EventData __)
+                => string.Empty;
 
             var context = DatabaseTestsHelper.CreateInMemoryChatContext();
             await context.AddRangeAsync(entities);
@@ -118,6 +121,9 @@ namespace Infrastructure.Outbox.Tests
                                 .Property(nameof(OutboxEvent.ProcessedOn))
                                 .EqualTo(null)
                                 .With
+                                .Property(nameof(OutboxEvent.MaxRetries))
+                                .EqualTo(5)
+                                .With
                                 .Property(nameof(OutboxEvent.OccurredOn))
                                 .LessThanOrEqualTo(datetimeNow));
                     Assert.That(
@@ -134,6 +140,9 @@ namespace Infrastructure.Outbox.Tests
                                 .With
                                 .Property(nameof(OutboxEvent.ProcessedOn))
                                 .EqualTo(null)
+                                .With
+                                .Property(nameof(OutboxEvent.MaxRetries))
+                                .EqualTo(5)
                                 .With
                                 .Property(nameof(OutboxEvent.OccurredOn))
                                 .LessThanOrEqualTo(datetimeNow));

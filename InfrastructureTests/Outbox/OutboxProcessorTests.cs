@@ -36,20 +36,23 @@ namespace Infrastructure.Outbox.Tests
                 {
                     EventType = "a",
                     EventData = "data1",
-                    OccurredOn = DateTime.Now
+                    OccurredOn = DateTime.Now,
+                    MaxRetries = 3
                 },
                 new()
                 {
                     EventType = "b",
                     EventData = "data2",
-                    OccurredOn = DateTime.Now
+                    OccurredOn = DateTime.Now,
+                    MaxRetries = 3
                 },
                 new()
                 {
                     EventType = "c",
                     EventData = "data3",
                     OccurredOn = DateTime.Now,
-                    IsProcessed = true
+                    IsProcessed = true,
+                    MaxRetries = 3
                 },
             };
 

@@ -16,5 +16,7 @@ namespace Domain.Events
         /// Id del mensaje generado.
         /// </summary>
         public required Guid MensajeId { get; init; }
+
+        public override int MaxRetries => 5;
     }
 }

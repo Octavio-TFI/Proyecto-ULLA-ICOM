@@ -13,5 +13,7 @@ namespace Domain.Events
         /// Id del mensaje generado por la herramienta
         /// </summary>
         public required Guid MensajeHerramientaId { get; init; }
+
+        public override int MaxRetries => 5;
     }
 }

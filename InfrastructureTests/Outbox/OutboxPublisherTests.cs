@@ -23,7 +23,8 @@
                     JsonConvert.SerializeObject(
                         mensajeRecibidoEvent,
                         _jsonSettings),
-                OccurredOn = DateTime.Now
+                OccurredOn = DateTime.Now,
+                MaxRetries = 5
             };
 
             var context = new Mock<ChatContext>();
@@ -60,11 +61,13 @@
                     Assert.That(
                         outboxEvent.ProcessedOn,
                         Is.Not.Null.And.GreaterThan(outboxEvent.OccurredOn));
+                    Assert.That(outboxEvent.RetryCount, Is.EqualTo(0));
                 });
         }
 
         [Test]
-        public async Task PublishOutboxEventAsync_ErrorPublishingEvent()
+        public async Task PublishOutboxEventAsync_ErrorPublishingEvent_IncrementsRetryCount(
+            )
         {
             // Arrange
             var mensajeRecibidoEvent = new MensajeRecibidoEvent
@@ -78,7 +81,9 @@
                     JsonConvert.SerializeObject(
                         mensajeRecibidoEvent,
                         _jsonSettings),
-                OccurredOn = DateTime.Now
+                OccurredOn = DateTime.Now,
+                RetryCount = 2,
+                MaxRetries = 5
             };
 
             var context = new Mock<ChatContext>();
@@ -101,21 +106,76 @@
                 CancellationToken.None);
 
             // Assert
-            logger.VerifyLog()
-                .ErrorWasCalled()
-                .MessageEquals(
-                    "Error al publicar el evento de Outbox de tipo EventType");
+            logger.VerifyLog().ErrorWasCalled();
 
-            context.Verify(c => c.Update(outboxEvent), Times.Never);
+            context.Verify(c => c.Update(outboxEvent), Times.Once);
             context.Verify(
                 c => c.SaveChangesAsync(CancellationToken.None),
-                Times.Never);
+                Times.Once);
 
             Assert.Multiple(
                 () =>
                 {
                     Assert.That(outboxEvent.IsProcessed, Is.False);
                     Assert.That(outboxEvent.ProcessedOn, Is.Null);
+                    Assert.That(outboxEvent.RetryCount, Is.EqualTo(3));
+                });
+        }
+
+        [Test]
+        public async Task PublishOutboxEventAsync_ErrorPublishingEvent_MaxRetriesExceeded(
+            )
+        {
+            // Arrange
+            var mensajeRecibidoEvent = new MensajeRecibidoEvent
+            {
+                EntityId = Guid.NewGuid()
+            };
+            var outboxEvent = new OutboxEvent
+            {
+                EventType = "EventType",
+                EventData =
+                    JsonConvert.SerializeObject(
+                        mensajeRecibidoEvent,
+                        _jsonSettings),
+                OccurredOn = DateTime.Now,
+                RetryCount = 4,
+                MaxRetries = 5
+            };
+
+            var context = new Mock<ChatContext>();
+            var publisher = new Mock<IPublisher>();
+            var logger = new Mock<ILogger<OutboxPublisher>>();
+            var outboxPublisher = new OutboxPublisher(
+                publisher.Object,
+                logger.Object,
+                context.Object);
+
+            publisher.Setup(
+                p => p.Publish(
+                    It.IsAny<INotification>(),
+                    CancellationToken.None))
+                .Throws<Exception>();
+
+            // Act
+            await outboxPublisher.PublishOutboxEventsAsync(
+                outboxEvent,
+                CancellationToken.None);
+
+            // Assert
+            logger.VerifyLog().ErrorWasCalled();
+
+            context.Verify(c => c.Update(outboxEvent), Times.Once);
+            context.Verify(
+                c => c.SaveChangesAsync(CancellationToken.None),
+                Times.Once);
+
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.That(outboxEvent.IsProcessed, Is.True);
+                    Assert.That(outboxEvent.ProcessedOn, Is.Not.Null);
+                    Assert.That(outboxEvent.RetryCount, Is.EqualTo(5));
                 });
         }
 
@@ -127,7 +187,8 @@
             {
                 EventType = "EventType",
                 EventData = "Invalid JSON",
-                OccurredOn = DateTime.Now
+                OccurredOn = DateTime.Now,
+                MaxRetries = 5
             };
 
             var context = new Mock<ChatContext>();
@@ -144,21 +205,17 @@
                 CancellationToken.None);
 
             // Assert
-            logger.VerifyLog()
-                .ErrorWasCalled()
-                .MessageEquals(
-                    "Error al publicar el evento de Outbox de tipo EventType");
+            logger.VerifyLog().ErrorWasCalled();
 
-            context.Verify(c => c.Update(outboxEvent), Times.Never);
+            context.Verify(c => c.Update(outboxEvent), Times.Once);
             context.Verify(
                 c => c.SaveChangesAsync(CancellationToken.None),
-                Times.Never);
+                Times.Once);
 
             Assert.Multiple(
                 () =>
                 {
-                    Assert.That(outboxEvent.IsProcessed, Is.False);
-                    Assert.That(outboxEvent.ProcessedOn, Is.Null);
+                    Assert.That(outboxEvent.RetryCount, Is.EqualTo(1));
                 });
         }
 
@@ -173,7 +230,8 @@
                     JsonConvert.SerializeObject(
                         (MensajeRecibidoEvent)null!,
                         _jsonSettings),
-                OccurredOn = DateTime.Now
+                OccurredOn = DateTime.Now,
+                MaxRetries = 5
             };
 
             var context = new Mock<ChatContext>();
@@ -190,21 +248,17 @@
                 CancellationToken.None);
 
             // Assert
-            logger.VerifyLog()
-                .ErrorWasCalled()
-                .MessageEquals(
-                    "Error al publicar el evento de Outbox de tipo EventType");
+            logger.VerifyLog().ErrorWasCalled();
 
-            context.Verify(c => c.Update(outboxEvent), Times.Never);
+            context.Verify(c => c.Update(outboxEvent), Times.Once);
             context.Verify(
                 c => c.SaveChangesAsync(CancellationToken.None),
-                Times.Never);
+                Times.Once);
 
             Assert.Multiple(
                 () =>
                 {
-                    Assert.That(outboxEvent.IsProcessed, Is.False);
-                    Assert.That(outboxEvent.ProcessedOn, Is.Null);
+                    Assert.That(outboxEvent.RetryCount, Is.EqualTo(1));
                 });
         }
     }

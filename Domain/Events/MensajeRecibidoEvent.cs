@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Events
 {
-    public record MensajeRecibidoEvent : EntityEvent
+    public record MensajeRecibidoEvent
+        : EntityEvent
     {
+        public override int MaxRetries => 5;
     }
 }

@@ -36,5 +36,15 @@ namespace Infrastructure.Outbox
         /// Indica si el evento ya fue procesado
         /// </summary>
         public bool IsProcessed { get; set; }
+
+        /// <summary>
+        /// Número de reintentos realizados
+        /// </summary>
+        public int RetryCount { get; set; } = 0;
+
+        /// <summary>
+        /// Número máximo de reintentos permitidos
+        /// </summary>
+        public required int MaxRetries { get; set; }
     }
 }
