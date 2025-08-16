@@ -2,6 +2,7 @@
 using Domain.Abstractions;
 using Domain.Abstractions.Factories;
 using Domain.Entities;
+using Domain.Entities.ChatAgregado;
 using Domain.Factories;
 using Domain.Repositories;
 using Domain.Services;
@@ -22,6 +23,22 @@ namespace Domain
             services.AddSingleton<IConsultaFactory, ConsultaFactory>();
             services.AddSingleton<IDocumentFactory, DocumentFactory>();
             services.AddSingleton<IRanker, Ranker>();
+
+            services.AddScoped<MensajeHerramientaInfoTextoBuilder>();
+
+            services.AddSingleton<Func<MensajeHerramienta, IMensajeHerramientaTextoBuilder>>(
+                (services) => mensajeHerramienta =>
+                {
+                    return mensajeHerramienta switch
+                    {
+                        MensajeHerramientaInfo info => services.CreateScope()
+                            .ServiceProvider
+                            .GetRequiredService<MensajeHerramientaInfoTextoBuilder>(
+                                ),
+                        _ => throw new NotSupportedException(
+                            $"Tipo de mensaje {mensajeHerramienta.GetType().Name} no soportado.")
+                    };
+                });
 
             services.AddKeyedTransient(
                 TipoAgent.Ranker,

@@ -41,7 +41,7 @@ namespace Domain.Factories.Tests
                                 Descripcion = "Processed Description",
                                 Solucion = "Processed Solution"
                             }),
-                        AgentData = new()
+                        FunctionCalls = []
                     });
 
             embeddingServiceMock.Setup(
@@ -49,8 +49,7 @@ namespace Domain.Factories.Tests
                     It.Is<IList<string>>(
                         x => x.First() == consultaData.Titulo &&
                             x.Last() == "Processed Description")))
-                .ReturnsAsync(
-                    [[0.1f, 0.2f],[0.3f, 0.4f]]);
+                .ReturnsAsync([[0.1f, 0.2f],[0.3f, 0.4f]]);
 
             var consultaFactory = new ConsultaFactory(
                 agentMock.Object,
@@ -93,11 +92,7 @@ namespace Domain.Factories.Tests
             agentMock.Setup(
                 x => x.GenerarRespuestaAsync(consultaData.ToString(), null))
                 .ReturnsAsync(
-                    new AgentResult
-                    {
-                        Texto = string.Empty,
-                        AgentData = new()
-                    });
+                    new AgentResult { Texto = string.Empty, FunctionCalls = [] });
 
             var consultaFactory = new ConsultaFactory(
                 agentMock.Object,

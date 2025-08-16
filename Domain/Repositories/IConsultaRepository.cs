@@ -29,5 +29,12 @@ namespace Domain.Repositories
         /// </summary>
         /// <returns>Ids de todas las consultas</returns>
         Task<int[]> GetAllIdsAsync();
+
+        /// <summary>
+        /// Obtiene el texto que representa una consulta por su GUID
+        /// </summary>
+        /// <param name="guid">GUID de la consulta</param>
+        /// <returns>Texto que representa la consulta</returns>
+        Task<string> GetTextoAsync(Guid guid);
     }
 }

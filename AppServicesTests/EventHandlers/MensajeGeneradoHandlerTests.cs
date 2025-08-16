@@ -28,7 +28,7 @@ namespace AppServices.EventHandlers.Tests
                 DateTime = DateTime.Now,
             };
 
-            var msjGeneradoEvent = new MensajeGeneradoEvent
+            var msjGeneradoEvent = new MensajeIAGeneradoEvent
             {
                 EntityId = chat.Id,
                 MensajeId = mensaje.Id,
@@ -36,7 +36,7 @@ namespace AppServices.EventHandlers.Tests
 
             var chatRepositoryMock = new Mock<IChatRepository>();
             var mensajeIARepositoryMock = new Mock<IMensajeIARepository>();
-            var loggerMock = new Mock<ILogger<MensajeGeneradoHandler>>();
+            var loggerMock = new Mock<ILogger<MensajeIAGeneradoHandler>>();
             var clientFactoryMock = new Mock<Func<string, IClient>>();
             var clientMock = new Mock<IClient>();
 
@@ -58,7 +58,7 @@ namespace AppServices.EventHandlers.Tests
             clientFactoryMock.Setup(x => x.Invoke("Test"))
                 .Returns(clientMock.Object);
 
-            var handler = new MensajeGeneradoHandler(
+            var handler = new MensajeIAGeneradoHandler(
                 chatRepositoryMock.Object,
                 mensajeIARepositoryMock.Object,
                 clientFactoryMock.Object,

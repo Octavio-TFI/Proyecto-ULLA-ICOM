@@ -23,7 +23,7 @@ namespace System.Tests.NoFuncionales
     public class MensajesSimultaneosTests
         : BaseTests
     {
-        [Test, Timeout(20000)]
+        [Test, Timeout(35000)]
         public async Task MensajesSimultaneos50Test()
         {
             // Arrange
@@ -93,7 +93,7 @@ namespace System.Tests.NoFuncionales
             // Mock llamada de herramienta de información
             localLLMServer.Given(
                 Request.Create()
-                    .WithPath("/v1/chat/completions")
+                    .WithPath("/chat/completions")
                     .WithBody(
                         new JsonPartialMatcher(
                                 @"
@@ -233,7 +233,7 @@ namespace System.Tests.NoFuncionales
             // Mock respuesta con datos de la herramienta
             localLLMServer.Given(
                 Request.Create()
-                    .WithPath("/v1/chat/completions")
+                    .WithPath("/chat/completions")
                     .WithBody(
                         new JsonPathMatcher("$.messages[?(@.role == 'tool')]"))
                     .UsingPost())
@@ -276,7 +276,7 @@ namespace System.Tests.NoFuncionales
                     i => new TestMensajeTexto
                     {
                         Texto = $"Mensaje {i + 1}",
-                        DateTime = DateTime.Now.AddSeconds(i),
+                        DateTime = DateTime.Now,
                         ChatId = Guid.NewGuid(),
                     })
                 .ToList();

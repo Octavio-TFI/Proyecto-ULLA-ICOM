@@ -1,5 +1,6 @@
 ﻿using AppServices.Abstractions;
 using Domain.Abstractions;
+using Domain.Abstractions.Entities;
 using Domain.Entities;
 using Domain.Entities.ChatAgregado;
 using Domain.Repositories;
@@ -20,14 +21,14 @@ namespace Domain.Services
         IEmbeddingService _embeddingService,
         IConsultaRepository _consultaRepository,
         IDocumentRepository _documentRepository,
-        IRanker _ranker,
-        AgentData _agentData)
+        IRanker _ranker)
     {
         [DisplayName("informacion")]
         [Description(
             "Busca documentación relacionada a la pregunta del usuario y soluciones a preguntas similares")]
-        public async Task<string> BuscarInformacionAsync(
-            [Description("Pregunta o problema que tiene el usuario")] string pregunta)
+        public async Task<MensajeHerramientaInfo> BuscarInformacionAsync(
+            [Description("Pregunta o problema que tiene el usuario")] string pregunta,
+            MensajeLlamadaHerramienta llamada)
         {
             _logger.LogInformation(
                 @"
@@ -70,71 +71,29 @@ SE ENCONTRARON {rankedDocuments} DOCUMENTOS PARA QUERY:
                 rankedDocuments.Count,
                 pregunta);
 
-            var stringBuilder = new StringBuilder();
+            var documentosRecuperadoss = documents.Select(
+                d => new DocumentoRecuperado
+                {
+                    DocumentoId = d.Id,
+                    Rank = rankedDocuments.Contains(d)
+                })
+                .ToList();
 
-            stringBuilder.Append("[Documentación]").AppendLine();
+            var consultasRecuperadas = consultas.Select(
+                c => new ConsultaRecuperada
+                {
+                    ConsultaId = c.Id,
+                    Rank = rankedConsultas.Contains(c)
+                })
+                .ToList();
 
-            if (rankedDocuments.Count > 0)
+            return new MensajeHerramientaInfo(
+                documentosRecuperadoss,
+                consultasRecuperadas)
             {
-                stringBuilder
-                    .AppendJoin(
-                        "\r\n",
-                        rankedDocuments.Select(d => d.ToString()));
-            }
-            else
-            {
-                stringBuilder.AppendLine(
-                    "No se encontro documentación relacionada");
-            }
-
-            stringBuilder.AppendLine();
-            stringBuilder.Append("[Consultas Históricas]").AppendLine();
-
-            if (rankedConsultas.Count > 0)
-            {
-                stringBuilder
-                    .AppendJoin(
-                        "\r\n",
-                        rankedConsultas.Select(c => c.ToString()));
-            }
-            else
-            {
-                stringBuilder.AppendLine(
-                    "No se encontraron consultas históricas similares");
-            }
-
-            string info = stringBuilder.ToString();
-
-            _logger.LogInformation(
-                @"
-INFORMACION PARA QUERY: {query}
-
-{info}
-",
-                pregunta,
-                info);
-
-            // Guardar metadata de los datos recuperados
-            _agentData.InformacionRecuperada
-                .AddRange(
-                    consultas.Select(
-                        c => new ConsultaRecuperada
-                        {
-                            ConsultaId = c.Id,
-                            Rank = rankedConsultas.Contains(c)
-                        }));
-
-            _agentData.InformacionRecuperada
-                .AddRange(
-                    documents.Select(
-                        d => new DocumentoRecuperado
-                        {
-                            DocumentoId = d.Id,
-                            Rank = rankedDocuments.Contains(d)
-                        }));
-
-
-            return info;
+                DateTime = DateTime.Now,
+                Llamada = llamada
+            };
         }
     }
 }

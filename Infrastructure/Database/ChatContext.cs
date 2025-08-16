@@ -6,6 +6,7 @@ using Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,12 @@ namespace Infrastructure.Database
         public DbSet<Chat> Chats { get; set; }
 
         public DbSet<MensajeIA> MensajesIA { get; set; }
+
+        public DbSet<MensajeTextoUsuario> MensajesTextoUsuario { get; set; }
+
+        public DbSet<MensajeLlamadaHerramienta> MensajesLlamadaHerramienta { get; set; }
+
+        public DbSet<MensajeHerramienta> MensajesHerramienta { get; set; }
 
         public DbSet<Document> Documents { get; set; }
 
@@ -42,6 +49,10 @@ namespace Infrastructure.Database
 
             ConfigureChatModel(modelBuilder.Entity<Chat>());
             ConfigureMensajeModel(modelBuilder.Entity<Mensaje>());
+            ConfigureMensajeLlamadaHerramientaModel(
+                modelBuilder.Entity<MensajeLlamadaHerramienta>());
+            ConfigureMensajeHerramientaInfoModel(
+                modelBuilder.Entity<MensajeHerramientaInfo>());
             ConfigureDocumentoRecuperadoModel(
                 modelBuilder.Entity<DocumentoRecuperado>());
             ConfigureConsultaRecuperadaModel(
@@ -78,14 +89,36 @@ namespace Infrastructure.Database
             mensajeBuilder.UseTpcMappingStrategy();
         }
 
+        static void ConfigureMensajeLlamadaHerramientaModel(
+            EntityTypeBuilder<MensajeLlamadaHerramienta> llamadaHerramientaBuilder)
+        {
+            llamadaHerramientaBuilder
+                .Property(e => e.Argumentos)
+                .HasColumnType("json")
+                .HasConversion(
+                    v => JsonConvert.SerializeObject(v),
+                    v => JsonConvert.DeserializeObject<Dictionary<string, object>>(
+                        v)!)
+                .IsRequired();
+        }
+
+        static void ConfigureMensajeHerramientaInfoModel(
+            EntityTypeBuilder<MensajeHerramientaInfo> mensajeHerramientaBuilder)
+        {
+            mensajeHerramientaBuilder
+                .HasMany(m => m.DocumentosRecuperados)
+                .WithOne()
+                .IsRequired();
+
+            mensajeHerramientaBuilder
+                .HasMany(m => m.ConsultasRecuperadas)
+                .WithOne()
+                .IsRequired();
+        }
+
         static void ConfigureDocumentoRecuperadoModel(
             EntityTypeBuilder<DocumentoRecuperado> documentoRecuperadoBuilder)
         {
-            documentoRecuperadoBuilder
-                .HasOne<MensajeIA>()
-                .WithMany(m => m.DocumentosRecuperados)
-                .IsRequired();
-
             documentoRecuperadoBuilder
                 .HasOne<Document>()
                 .WithMany()
@@ -96,11 +129,6 @@ namespace Infrastructure.Database
         static void ConfigureConsultaRecuperadaModel(
             EntityTypeBuilder<ConsultaRecuperada> consultaRecuperadaBuilder)
         {
-            consultaRecuperadaBuilder
-                .HasOne<MensajeIA>()
-                .WithMany(m => m.ConsultasRecuperadas)
-                .IsRequired();
-
             consultaRecuperadaBuilder
                 .HasOne<Consulta>()
                 .WithMany()

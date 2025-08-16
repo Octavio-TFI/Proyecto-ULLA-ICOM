@@ -26,11 +26,11 @@ namespace Domain.Services
         {
             List<T> datosFiltrados = [];
 
-            foreach (T datosRecuperado in datosRecuperados)
+            foreach (T datoRecuperado in datosRecuperados)
             {
                 var arguments = new Dictionary<string, object?>
                 {
-                    ["document"] = datosRecuperado
+                    ["document"] = datoRecuperado
                 };
 
                 var agentResult = await _rankingAgent
@@ -42,7 +42,7 @@ namespace Domain.Services
 
                 if (result?.Score is true)
                 {
-                    datosFiltrados.Add(datosRecuperado);
+                    datosFiltrados.Add(datoRecuperado);
                 }
             }
 

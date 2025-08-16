@@ -30,7 +30,13 @@ namespace Domain.Entities.ChatAgregado
         /// <summary>
         /// Lista de mensajes
         /// </summary>
-        public List<Mensaje> Mensajes { get; } = [];
+        public virtual List<Mensaje> Mensajes { get; } = [];
+
+        public Mensaje UltimoMensaje
+            => Mensajes.OrderBy(m => m.DateTime).Last();
+
+        public bool UltimoMensajeEsLlamadoHerramienta
+            => UltimoMensaje is MensajeLlamadaHerramienta;
 
         /// <summary>
         /// Añade un mensaje de texto recibido
@@ -60,37 +66,77 @@ namespace Domain.Entities.ChatAgregado
         /// <returns>Mensaje de respuesta generado</returns>
         public virtual async Task<Mensaje> GenerarMensajeAsync(IAgent agente)
         {
+            Mensaje mensaje;
+
             var agentResult = await agente
                 .GenerarRespuestaAsync(Mensajes)
                 .ConfigureAwait(false);
 
-            var respuesta = new MensajeIA()
+            if (agentResult.FunctionCalls.Count != 0)
             {
-                Texto = agentResult.Texto,
-                DateTime = DateTime.Now
-            };
+                // Por el momento solo soporta un llamado a la vez
+                var functionCall = agentResult.FunctionCalls.First();
 
-            respuesta.DocumentosRecuperados
-                .AddRange(
-                    agentResult.AgentData.InformacionRecuperada
-                        .Where(ir => ir is DocumentoRecuperado)
-                        .Cast<DocumentoRecuperado>());
-
-            respuesta.ConsultasRecuperadas
-                .AddRange(
-                    agentResult.AgentData.InformacionRecuperada
-                        .Where(ir => ir is ConsultaRecuperada)
-                        .Cast<ConsultaRecuperada>());
-
-            Mensajes.Add(respuesta);
-            Events.Add(
-                new MensajeGeneradoEvent
+                mensaje = new MensajeLlamadaHerramienta
                 {
-                    EntityId = Id,
-                    MensajeId = respuesta.Id
-                });
+                    DateTime = DateTime.Now,
+                    PluginName = functionCall.PluginName,
+                    FunctionName = functionCall.FunctionName,
+                    Argumentos =
+                        functionCall.Arguments?
+                            .ToDictionary(
+                            x => x.Key,
+                            x => x.Value?.ToString() as object)
+                };
 
-            return respuesta;
+                Events.Add(
+                    new LlamadaHerramientaGeneradaEvent
+                    {
+                        EntityId = Id,
+                        MensajeLlamadaHerramientaGeneradaId = mensaje.Id
+                    });
+            }
+            else
+            {
+                mensaje = new MensajeIA
+                {
+                    DateTime = DateTime.Now,
+                    Texto = agentResult.Texto
+                };
+
+                Events.Add(
+                    new MensajeIAGeneradoEvent
+                    {
+                        EntityId = Id,
+                        MensajeId = mensaje.Id
+                    });
+            }
+
+            Mensajes.Add(mensaje);
+
+            return mensaje;
+        }
+
+        public async Task<MensajeHerramienta> LlamarHerramientaAsync(
+            IAgent agent)
+        {
+            if (!UltimoMensajeEsLlamadoHerramienta)
+            {
+                throw new InvalidOperationException(
+                    "No se puede llamar herramienta porque ultimo mensaje no es una llamda de herramienta");
+            }
+
+            var llamadaHerramienta = UltimoMensaje as MensajeLlamadaHerramienta;
+
+            var mensaje = await agent.LlamarHerramientaAsync(
+                llamadaHerramienta!);
+
+            Mensajes.Add(mensaje);
+            // Que la herramienta se ejecute es como un mensaje recibido para el LLM
+            // Se realiza la misma accion en ambos casos (Generar una respuesta)
+            Events.Add(new MensajeRecibidoEvent { EntityId = Id });
+
+            return mensaje;
         }
     }
 }

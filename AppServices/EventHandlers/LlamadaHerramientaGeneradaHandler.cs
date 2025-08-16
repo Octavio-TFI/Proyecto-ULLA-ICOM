@@ -1,7 +1,5 @@
 ﻿using AppServices.Ports;
-using Domain;
 using Domain.Abstractions;
-using Domain.Entities;
 using Domain.Events;
 using Domain.Repositories;
 using Domain.ValueObjects;
@@ -16,34 +14,38 @@ using System.Threading.Tasks;
 
 namespace AppServices.EventHandlers
 {
-    internal class MensajeRecibidoHandler(
+    internal class LlamadaHerramientaGeneradaHandler(
         IChatRepository chatRepository,
         [FromKeyedServices(TipoAgent.Chat)] IAgent agent,
-        ILogger<MensajeIAGeneradoHandler> logger)
-        : INotificationHandler<MensajeRecibidoEvent>
+        ILogger<LlamadaHerramientaGeneradaHandler> logger)
+        : INotificationHandler<LlamadaHerramientaGeneradaEvent>
     {
         readonly IChatRepository _chatRepository = chatRepository;
         readonly IAgent _agent = agent;
-        readonly ILogger<MensajeIAGeneradoHandler> _logger = logger;
+        readonly ILogger _logger = logger;
 
         public async Task Handle(
-            MensajeRecibidoEvent notification,
+            LlamadaHerramientaGeneradaEvent notification,
             CancellationToken cancellationToken)
         {
             var chat = await _chatRepository
                 .GetWithUltimosMensajesAsync(notification.EntityId)
                 .ConfigureAwait(false);
 
-            var respuesta = await chat
-                .GenerarMensajeAsync(_agent)
+            var llamada = chat.UltimoMensaje;
+
+            var mensajeHerramienta = await chat
+                .LlamarHerramientaAsync(_agent)
                 .ConfigureAwait(false);
 
             _logger.LogInformation(
                 @"
-MENSAJE GENERADO
-Texto: {Texto}
+Herramienta Llamada
+Herramienta: {Herramienta}
+Resultado: {Resultado}
 ChatId: {ChatId}",
-                respuesta.ToString(),
+                llamada.ToString(),
+                mensajeHerramienta.ToString(),
                 notification.EntityId);
         }
     }

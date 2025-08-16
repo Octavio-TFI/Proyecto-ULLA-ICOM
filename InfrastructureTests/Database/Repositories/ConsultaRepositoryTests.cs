@@ -111,6 +111,51 @@ namespace Infrastructure.Database.Repositories.Tests
                     EmbeddingDescripcion = [1, 1, 1],
                     Solucion = "Solucion5"
                 },
+                new()
+                {
+                    RemoteId = 7,
+                    Titulo = "Titulo6",
+                    EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
+                    Descripcion = "Descripcion6",
+                    EmbeddingDescripcion = [1, 1, 1],
+                    Solucion = "Solucion6"
+                },
+                new()
+                {
+                    RemoteId = 8,
+                    Titulo = "Titulo7",
+                    EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
+                    Descripcion = "Descripcion7",
+                    EmbeddingDescripcion = [1, 1, 1],
+                    Solucion = "Solucion7"
+                },
+                new()
+                {
+                    RemoteId = 9,
+                    Titulo = "Titulo8",
+                    EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
+                    Descripcion = "Descripcion8",
+                    EmbeddingDescripcion = [1, 1, 1],
+                    Solucion = "Solucion8"
+                },
+                new()
+                {
+                    RemoteId = 10,
+                    Titulo = "Titulo9",
+                    EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
+                    Descripcion = "Descripcion9",
+                    EmbeddingDescripcion = [1, 1, 1],
+                    Solucion = "Solucion9"
+                },
+                new()
+                {
+                    RemoteId = 11,
+                    Titulo = "Titulo10",
+                    EmbeddingTitulo = [0.7f, 0.8f, 0.9f],
+                    Descripcion = "Descripcion10",
+                    EmbeddingDescripcion = [1, 1, 1],
+                    Solucion = "Solucion10"
+                },
             };
 
             var context = DatabaseTestsHelper.CreateInMemoryChatContext();
@@ -123,7 +168,7 @@ namespace Infrastructure.Database.Repositories.Tests
             var result = await repository.GetConsultasSimilaresAsync(embedding);
 
             // Assert
-            Assert.That(result, Has.Count.EqualTo(5));
+            Assert.That(result, Has.Count.EqualTo(10));
             Assert.That(result, Has.No.Member(consultas[3]));
         }
     }

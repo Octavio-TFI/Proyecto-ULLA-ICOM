@@ -9,7 +9,7 @@ using System.Xml.Schema;
 
 namespace Domain.Events
 {
-    public record MensajeGeneradoEvent
+    public record MensajeIAGeneradoEvent
         : EntityEvent
     {
         /// <summary>

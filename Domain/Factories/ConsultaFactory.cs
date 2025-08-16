@@ -42,8 +42,8 @@ namespace Domain.Factories
                 Titulo = consultaData.Titulo,
                 Descripcion = consultaResumen.Descripcion,
                 Solucion = consultaResumen.Solucion,
-                EmbeddingTitulo = embeddings[0].ToArray(),
-                EmbeddingDescripcion = embeddings[1].ToArray()
+                EmbeddingTitulo = [.. embeddings[0]],
+                EmbeddingDescripcion = [.. embeddings[1]]
             };
         }
     }

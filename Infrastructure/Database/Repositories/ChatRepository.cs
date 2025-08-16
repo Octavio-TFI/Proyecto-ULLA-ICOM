@@ -32,7 +32,9 @@ namespace Infrastructure.Database.Repositories
         {
             return await _context.Chats
                     .Include(
-                        c => c.Mensajes.OrderByDescending(m => m.DateTime).Take(10))
+                        c => c.Mensajes
+                                .OrderByDescending(m => m.DateTime)
+                                .Take(10))
                     .Where(c => c.Id == id)
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false) ??

@@ -21,8 +21,8 @@ namespace System.Tests.NoFuncionales
     public class TiempoGeneracionTests
         : BaseTests
     {
-        [Test, Timeout(3 * 60 * 1000)]
-        public async Task GeneracionRespuestaMenos3MinutosTest()
+        [Test, Timeout(2 * 60 * 1000)]
+        public async Task GeneracionRespuestaMenos2MinutosTest()
         {
             // Arrange
             using var localLLMServer = WireMockServer.Start();
@@ -92,7 +92,7 @@ namespace System.Tests.NoFuncionales
             // Mock llamada de herramienta de información
             localLLMServer.Given(
                 Request.Create()
-                    .WithPath("/v1/chat/completions")
+                    .WithPath("/chat/completions")
                     .WithBody(
                         new JsonPartialMatcher(
                                 @"
@@ -239,7 +239,7 @@ namespace System.Tests.NoFuncionales
 
             localLLMServer.Given(
                 Request.Create()
-                    .WithPath("/v1/chat/completions")
+                    .WithPath("/chat/completions")
                     .WithBody(
                         new JsonPathMatcher("$.messages[?(@.role == 'tool')]"))
                     .UsingPost())
@@ -295,7 +295,7 @@ namespace System.Tests.NoFuncionales
                     .GetRequiredService<ChatContext>()
                     .Set<Mensaje>()
                     .Count() <
-                2)
+                4)
             {
                 await Task.Delay(100).ConfigureAwait(false);
             }

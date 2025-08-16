@@ -17,11 +17,12 @@ namespace Domain.Entities.DocumentoAgregado
 
         public required string Texto { get; set; }
 
-        public ICollection<DocumentChunk> Chunks { get; set; } = [];
+        public virtual ICollection<DocumentChunk> Chunks { get; set; } = [];
 
         public override string ToString()
         {
-            return Texto;
+            // Para no hacer context overflow
+            return Texto[..int.Min(20000, Texto.Length)];
         }
     }
 }
