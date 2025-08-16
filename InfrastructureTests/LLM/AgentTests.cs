@@ -167,6 +167,102 @@ namespace Infrastructure.LLM.Tests
                 });
         }
 
-        // TODO: Añadir tests para llamar herramienta
+        [Test]
+        public async Task LlamarHerramientaAsync_DevuelveMensajeHerramienta()
+        {
+            // Arrange
+            var kernelBuilder = Kernel.CreateBuilder();
+            var kernel = kernelBuilder.Build();
+            kernel.Plugins.AddFromObject(new TestHerramientas(), "TestPlugin");
+
+            var agent = new ChatCompletionAgent() { Kernel = kernel };
+            var agente = new Agent(
+                agent,
+                new Mock<IChatHistoryAdapter>().Object);
+
+            var llamada = new MensajeLlamadaHerramienta
+            {
+                PluginName = "TestPlugin",
+                FunctionName = "TestFunction",
+                Argumentos =
+                    new Dictionary<string, object?> { ["param"] = "valor" },
+                DateTime = DateTime.UtcNow
+            };
+
+            // Act
+            var mensajeHerramienta = await agente.LlamarHerramientaAsync(
+                llamada);
+
+            // Assert
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.That(
+                        mensajeHerramienta,
+                        Is.TypeOf<MensajeHerramientaInfo>());
+                    Assert.That(
+                        mensajeHerramienta.Llamada.FunctionName,
+                        Is.EqualTo("TestFunction"));
+                    Assert.That(
+                        ((MensajeHerramientaInfo)mensajeHerramienta).DocumentosRecuperados,
+                        Is.Empty);
+                });
+        }
+
+        [Test]
+        public void LlamarHerramientaAsync_RetornoInvalido_LanzaExcepcion()
+        {
+            // Arrange
+            var kernelBuilder = Kernel.CreateBuilder();
+            var kernel = kernelBuilder.Build();
+            kernel.Plugins.AddFromObject(new TestHerramientas(), "TestPlugin");
+
+            var agent = new ChatCompletionAgent() { Kernel = kernel };
+            var agente = new Agent(
+                agent,
+                new Mock<IChatHistoryAdapter>().Object);
+
+            var llamada = new MensajeLlamadaHerramienta
+            {
+                PluginName = "TestPlugin",
+                FunctionName = "BadFunction",
+                Argumentos = new Dictionary<string, object?>(),
+                DateTime = DateTime.UtcNow
+            };
+
+            // Act & Assert
+            Assert.ThrowsAsync<Exception>(
+                async () => await agente.LlamarHerramientaAsync(llamada));
+        }
+
+        private sealed class TestHerramientas
+        {
+            [KernelFunction]
+            public MensajeHerramientaInfo TestFunction(string param)
+            {
+                return new MensajeHerramientaInfo([], [])
+                {
+                    Llamada =
+                        new MensajeLlamadaHerramienta
+                        {
+                            PluginName = "TestPlugin",
+                            FunctionName = "TestFunction",
+                            Argumentos =
+                                new Dictionary<string, object?>
+                                    {
+                                        ["param"] = param
+                                    },
+                            DateTime = DateTime.UtcNow
+                        },
+                    DateTime = DateTime.UtcNow
+                };
+            }
+
+            [KernelFunction]
+            public string BadFunction()
+            {
+                return null!;
+            }
+        }
     }
 }
