@@ -48,11 +48,9 @@ namespace Infrastructure.LLM.Tests
                 Instructions = "{{$argument}}"
             };
 
-            var agentData = new AgentData();
-
             chatHistoryFactoryMock
-                .Setup(x => x.Adapt(mensajes))
-                .Returns(chatHistory);
+                .Setup(x => x.AdaptAsync(mensajes))
+                .ReturnsAsync(chatHistory);
 
             chatCompletionMock
                 .Setup(
@@ -69,7 +67,6 @@ namespace Infrastructure.LLM.Tests
 
             var generadorRespuesta = new Agent(
                 agent,
-                agentData,
                 chatHistoryFactoryMock.Object);
 
             // Act
@@ -79,7 +76,6 @@ namespace Infrastructure.LLM.Tests
 
             // Assert
             Assert.That(result.Texto, Is.EqualTo(expectedResponse));
-            Assert.That(result.AgentData, Is.EqualTo(agentData));
         }
 
         [Test]
@@ -98,12 +94,12 @@ namespace Infrastructure.LLM.Tests
             var kernel = kernelBuilder.Build();
 
             var agent = new ChatCompletionAgent() { Kernel = kernel };
-            var agentData = new AgentData();
 
             chatCompletionMock
                 .Setup(
                     x => x.GetChatMessageContentsAsync(
-                        It.Is<ChatHistory>(c => c.Any(m => m.ToString() == mensaje)),
+                        It.Is<ChatHistory>(
+                            c => c.Any(m => m.ToString() == mensaje)),
                         It.IsAny<PromptExecutionSettings>(),
                         kernel,
                         default))
@@ -115,7 +111,6 @@ namespace Infrastructure.LLM.Tests
 
             var generadorRespuesta = new Agent(
                 agent,
-                agentData,
                 chatHistoryFactoryMock.Object);
 
             // Act
@@ -125,7 +120,8 @@ namespace Infrastructure.LLM.Tests
 
             // Assert
             Assert.That(result.Texto, Is.EqualTo(expectedResponse));
-            Assert.That(result.AgentData, Is.EqualTo(agentData));
         }
+
+        // TODO: Añadir tests para llamar herramienta
     }
 }

@@ -146,8 +146,8 @@ namespace Infrastructure.LLM.Tests
                         Is.EqualTo(typeof(string)));
                 });
 
-            var paremeter1 = function1.Metadata.Parameters.First();
-            var paremeter2 = function2.Metadata.Parameters.First();
+            var paremeter1 = function1.Metadata.Parameters[0];
+            var paremeter2 = function2.Metadata.Parameters[0];
 
             Assert.Multiple(
                 () =>
@@ -163,14 +163,13 @@ namespace Infrastructure.LLM.Tests
                 });
         }
 
-        private class TestTool(AgentData agentData)
+        private class TestTool
         {
             [DisplayName("1")]
             [Description("Function Description 1")]
             public string TestFunction(
                 [Description("Parameter Description 1")] string testParameter)
             {
-                agentData.MetaData["test"] = testParameter;
                 return "test";
             }
 
@@ -179,7 +178,6 @@ namespace Infrastructure.LLM.Tests
             public string TestFunction2(
                 [Description("Parameter Description 2")] string testParameter2)
             {
-                agentData.MetaData["test2"] = testParameter2;
                 return "test2";
             }
         }
