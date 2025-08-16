@@ -94,7 +94,7 @@ namespace Domain.Entities.ChatAgregado.Tests
                     .EqualTo(DateTime.Now.Date));
             Assert.That(
                 chat.Events,
-                Has.One.With
+                Has.One.InstanceOf<MensajeIAGeneradoEvent>().With
                     .Property(nameof(MensajeIAGeneradoEvent.EntityId))
                     .EqualTo(chat.Id));
         }
@@ -193,7 +193,7 @@ namespace Domain.Entities.ChatAgregado.Tests
 
             Assert.That(
                 chat.Events,
-                Has.One.With
+                Has.One.InstanceOf<LlamadaHerramientaGeneradaEvent>().With
                     .Property(nameof(LlamadaHerramientaGeneradaEvent.EntityId))
                     .EqualTo(chat.Id)
                     .And
@@ -203,6 +203,96 @@ namespace Domain.Entities.ChatAgregado.Tests
                     .EqualTo(mensaje.Id));
         }
 
-        // TODO: Add tests for LlamarHerramientaAsync
+        [Test]
+        public void LlamarHerramientaAsync_UltimoMensajeNoEsLlamadaHerramienta_LanzaInvalidOperationException(
+            )
+        {
+            // Arrange
+            var chat = new Chat
+            {
+                ChatPlataformaId = "1",
+                Plataforma = "WhatsApp",
+                UsuarioId = "1"
+            };
+
+            chat.Mensajes
+                .Add(
+                    new MensajeTextoUsuario
+                    {
+                        Texto = "Hola",
+                        DateTime = DateTime.Now
+                    });
+
+            var agente = new Mock<IAgent>();
+
+            // Act & Assert
+            Assert.ThrowsAsync<InvalidOperationException>(
+                async () => await chat.LlamarHerramientaAsync(agente.Object));
+        }
+
+        [Test]
+        public async Task LlamarHerramientaAsync_Exitoso_AgregaMensajeHerramientaYEvento(
+            )
+        {
+            // Arrange
+            var chat = new Chat
+            {
+                ChatPlataformaId = "1",
+                Plataforma = "WhatsApp",
+                UsuarioId = "1"
+            };
+
+            var mensajeUsuario = new MensajeTextoUsuario
+            {
+                Texto = "Necesito información",
+                DateTime = DateTime.Now.AddMinutes(-2)
+            };
+            chat.Mensajes.Add(mensajeUsuario);
+
+            var llamadaHerramienta = new MensajeLlamadaHerramienta
+            {
+                PluginName = "InfoPlugin",
+                FunctionName = "GetInfo",
+                Argumentos =
+                    new Dictionary<string, object?> { ["query"] = "test" },
+                DateTime = DateTime.Now.AddMinutes(-1)
+            };
+            chat.Mensajes.Add(llamadaHerramienta); // UltimoMensaje es la llamada
+
+            var agente = new Mock<IAgent>();
+
+            var mensajeHerramienta = new MensajeHerramientaInfo([], [])
+            {
+                Llamada = llamadaHerramienta,
+                DateTime = DateTime.Now
+            };
+
+            agente.Setup(a => a.LlamarHerramientaAsync(llamadaHerramienta))
+                .ReturnsAsync(mensajeHerramienta);
+
+            // Act
+            var resultado = await chat.LlamarHerramientaAsync(agente.Object)
+                .ConfigureAwait(false);
+
+            // Assert
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.That(resultado, Is.EqualTo(mensajeHerramienta));
+                    Assert.That(
+                        chat.Mensajes.Last(),
+                        Is.EqualTo(mensajeHerramienta));
+                    Assert.That(chat.Mensajes, Has.Count.EqualTo(3));
+                    Assert.That(
+                        chat.Events,
+                        Has.One.InstanceOf<MensajeRecibidoEvent>().With
+                                .Property(nameof(MensajeRecibidoEvent.EntityId))
+                                .EqualTo(chat.Id));
+                });
+
+            agente.Verify(
+                a => a.LlamarHerramientaAsync(llamadaHerramienta),
+                Times.Once);
+        }
     }
 }
