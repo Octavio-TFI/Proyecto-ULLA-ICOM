@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
+using Moq;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,12 +35,24 @@ namespace Infrastructure.LLM.Tests
             var chatHistory = new ChatHistory();
 
             string expectedResponse = "AI response";
+            var expectedFunctionCalls = new List<AgentFunctionCall>
+            {
+                new()
+                {
+                    PluginName = "TestPlugin",
+                    FunctionName = "TestFunction",
+                    Arguments =
+                        new Dictionary<string, object?> { ["param"] = "value" }
+                }
+            };
 
             var chatCompletionMock = new Mock<IChatCompletionService>();
             var chatHistoryFactoryMock = new Mock<IChatHistoryAdapter>();
+            var toolExtractorMock = new Mock<IToolCallExtractor>();
 
             var kernelBuilder = Kernel.CreateBuilder();
             kernelBuilder.Services.AddSingleton(chatCompletionMock.Object);
+            kernelBuilder.Services.AddSingleton(toolExtractorMock.Object);
 
             var kernel = kernelBuilder.Build();
 
@@ -47,6 +61,10 @@ namespace Infrastructure.LLM.Tests
                 Kernel = kernel,
                 Instructions = "{{$argument}}"
             };
+
+            var chatMessageContent = new ChatMessageContent(
+                AuthorRole.Assistant,
+                expectedResponse);
 
             chatHistoryFactoryMock
                 .Setup(x => x.AdaptAsync(mensajes))
@@ -60,10 +78,12 @@ namespace Infrastructure.LLM.Tests
                         kernel,
                         default))
                 .ReturnsAsync(
-                    new List<ChatMessageContent>
-                    {
-                        new(AuthorRole.Assistant, expectedResponse)
-                    }.AsReadOnly());
+                    new List<ChatMessageContent> { chatMessageContent }.AsReadOnly(
+                        ));
+
+            toolExtractorMock
+                .Setup(x => x.Extract(chatMessageContent))
+                .Returns(expectedFunctionCalls);
 
             var generadorRespuesta = new Agent(
                 agent,
@@ -75,7 +95,18 @@ namespace Infrastructure.LLM.Tests
                 .ConfigureAwait(false);
 
             // Assert
-            Assert.That(result.Texto, Is.EqualTo(expectedResponse));
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.That(result.Texto, Is.EqualTo(expectedResponse));
+                    Assert.That(result.FunctionCalls, Has.Count.EqualTo(1));
+                    Assert.That(
+                        result.FunctionCalls[0].PluginName,
+                        Is.EqualTo("TestPlugin"));
+                    Assert.That(
+                        result.FunctionCalls[0].FunctionName,
+                        Is.EqualTo("TestFunction"));
+                });
         }
 
         [Test]
@@ -84,16 +115,23 @@ namespace Infrastructure.LLM.Tests
             // Arrange
             string mensaje = "Hola";
             string expectedResponse = "AI response";
+            var expectedFunctionCalls = new List<AgentFunctionCall>();
 
             var chatCompletionMock = new Mock<IChatCompletionService>();
             var chatHistoryFactoryMock = new Mock<IChatHistoryAdapter>();
+            var toolExtractorMock = new Mock<IToolCallExtractor>();
 
             var kernelBuilder = Kernel.CreateBuilder();
             kernelBuilder.Services.AddSingleton(chatCompletionMock.Object);
+            kernelBuilder.Services.AddSingleton(toolExtractorMock.Object);
 
             var kernel = kernelBuilder.Build();
 
             var agent = new ChatCompletionAgent() { Kernel = kernel };
+
+            var chatMessageContent = new ChatMessageContent(
+                AuthorRole.Assistant,
+                expectedResponse);
 
             chatCompletionMock
                 .Setup(
@@ -104,10 +142,12 @@ namespace Infrastructure.LLM.Tests
                         kernel,
                         default))
                 .ReturnsAsync(
-                    new List<ChatMessageContent>
-                    {
-                        new(AuthorRole.Assistant, expectedResponse)
-                    }.AsReadOnly());
+                    new List<ChatMessageContent> { chatMessageContent }.AsReadOnly(
+                        ));
+
+            toolExtractorMock
+                .Setup(x => x.Extract(chatMessageContent))
+                .Returns(expectedFunctionCalls);
 
             var generadorRespuesta = new Agent(
                 agent,
@@ -119,7 +159,12 @@ namespace Infrastructure.LLM.Tests
                 .ConfigureAwait(false);
 
             // Assert
-            Assert.That(result.Texto, Is.EqualTo(expectedResponse));
+            Assert.Multiple(
+                () =>
+                {
+                    Assert.That(result.Texto, Is.EqualTo(expectedResponse));
+                    Assert.That(result.FunctionCalls, Has.Count.EqualTo(0));
+                });
         }
 
         // TODO: Añadir tests para llamar herramienta
