@@ -117,7 +117,7 @@ namespace Domain.Entities.ChatAgregado
             return mensaje;
         }
 
-        public async Task<MensajeHerramienta> LlamarHerramientaAsyn(
+        public async Task<MensajeHerramienta> LlamarHerramientaAsync(
             IAgent agent)
         {
             if (!UltimoMensajeEsLlamadoHerramienta)

@@ -40,11 +40,7 @@ namespace Domain.Services.Tests
                         a => a.First().Key == "document" &&
                             a.First().Value == datosRecuperados[0])))
                 .ReturnsAsync(
-                    new AgentResult
-                    {
-                        Texto = TrueResult,
-                        AgentData = new()
-                    });
+                    new AgentResult { Texto = TrueResult, FunctionCalls = [] });
 
             agentMock.Setup(
                 x => x.GenerarRespuestaAsync(
@@ -53,11 +49,7 @@ namespace Domain.Services.Tests
                         a => a.First().Key == "document" &&
                             a.First().Value == datosRecuperados[1])))
                 .ReturnsAsync(
-                    new AgentResult
-                    {
-                        Texto = FalseResult,
-                        AgentData = new()
-                    });
+                    new AgentResult { Texto = FalseResult, FunctionCalls = [] });
 
             agentMock.Setup(
                 x => x.GenerarRespuestaAsync(
@@ -66,11 +58,7 @@ namespace Domain.Services.Tests
                         a => a.First().Key == "document" &&
                             a.First().Value == datosRecuperados[2])))
                 .ReturnsAsync(
-                    new AgentResult
-                    {
-                        Texto = string.Empty,
-                        AgentData = new()
-                    });
+                    new AgentResult { Texto = string.Empty, FunctionCalls = [] });
 
             var ranker = new Ranker(agentMock.Object);
 

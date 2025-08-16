@@ -35,7 +35,7 @@ namespace AppServices.EventHandlers
             var llamada = chat.UltimoMensaje;
 
             var mensajeHerramienta = await chat
-                .LlamarHerramientaAsyn(_agent)
+                .LlamarHerramientaAsync(_agent)
                 .ConfigureAwait(false);
 
             _logger.LogInformation(

@@ -7,6 +7,7 @@ using Domain.Services;
 using Domain.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,6 @@ namespace Domain.Services.Tests
             var consultaRepository = new Mock<IConsultaRepository>();
             var documentRepository = new Mock<IDocumentRepository>();
             var rankerMock = new Mock<IRanker>();
-            var agentData = new AgentData();
 
             var consulta = "consulta";
             var embeddingConsulta = new float[] { 1, 2, 3 };
@@ -75,6 +75,15 @@ namespace Domain.Services.Tests
                 documentoNoRelacionado
             };
 
+            var llamadaHerramienta = new MensajeLlamadaHerramienta
+            {
+                FunctionName = "informacion",
+                PluginName = "InformacionTool",
+                Argumentos =
+                    new Dictionary<string, object?> { ["pregunta"] = consulta },
+                DateTime = DateTime.Now
+            };
+
             embeddingServiceMock
                 .Setup(x => x.GenerateAsync(consulta))
                 .ReturnsAsync(embeddingConsulta);
@@ -98,69 +107,65 @@ namespace Domain.Services.Tests
                 embeddingServiceMock.Object,
                 consultaRepository.Object,
                 documentRepository.Object,
-                rankerMock.Object,
-                agentData);
+                rankerMock.Object);
 
             // Act
-            string result = await consultasPlugin
-                .BuscarInformacionAsync(consulta)
+            var result = await consultasPlugin
+                .BuscarInformacionAsync(consulta, llamadaHerramienta)
                 .ConfigureAwait(false);
 
             // Assert
-            string expected = new StringBuilder()
-                .Append("[Documentación]")
-                .AppendLine()
-                .Append(documentoRelacionado.ToString())
-                .AppendLine()
-                .Append(documentoRelacionado.ToString())
-                .AppendLine()
-                .Append("[Consultas Históricas]")
-                .AppendLine()
-                .Append(consultaSimilar.ToString())
-                .ToString();
+            Assert.That(result, Is.TypeOf<MensajeHerramientaInfo>());
+            Assert.That(result.DocumentosRecuperados, Has.Count.EqualTo(3));
+            Assert.That(result.ConsultasRecuperadas, Has.Count.EqualTo(2));
+            Assert.That(result.Llamada, Is.EqualTo(llamadaHerramienta));
 
-            Assert.That(result, Is.EqualTo(expected));
-            Assert.That(agentData.InformacionRecuperada, Has.Count.EqualTo(5));
+            // Verify ranked documents
             Assert.That(
-                agentData.InformacionRecuperada
+                result.DocumentosRecuperados
                     .Count(
-                        dr => dr is DocumentoRecuperado &&
-                                dr.InformacionId == documentoRelacionado.Id &&
+                        dr => dr.DocumentoId == documentoRelacionado.Id &&
                                 dr.Rank == true),
                 Is.EqualTo(2));
             Assert.That(
-                agentData.InformacionRecuperada
+                result.DocumentosRecuperados
                     .Any(
-                        dr => dr is DocumentoRecuperado &&
-                                dr.InformacionId == documentoNoRelacionado.Id &&
+                        dr => dr.DocumentoId == documentoNoRelacionado.Id &&
                                 dr.Rank == false));
+
+            // Verify ranked consultas
             Assert.That(
-                agentData.InformacionRecuperada
+                result.ConsultasRecuperadas
                     .Any(
-                        dr => dr is ConsultaRecuperada &&
-                                dr.InformacionId == consultaSimilar.Id &&
-                                dr.Rank == true));
+                        cr => cr.ConsultaId == consultaSimilar.Id &&
+                                cr.Rank == true));
             Assert.That(
-                agentData.InformacionRecuperada
+                result.ConsultasRecuperadas
                     .Any(
-                        dr => dr is ConsultaRecuperada &&
-                                dr.InformacionId == consultaNoSimilar.Id &&
-                                dr.Rank == false));
+                        cr => cr.ConsultaId == consultaNoSimilar.Id &&
+                                cr.Rank == false));
         }
 
         [Test]
         public async Task BuscarInformacionAsync_NoDocumentsNoConsultasTest()
         {
             // Arrange
-            var embeddingServiceMock
-                = new Mock<IEmbeddingService>();
+            var embeddingServiceMock = new Mock<IEmbeddingService>();
             var consultaRepository = new Mock<IConsultaRepository>();
             var documentRepository = new Mock<IDocumentRepository>();
             var rankerMock = new Mock<IRanker>();
-            var agentData = new AgentData();
 
             var consulta = "consulta";
             var embeddingConsulta = new float[] { 1, 2, 3 };
+
+            var llamadaHerramienta = new MensajeLlamadaHerramienta
+            {
+                FunctionName = "informacion",
+                PluginName = "InformacionTool",
+                Argumentos =
+                    new Dictionary<string, object?> { ["pregunta"] = consulta },
+                DateTime = DateTime.Now
+            };
 
             embeddingServiceMock
                 .Setup(x => x.GenerateAsync(consulta))
@@ -168,46 +173,37 @@ namespace Domain.Services.Tests
 
             consultaRepository
                 .Setup(x => x.GetConsultasSimilaresAsync(embeddingConsulta))
-                .ReturnsAsync(new List<Consulta>());
+                .ReturnsAsync([]);
 
             documentRepository.Setup(
                 x => x.GetDocumentosRelacionadosAsync(embeddingConsulta))
-                .ReturnsAsync(new List<Document>());
+                .ReturnsAsync([]);
 
             rankerMock.Setup(
                 x => x.RankAsync(It.IsAny<List<Consulta>>(), consulta))
-                .ReturnsAsync(new List<Consulta>());
+                .ReturnsAsync([]);
 
             rankerMock.Setup(
                 x => x.RankAsync(It.IsAny<List<Document>>(), consulta))
-                .ReturnsAsync(new List<Document>());
+                .ReturnsAsync([]);
 
             var consultasPlugin = new InformacionTool(
                 Mock.Of<ILogger<InformacionTool>>(),
                 embeddingServiceMock.Object,
                 consultaRepository.Object,
                 documentRepository.Object,
-                rankerMock.Object,
-                agentData);
+                rankerMock.Object);
 
             // Act
-            string result = await consultasPlugin
-                .BuscarInformacionAsync(consulta)
+            var result = await consultasPlugin
+                .BuscarInformacionAsync(consulta, llamadaHerramienta)
                 .ConfigureAwait(false);
 
             // Assert
-            string expected = new StringBuilder()
-                .Append("[Documentación]")
-                .AppendLine()
-                .AppendLine("No se encontro documentación relacionada")
-                .AppendLine()
-                .Append("[Consultas Históricas]")
-                .AppendLine()
-                .AppendLine("No se encontraron consultas históricas similares")
-                .ToString();
-
-            Assert.That(result, Is.EqualTo(expected));
-            Assert.That(agentData.InformacionRecuperada, Is.Empty);
+            Assert.That(result, Is.TypeOf<MensajeHerramientaInfo>());
+            Assert.That(result.DocumentosRecuperados, Is.Empty);
+            Assert.That(result.ConsultasRecuperadas, Is.Empty);
+            Assert.That(result.Llamada, Is.EqualTo(llamadaHerramienta));
         }
     }
 }
