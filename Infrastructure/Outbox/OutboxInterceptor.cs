@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -59,7 +60,7 @@ namespace Infrastructure.Outbox
         }
 
         static OutboxEvent CreateOutboxEvent(
-            INotification @event,
+            EntityEvent @event,
             DateTime ocurredOn)
         {
             var type = @event.GetType().Name;
@@ -69,7 +70,11 @@ namespace Infrastructure.Outbox
             {
                 EventType = type,
                 EventData = json,
-                OccurredOn = ocurredOn
+                OccurredOn = ocurredOn,
+                MaxRetries = @event.MaxRetries,
+                RetryIntervalSeconds = @event.RetryInterval.TotalSeconds,
+                // First attempt can happen immediately
+                NextRetryOn = ocurredOn,
             };
         }
     }

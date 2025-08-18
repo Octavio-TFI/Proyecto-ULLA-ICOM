@@ -14,11 +14,11 @@ namespace Infrastructure.Outbox
         protected override async Task ExecuteAsync(
             CancellationToken stoppingToken)
         {
-            while(!stoppingToken.IsCancellationRequested)
+            while (!stoppingToken.IsCancellationRequested)
             {
                 await _outboxProcessor.ProcessOutboxAsync(stoppingToken);
 
-                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(0.5), stoppingToken);
             }
         }
     }

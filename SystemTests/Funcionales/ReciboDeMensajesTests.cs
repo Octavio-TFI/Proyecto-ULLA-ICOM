@@ -30,10 +30,10 @@ namespace System.Tests.Funcionales
         public async Task Mensaje_SinHerramienta_Test()
         {
             // Arrange
-            using var localLLMServer = WireMockServer.Start();
+            using var LLMServer = WireMockServer.Start();
             using var chatServer = WireMockServer.Start();
 
-            localLLMServer
+            LLMServer
                 .Given(
                     Request.Create()
                         .WithPath("/chat/completions")
@@ -74,7 +74,7 @@ namespace System.Tests.Funcionales
                         .WithBody(mensajePlataformaId));
 
             var apiFactory = CreateAPIFactory(
-                localLLMServer.Port,
+                LLMServer.Port,
                 chatServer.Port);
 
             var client = apiFactory.CreateClient();
