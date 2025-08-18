@@ -24,19 +24,21 @@ namespace Infrastructure.Outbox
 
             var context = services.GetRequiredService<ChatContext>();
 
-            var chatContextTask = ProcessContextEvents(
+            await ProcessContextEvents(
                 context,
                 cancellationToken);
-
-            await Task.WhenAll(chatContextTask);
         }
 
         async Task ProcessContextEvents(
             ChatContext context,
             CancellationToken cancellationToken)
         {
+            var now = DateTime.Now;
+
             var outboxEvents = await context.OutboxEvents
-                .Where(x => x.IsProcessed == false)
+                .Where(
+                    x => x.IsProcessed == false &&
+                        (x.NextRetryOn == null || x.NextRetryOn <= now))
                 .OrderBy(x => x.OccurredOn)
                 .Take(100)
                 .AsNoTracking()

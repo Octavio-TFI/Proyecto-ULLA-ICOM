@@ -24,7 +24,9 @@
                         mensajeRecibidoEvent,
                         _jsonSettings),
                 OccurredOn = DateTime.Now,
-                MaxRetries = 5
+                MaxRetries = 5,
+                RetryIntervalSeconds = 10,
+                NextRetryOn = DateTime.Now
             };
 
             var context = new Mock<ChatContext>();
@@ -70,6 +72,8 @@
             )
         {
             // Arrange
+            var now = DateTime.Now;
+
             var mensajeRecibidoEvent = new MensajeRecibidoEvent
             {
                 EntityId = Guid.NewGuid()
@@ -81,9 +85,11 @@
                     JsonConvert.SerializeObject(
                         mensajeRecibidoEvent,
                         _jsonSettings),
-                OccurredOn = DateTime.Now,
+                OccurredOn = now,
                 RetryCount = 2,
-                MaxRetries = 5
+                MaxRetries = 5,
+                RetryIntervalSeconds = 10,
+                NextRetryOn = now
             };
 
             var context = new Mock<ChatContext>();
@@ -119,6 +125,11 @@
                     Assert.That(outboxEvent.IsProcessed, Is.False);
                     Assert.That(outboxEvent.ProcessedOn, Is.Null);
                     Assert.That(outboxEvent.RetryCount, Is.EqualTo(3));
+                    Assert.That(
+                        outboxEvent.NextRetryOn,
+                        Is.Not.Null.And
+                                .GreaterThan(
+                                    now.AddSeconds(outboxEvent.RetryIntervalSeconds)));
                 });
         }
 
@@ -140,7 +151,9 @@
                         _jsonSettings),
                 OccurredOn = DateTime.Now,
                 RetryCount = 4,
-                MaxRetries = 5
+                MaxRetries = 5,
+                RetryIntervalSeconds = 10,
+                NextRetryOn = DateTime.Now
             };
 
             var context = new Mock<ChatContext>();
@@ -188,7 +201,9 @@
                 EventType = "EventType",
                 EventData = "Invalid JSON",
                 OccurredOn = DateTime.Now,
-                MaxRetries = 5
+                MaxRetries = 5,
+                RetryIntervalSeconds = 10,
+                NextRetryOn = DateTime.Now
             };
 
             var context = new Mock<ChatContext>();
@@ -216,6 +231,7 @@
                 () =>
                 {
                     Assert.That(outboxEvent.RetryCount, Is.EqualTo(1));
+                    Assert.That(outboxEvent.NextRetryOn, Is.Not.Null);
                 });
         }
 
@@ -228,10 +244,12 @@
                 EventType = "EventType",
                 EventData =
                     JsonConvert.SerializeObject(
-                        (MensajeRecibidoEvent)null!,
+                        null!,
                         _jsonSettings),
                 OccurredOn = DateTime.Now,
-                MaxRetries = 5
+                MaxRetries = 5,
+                RetryIntervalSeconds = 10,
+                NextRetryOn = DateTime.Now
             };
 
             var context = new Mock<ChatContext>();
@@ -259,6 +277,7 @@
                 () =>
                 {
                     Assert.That(outboxEvent.RetryCount, Is.EqualTo(1));
+                    Assert.That(outboxEvent.NextRetryOn, Is.Not.Null);
                 });
         }
     }

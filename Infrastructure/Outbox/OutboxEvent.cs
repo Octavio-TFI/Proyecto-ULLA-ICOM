@@ -46,5 +46,15 @@ namespace Infrastructure.Outbox
         /// Número máximo de reintentos permitidos
         /// </summary>
         public required int MaxRetries { get; set; }
+
+        /// <summary>
+        /// Intervalo entre reintentos (segundos)
+        /// </summary>
+        public required double RetryIntervalSeconds { get; set; }
+
+        /// <summary>
+        /// Fecha/hora del próximo intento permitido.
+        /// </summary>
+        public DateTime? NextRetryOn { get; set; }
     }
 }

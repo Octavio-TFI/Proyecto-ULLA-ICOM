@@ -27,6 +27,8 @@ namespace System.Tests
                 {
                 { "LLMLocal:URL", $"http://localhost:{LLMPort}" },
                 { "LLMGoogle:URL", $"http://localhost:{LLMPort}" },
+                { "LLMGoogle:ApiKey", "ApiKey" },
+                { "LLMGoogle:Model", "Model" },
                 { "ConnectionStrings:Default", _connectionString },
                 { "Clients:Test:URL", $"http://localhost:{testClientPort}" }
                 })

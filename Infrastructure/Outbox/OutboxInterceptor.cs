@@ -72,6 +72,9 @@ namespace Infrastructure.Outbox
                 EventData = json,
                 OccurredOn = ocurredOn,
                 MaxRetries = @event.MaxRetries,
+                RetryIntervalSeconds = @event.RetryInterval.TotalSeconds,
+                // First attempt can happen immediately
+                NextRetryOn = ocurredOn,
             };
         }
     }

@@ -68,6 +68,12 @@ namespace Infrastructure.Outbox
                     outboxEvent.IsProcessed = true;
                     outboxEvent.ProcessedOn = DateTime.Now;
                 }
+                else
+                {
+                    // Schedule next retry respecting interval
+                    outboxEvent.NextRetryOn = DateTime.Now
+                        .AddSeconds(outboxEvent.RetryIntervalSeconds);
+                }
 
                 _context.Update(outboxEvent);
                 await _context.SaveChangesAsync(cancellationToken);

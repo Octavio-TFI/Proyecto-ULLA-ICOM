@@ -19,5 +19,11 @@ namespace Domain.Events
         /// </summary>
         [JsonIgnore]
         public abstract int MaxRetries { get; }
+
+        /// <summary>
+        /// Intervalo entre reintentos para este tipo de evento.
+        /// </summary>
+        [JsonIgnore]
+        public abstract TimeSpan RetryInterval { get; }
     }
 }
