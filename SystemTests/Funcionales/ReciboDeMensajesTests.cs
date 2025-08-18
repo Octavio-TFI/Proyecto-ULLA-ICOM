@@ -72,9 +72,8 @@ namespace System.Tests.Funcionales
                     Response.Create()
                         .WithSuccess()
                         .WithBody(mensajePlataformaId));
-            Cambi
-            var 
-            apiFactory = CreateAPIFactory(
+
+            var apiFactory = CreateAPIFactory(
                 LLMServer.Port,
                 chatServer.Port);
 
