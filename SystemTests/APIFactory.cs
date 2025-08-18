@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace System.Tests
 {
-    public class APIFactory(int localLLMPort, int testClientPort, string dbName)
+    public class APIFactory(int LLMPort, int testClientPort, string dbName)
         : WebApplicationFactory<APIProgram>
     {
         readonly string _connectionString = $"Data Source={dbName}.db";
 
-        readonly int localLLMPort = localLLMPort;
+        readonly int LLMPort = LLMPort;
         readonly int testClientPort = testClientPort;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -25,8 +25,8 @@ namespace System.Tests
             var config = new ConfigurationBuilder().AddInMemoryCollection(
                 new Dictionary<string, string?>
                 {
-                { "LLMLocal:URL", $"http://localhost:{localLLMPort}" },
-                { "LLMGoogle:URL", $"http://localhost:{localLLMPort}" },
+                { "LLMLocal:URL", $"http://localhost:{LLMPort}" },
+                { "LLMGoogle:URL", $"http://localhost:{LLMPort}" },
                 { "ConnectionStrings:Default", _connectionString },
                 { "Clients:Test:URL", $"http://localhost:{testClientPort}" }
                 })
