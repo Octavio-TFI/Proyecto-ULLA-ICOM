@@ -22,7 +22,7 @@ namespace Infrastructure.Outbox.Tests
             // Act
             var task = outboxService.StartAsync(cts.Token);
 
-            await Task.Delay(5100);
+            await Task.Delay(600);
 
             cts.Cancel();
             await task;
