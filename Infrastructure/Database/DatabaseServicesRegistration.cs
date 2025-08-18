@@ -6,6 +6,7 @@ using Infrastructure.Outbox;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Proxies;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,8 @@ namespace Infrastructure.Database
             services.AddDbContext<ChatContext>(
                 options =>
                 {
-                    options.UseSqlite(connectionString)
+                    options.UseLazyLoadingProxies()
+                        .UseSqlite(connectionString)
                         .AddInterceptors(
                             new OutboxInterceptor(),
                             new SQLiteExtensionInterceptor());
@@ -35,6 +37,7 @@ namespace Infrastructure.Database
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IChatRepository, ChatRepository>();
+            services.AddScoped<IMensajeIARepository, MensajeIARepository>();
 
             services.AddScoped<IConsultaRepository, ConsultaRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();

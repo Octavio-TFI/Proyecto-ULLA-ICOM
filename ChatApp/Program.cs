@@ -12,6 +12,28 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IUserIdProvider, UserIdProvider>();
 
+// Configuracion de deployment como windows service
+if (builder.Environment.IsProduction())
+{
+    Directory.SetCurrentDirectory(AppContext.BaseDirectory);
+    builder.Services.AddWindowsService();
+
+    builder.Logging
+        .AddEventLog(
+            x =>
+            {
+                x.LogName = "Application";
+                x.SourceName = "LLM UI";
+            });
+
+    builder.WebHost
+        .ConfigureKestrel(
+            options =>
+            {
+                options.ListenAnyIP(80);
+            });
+}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

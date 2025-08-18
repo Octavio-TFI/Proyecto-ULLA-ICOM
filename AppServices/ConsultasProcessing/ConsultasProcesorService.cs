@@ -52,6 +52,10 @@ namespace AppServices.ConsultasProcessing
             var consultasDatas = await _consultaDataRepository.GetAllExceptExistingIdsAsync(
                 existingIds);
 
+            _logger.LogInformation(
+                "Se encontraron {count} consultas nuevas para procesar",
+                consultasDatas.Count);
+
             int i = 1;
 
             foreach (var consultaData in consultasDatas)

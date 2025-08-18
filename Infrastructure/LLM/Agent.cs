@@ -7,8 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.Google;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.VisualBasic;
+using OpenAI.Assistants;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,22 +22,20 @@ namespace Infrastructure.LLM
 {
     internal class Agent(
         ChatCompletionAgent agent,
-        AgentData agentData,
         IChatHistoryAdapter chatHistoryFactory)
         : IAgent
     {
         public ChatCompletionAgent ChatCompletionAgent { get; } = agent;
 
-        readonly AgentData _data = agentData;
         readonly IChatHistoryAdapter _chatHistoryFactory = chatHistoryFactory;
 
-        public Task<AgentResult> GenerarRespuestaAsync(
+        public async Task<AgentResult> GenerarRespuestaAsync(
             List<Mensaje> mensajes,
             Dictionary<string, object?>? arguments = null)
         {
-            var chatHistory = _chatHistoryFactory.Adapt(mensajes);
+            var chatHistory = await _chatHistoryFactory.AdaptAsync(mensajes);
 
-            return GenerarRespuestaAsync(chatHistory, arguments);
+            return await GenerarRespuestaAsync(chatHistory, arguments);
         }
 
         public Task<AgentResult> GenerarRespuestaAsync(
@@ -56,11 +59,33 @@ namespace Infrastructure.LLM
                 .FirstAsync()
                 .ConfigureAwait(false);
 
+            var functionCalls = ChatCompletionAgent.Kernel
+                .GetRequiredService<IToolCallExtractor>()
+                .Extract(result);
+
             return new AgentResult
             {
                 Texto = result.ToString(),
-                AgentData = _data,
+                FunctionCalls = [.. functionCalls]
             };
+        }
+
+        public async Task<MensajeHerramienta> LlamarHerramientaAsync(
+            MensajeLlamadaHerramienta llamadaHerramienta)
+        {
+            var kernelArguments = new KernelArguments(
+                llamadaHerramienta.Argumentos?.ToDictionary() ?? [])
+            { { "llamada", llamadaHerramienta } };
+
+            var result = await ChatCompletionAgent.Kernel
+                .InvokeAsync(
+                    llamadaHerramienta.PluginName,
+                    llamadaHerramienta.FunctionName,
+                    kernelArguments);
+
+            return result.GetValue<MensajeHerramienta>() ??
+                throw new Exception(
+                    "No se pudo obtener el mensaje de la herramienta");
         }
     }
 }

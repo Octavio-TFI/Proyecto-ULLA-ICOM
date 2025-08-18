@@ -29,5 +29,12 @@ namespace Domain.Repositories
         /// <param name="document">Documento a insertar</param>
         /// <returns>Documento insertado</returns>
         Task<Document> InsertAsync(Document document);
+
+        /// <summary>
+        /// Obtiene el texto de un documento por su GUID
+        /// </summary>
+        /// <param name="guid">GUID del documento</param>
+        /// <returns>Texto del documento</returns>
+        Task<string> GetTextoAsync(Guid guid);
     }
 }

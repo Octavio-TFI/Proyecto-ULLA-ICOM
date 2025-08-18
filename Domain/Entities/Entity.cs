@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Domain.Events;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,6 +22,7 @@ namespace Domain.Entities
         /// <summary>
         /// Lista de eventos
         /// </summary>
-        public List<INotification> Events { get; } = [];
+        [NotMapped]
+        public List<EntityEvent> Events { get; } = [];
     }
 }

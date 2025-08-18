@@ -19,14 +19,12 @@ namespace AppServices.EventHandlers
     internal class MensajeRecibidoHandler(
         IChatRepository chatRepository,
         [FromKeyedServices(TipoAgent.Chat)] IAgent agent,
-        IUnitOfWork unitOfWork,
-        ILogger<MensajeGeneradoHandler> logger)
+        ILogger<MensajeIAGeneradoHandler> logger)
         : INotificationHandler<MensajeRecibidoEvent>
     {
         readonly IChatRepository _chatRepository = chatRepository;
         readonly IAgent _agent = agent;
-        readonly IUnitOfWork _unitOfWork = unitOfWork;
-        readonly ILogger<MensajeGeneradoHandler> _logger = logger;
+        readonly ILogger<MensajeIAGeneradoHandler> _logger = logger;
 
         public async Task Handle(
             MensajeRecibidoEvent notification,
@@ -39,8 +37,6 @@ namespace AppServices.EventHandlers
             var respuesta = await chat
                 .GenerarMensajeAsync(_agent)
                 .ConfigureAwait(false);
-
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
             _logger.LogInformation(
                 @"

@@ -1,6 +1,6 @@
 ﻿namespace Controllers.DTOs
 {
-    public record MensajeTextoPrueba
+    public record TestMensajeTexto
     {
         public required Guid ChatId { get; init; }
 

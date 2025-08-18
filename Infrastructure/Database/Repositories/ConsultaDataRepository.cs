@@ -1,8 +1,10 @@
 ﻿using AppServices.Ports;
 using Domain.Entities;
 using Domain.Repositories;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,7 +48,10 @@ namespace Infrastructure.Database.Repositories
             {
                 string? dateString = defect.Element("date-entered")?.Value;
 
-                if (!DateTime.TryParse(dateString, out DateTime date) ||
+                if (!DateTime.TryParse(
+                        dateString,
+                        CultureInfo.InvariantCulture.DateTimeFormat,
+                        out DateTime date) ||
                     date.Year < 2015)
                 {
                     continue;

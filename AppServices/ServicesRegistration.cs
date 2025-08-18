@@ -46,6 +46,8 @@ namespace AppServices
             services.AddHostedService<ConsultasProcesorService>();
 
             services.AddScoped<IRecibidorMensajes, RecibidorMensajes>();
+            services.AddScoped<ICalificadorMensajes, CalificadorMensajes>();
+
             services.AddSingleton<Func<string, IClient>>(
                 services => (string plataforma) =>
                 {

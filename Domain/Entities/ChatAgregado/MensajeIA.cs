@@ -7,19 +7,17 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.ChatAgregado
 {
-    public class MensajeIA : Mensaje, IMensajeTexto
+    public class MensajeIA
+        : Mensaje
+        , IMensajeTexto
     {
         internal MensajeIA()
         {
         }
 
-        public string Texto { get; init; }
+        public required string Texto { get; init; }
 
         public bool? Calificacion { get; set; }
-
-        public List<DocumentoRecuperado> DocumentosRecuperados { get; } = [];
-
-        public List<ConsultaRecuperada> ConsultasRecuperadas { get; } = [];
 
         public override string ToString()
         {

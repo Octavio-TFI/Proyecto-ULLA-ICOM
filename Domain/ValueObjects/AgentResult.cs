@@ -9,13 +9,13 @@ namespace Domain.ValueObjects
     public record AgentResult
     {
         /// <summary>
-        /// Texto generado por el agente
+        /// Texto generado por el agente.
         /// </summary>
         public required string Texto { get; init; }
 
         /// <summary>
-        /// Datos del agente
+        /// Funciones llamadas por el agente.
         /// </summary>
-        public required AgentData AgentData { get; init; }
+        public required List<AgentFunctionCall> FunctionCalls { get; init; }
     }
 }

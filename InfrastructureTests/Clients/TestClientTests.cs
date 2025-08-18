@@ -23,8 +23,9 @@ namespace Infrastructure.Clients.Tests
             // Arrange
             string chatPlataformaId = "chatPlataformaId";
             string usuarioId = "usuarioId";
+            string mensajePlataformaId = "mensajePlataformaId";
 
-            var mensaje = new MensajeTextoUsuario
+            var mensaje = new MensajeIA
             {
                 Texto = "Texto",
                 DateTime = DateTime.Now
@@ -59,7 +60,11 @@ namespace Infrastructure.Clients.Tests
                             });
                     })
                 .ReturnsAsync(
-                    new HttpResponseMessage { StatusCode = httpStatusCode });
+                    new HttpResponseMessage
+                    {
+                        StatusCode = httpStatusCode,
+                        Content = new StringContent(mensajePlataformaId)
+                    });
 
             var httpClient = new HttpClient(
                 httpMessageRequestHandlerMock.Object)
@@ -73,7 +78,7 @@ namespace Infrastructure.Clients.Tests
 
             var testClient = new TestClient(httpClientFactoryMock.Object);
 
-            // Act
+            // Act and Assert
             if (shouldThrow)
             {
                 Assert.ThrowsAsync<ErrorEnviandoMensajeException>(
@@ -84,10 +89,12 @@ namespace Infrastructure.Clients.Tests
             }
             else
             {
-                await testClient.EnviarMensajeAsync(
+                string reponse = await testClient.EnviarMensajeAsync(
                     chatPlataformaId,
                     usuarioId,
                     mensaje);
+
+                Assert.That(reponse, Is.EqualTo(mensajePlataformaId));
             }
         }
 
@@ -98,7 +105,7 @@ namespace Infrastructure.Clients.Tests
             string chatPlataformaId = "chatPlataformaId";
             string usuarioId = "usuarioId";
 
-            var mensaje = new MensajeTextoUsuario
+            var mensaje = new MensajeIA
             {
                 Texto = "Texto",
                 DateTime = DateTime.Now

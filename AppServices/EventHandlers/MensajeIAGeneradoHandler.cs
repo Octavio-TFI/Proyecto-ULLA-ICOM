@@ -11,26 +11,30 @@ using System.Threading.Tasks;
 
 namespace AppServices.EventHandlers
 {
-    internal class MensajeGeneradoHandler(
+    internal class MensajeIAGeneradoHandler(
         IChatRepository _chatRepository,
+        IMensajeIARepository _mensajeIARepository,
         Func<string, IClient> _clientFactory,
-        ILogger<MensajeGeneradoHandler> _logger)
-        : INotificationHandler<MensajeGeneradoEvent>
+        ILogger<MensajeIAGeneradoHandler> _logger)
+        : INotificationHandler<MensajeIAGeneradoEvent>
     {
         public async Task Handle(
-            MensajeGeneradoEvent mensajeGeneradoEvent,
+            MensajeIAGeneradoEvent mensajeGeneradoEvent,
             CancellationToken cancellationToken)
         {
             var chat = await _chatRepository
                 .GetAsync(mensajeGeneradoEvent.EntityId)
                 .ConfigureAwait(false);
 
+            var mensaje = await _mensajeIARepository.GetAsync(
+                mensajeGeneradoEvent.MensajeId);
+
             var client = _clientFactory.Invoke(chat.Plataforma);
 
-            await client.EnviarMensajeAsync(
+            string mensajePlataformaId = await client.EnviarMensajeAsync(
                 chat.ChatPlataformaId,
                 chat.UsuarioId,
-                mensajeGeneradoEvent.Mensaje)
+                mensaje)
                 .ConfigureAwait(false);
 
             _logger.LogInformation(
@@ -38,8 +42,10 @@ namespace AppServices.EventHandlers
 MENSAJE ENVIADO
 Texto: {Texto}
 ChatId: {ChatId}",
-                mensajeGeneradoEvent.Mensaje.ToString(),
+                mensaje.ToString(),
                 mensajeGeneradoEvent.EntityId);
+
+            mensaje.PlataformaMensajeId = mensajePlataformaId;
         }
     }
 }
