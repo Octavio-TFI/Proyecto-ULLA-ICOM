@@ -4,107 +4,461 @@
     ViewData["Title"] = "Chat";
 }
 
-<div class="chat-container">
-    <div id="chat-window" class="chat-window"></div>
-    <div class="message-input-container" id="message-input-container">
-        <textarea type="text" id="message-input" class="message-input" rows="1" placeholder="Escribe un mensaje..."></textarea>
-        <button id="send-button" class="send-button" disabled>Enviar</button>
-    </div>
-</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Integrador: REST API LLM para Soporte de Software</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="w-full">
+
+    <!-- Header / Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-slate-900/60 backdrop-blur-md border-b border-slate-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold text-white">Proyecto Integrador</div>
+            <div class="hidden md:flex space-x-8 text-slate-300" id="nav-links">
+                <a href="#inicio" class="hover:text-sky-400">Inicio</a>
+                <a href="#resumen" class="hover:text-sky-400">Resumen</a>
+                <a href="#problema" class="hover:text-sky-400">Problema</a>
+                <a href="#solucion" class="hover:text-sky-400">Solución</a>
+                <a href="#arquitectura" class="hover:text-sky-400">Arquitectura</a>
+                <a href="#tecnologias" class="hover:text-sky-400">Tecnologías</a>
+                <a href="#demo" class="hover:text-sky-400">Demo</a>
+                <a href="#conclusion" class="hover:text-sky-400">Conclusión</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Section 1: Inicio -->
+        <section id="inicio" class="section">
+            <div class="text-center max-w-4xl mx-auto">
+                <div class="mb-4">
+                    <span class="inline-block bg-sky-500/10 text-sky-400 text-sm font-semibold px-3 py-1 rounded-full">Ingeniería en Computación - FCEFyN, UNC</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
+                    <span class="gradient-text">REST API con LLM</span><br> para Soporte de Software
+                </h1>
+                <p class="text-lg md:text-xl text-slate-400 mb-8">
+                    Un proyecto para automatizar y optimizar la asistencia al cliente mediante el uso de Modelos de Lenguaje Grandes (LLMs) y técnicas de RAG.
+                </p>
+                <div class="text-slate-300">
+                    <p class="font-semibold text-lg">Realizado por: Octavio Ulla</p>
+                    <p class="text-sm mt-2">Dirigido por: Laura Díaz | Co-dirigido por: Danilo Páez</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Resumen -->
+        <section id="resumen" class="section">
+            <div class="glass-card max-w-4xl w-full">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Resumen del Proyecto</h2>
+                <div class="space-y-4 text-slate-300 text-lg text-left leading-relaxed">
+                    <p>
+                        Este proyecto aborda la creación de una <strong>API RESTful</strong> diseñada para revolucionar el soporte de software. La API integra un <strong>Modelo de Lenguaje Grande (LLM)</strong> que se conecta a una base de conocimientos específica de la empresa.
+                    </p>
+                    <p>
+                        El objetivo principal es proporcionar <strong>respuestas rápidas y precisas</strong> a las consultas de los usuarios, automatizando un proceso que tradicionalmente consume mucho tiempo y recursos. Para lograrlo, se implementa el patrón <strong>Retrieval-Augmented Generation (RAG)</strong>, que permite al modelo consultar información actualizada y relevante de la base de conocimientos antes de generar una respuesta.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: El Problema -->
+        <section id="problema" class="section">
+            <div class="max-w-4xl w-full text-center">
+                <h2 class="text-3xl font-bold text-white mb-8">El Desafío del Soporte Tradicional</h2>
+                <div class="grid md:grid-cols-2 gap-8 text-left">
+                    <div class="glass-card">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-3">Altos Costos y Tiempo</h3>
+                        <p class="text-slate-300">
+                            El soporte manual requiere un equipo dedicado, lo que implica costos significativos en salarios y capacitación. Además, el tiempo de respuesta puede ser lento, afectando la satisfacción del cliente.
+                        </p>
+                    </div>
+                    <div class="glass-card">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-3">Inconsistencia y Escalabilidad</h3>
+                        <p class="text-slate-300">
+                            La calidad del soporte puede variar entre agentes. Escalar el equipo para manejar un mayor volumen de consultas es un desafío logístico y financiero constante para las empresas en crecimiento.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: La Solución Propuesta -->
+        <section id="solucion" class="section">
+            <div class="glass-card max-w-4xl w-full">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Una Solución Inteligente y Automatizada</h2>
+                <div class="space-y-4 text-slate-300 text-lg leading-relaxed">
+                    <p>
+                        La solución es una <strong>API REST</strong> que actúa como un asistente inteligente. Permite a los sistemas de software (como un ERP) realizar consultas en lenguaje natural y recibir respuestas coherentes y contextualizadas.
+                    </p>
+                    <ul class="list-disc list-inside space-y-3 pl-4">
+                        <li><strong>Disponibilidad 24/7:</strong> El soporte está siempre activo, sin interrupciones.</li>
+                        <li><strong>Respuestas Instantáneas:</strong> Reduce drásticamente los tiempos de espera para los usuarios.</li>
+                        <li><strong>Base de Conocimiento Centralizada:</strong> Utiliza la documentación existente, tickets de soporte y manuales para asegurar respuestas precisas y basadas en la realidad de la empresa.</li>
+                        <li><strong>Aprendizaje y Mejora Continua:</strong> La base de conocimiento puede actualizarse constantemente para mejorar la calidad de las respuestas.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Arquitectura -->
+        <section id="arquitectura" class="section">
+            <div class="max-w-5xl w-full text-center">
+                <h2 class="text-3xl font-bold text-white mb-8">Arquitectura del Sistema</h2>
+                <div class="glass-card p-8">
+                    <div class="flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 text-white">
+                        <!-- Cliente -->
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            <span class="font-bold">Cliente (ERP)</span>
+                            <p class="text-sm text-slate-400">Realiza consulta</p>
+                        </div>
+
+                        <div class="text-3xl text-slate-500 font-thin">&rarr;</div>
+
+                        <!-- API REST -->
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
+                            <span class="font-bold">API REST (.NET 8)</span>
+                            <p class="text-sm text-slate-400">Procesa la petición</p>
+                        </div>
+
+                        <div class="text-3xl text-slate-500 font-thin">&rarr;</div>
+
+                        <!-- Lógica con LLM -->
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.25 6.75c0 3.105-2.52 5.625-5.625 5.625S6 9.855 6 6.75m11.25 0c0-3.105-2.52-5.625-5.625-5.625S6 3.645 6 6.75m11.25 0v9.188c0 1.562-.625 3.016-1.64 4.03.02.002.04.004.06.006a5.625 5.625 0 005.625-5.625V6.75m-16.5 0v9.188c0 1.562.625 3.016 1.64 4.03-.02.002-.04.004-.06.006a5.625 5.625 0 01-5.625-5.625V6.75m11.25 0a5.625 5.625 0 00-5.625-5.625m5.625 5.625a5.625 5.625 0 01-5.625 5.625m0-5.625a5.625 5.625 0 00-5.625 5.625m5.625-5.625a5.625 5.625 0 015.625-5.625"></path></svg>
+                            <span class="font-bold">Semantic Kernel + LLM</span>
+                            <p class="text-sm text-slate-400">Aplica RAG</p>
+                        </div>
+
+                        <div class="text-3xl text-slate-500 font-thin">&rarr;</div>
+
+                        <!-- Base de Conocimiento -->
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                            <span class="font-bold">Base de Datos</span>
+                            <p class="text-sm text-slate-400">SQL Server</p>
+                        </div>
+                    </div>
+                    <p class="mt-8 text-slate-300">El flujo comienza con una consulta del cliente, que la API procesa. Usando <strong>Semantic Kernel</strong>, se busca información relevante en la base de datos (vectorizada) y se envía al LLM junto con la consulta original. El LLM genera una respuesta fundamentada, que se devuelve al cliente.</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Section 6: Tecnologías -->
+        <section id="tecnologias" class="section">
+            <div class="max-w-4xl w-full text-center">
+                <h2 class="text-3xl font-bold text-white mb-10">Stack Tecnológico</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- .NET 8 -->
+                    <div class="glass-card flex flex-col items-center p-6">
+                        <img src="https://img.icons8.com/color/96/net-framework.png" alt=".NET Logo" class="h-16 w-16 mb-3">
+                        <h3 class="font-bold text-xl text-white">.NET 8</h3>
+                        <p class="text-slate-400 text-sm">Framework principal</p>
+                    </div>
+                    <!-- Semantic Kernel -->
+                    <div class="glass-card flex flex-col items-center p-6">
+                        <img src="https://img.icons8.com/ios-filled/100/A9A9A9/brain.png" alt="Brain Icon" class="h-16 w-16 mb-3 filter invert">
+                        <h3 class="font-bold text-xl text-white">Semantic Kernel</h3>
+                        <p class="text-slate-400 text-sm">Orquestador de IA</p>
+                    </div>
+                    <!-- SQL Server -->
+                    <div class="glass-card flex flex-col items-center p-6">
+                        <img src="https://img.icons8.com/color/96/microsoft-sql-server.png" alt="SQL Server Logo" class="h-16 w-16 mb-3">
+                        <h3 class="font-bold text-xl text-white">SQL Server</h3>
+                        <p class="text-slate-400 text-sm">Base de datos</p>
+                    </div>
+                    <!-- Entity Framework -->
+                    <div class="glass-card flex flex-col items-center p-6">
+                        <img src="https://img.icons8.com/ios-filled/100/A9A9A9/data-configuration.png" alt="EF Core Icon" class="h-16 w-16 mb-3 filter invert">
+                        <h3 class="font-bold text-xl text-white">Entity Framework</h3>
+                        <p class="text-slate-400 text-sm">ORM para datos</p>
+                    </div>
+                    <!-- Docker -->
+                    <div class="glass-card flex flex-col items-center p-6">
+                        <img src="https://img.icons8.com/fluency/96/docker.png" alt="Docker Logo" class="h-16 w-16 mb-3">
+                        <h3 class="font-bold text-xl text-white">Docker</h3>
+                        <p class="text-slate-400 text-sm">Contenerización</p>
+                    </div>
+                    <!-- LLMs -->
+                    <div class="glass-card flex flex-col items-center p-6">
+                        <img src="https://img.icons8.com/stickers/100/processor.png" alt="LLM Icon" class="h-16 w-16 mb-3">
+                        <h3 class="font-bold text-xl text-white">Modelos LLM</h3>
+                        <p class="text-slate-400 text-sm">OpenAI / Azure</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Demo-->
+        <section id="demo" class="section">
+            <div class="glass-card max-w-4xl w-full">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Demostración en Vivo</h2>
+                <div class="space-y-4 text-slate-300 text-lg leading-relaxed">
+                    <p class="text-center text-slate-400 mb-6">
+                        Prueba la API en tiempo real. Escribe tu consulta y obtén una respuesta automática del sistema de IA.
+                    </p>
+                    <div class="chat-container glass-card border-slate-600 bg-slate-900/50">
+                        <div id="chat-window" class="chat-window"></div>
+                        <div class="message-input-container glass-card-input" id="message-input-container">
+                            <textarea id="message-input" class="message-input" rows="2" placeholder="Escribe tu consulta aquí..."></textarea>
+                            <button id="send-button" class="send-button" disabled>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                </svg>
+                                Enviar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8: Conclusión -->
+        <section id="conclusion" class="section">
+            <div class="glass-card max-w-4xl w-full">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Conclusión e Impacto</h2>
+                <div class="space-y-4 text-slate-300 text-lg leading-relaxed">
+                    <p>
+                        El proyecto demuestra con éxito la viabilidad de utilizar LLMs para crear un sistema de soporte de software avanzado. La API desarrollada no solo es funcional, sino que también es <strong>escalable, eficiente y adaptable</strong> a las necesidades de cualquier empresa.
+                    </p>
+                    <p>
+                        El impacto potencial incluye una <strong>mejora significativa en la experiencia del cliente</strong>, una <strong>reducción de los costos operativos</strong> y la liberación de los equipos de soporte para que puedan centrarse en problemas más complejos. Este enfoque representa el futuro del soporte de software: inteligente, instantáneo y siempre disponible.
+                    </p>
+                    <div class="text-center mt-8">
+                        <p class="text-lg font-semibold text-white">Octavio Ulla</p>
+                        <p class="text-sky-400">octavio.ulla@mi.unc.edu.ar</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('#nav-links a');
+
+            // --- Animación de Scroll ---
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // --- Navegación Activa ---
+            const navObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.remove('active', 'text-sky-400');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active', 'text-sky-400');
+                            }
+                        });
+                    }
+                });
+            }, {
+                rootMargin: '-50% 0px -50% 0px'
+            });
+
+            sections.forEach(section => {
+                navObserver.observe(section);
+            });
+        });
+    </script>
+</body>
 
 @section Styles {
     <style>
-        header {
-            width: 100%;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
         }
 
-        html, body {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            background-color: #3b3b3b;
+        .section {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
+            padding: 4rem 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .gradient-text {
+            background: -webkit-linear-gradient(45deg, #38bdf8, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav a {
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #38bdf8;
+            transition: width 0.3s ease-out;
+        }
+
+        nav a.active::after,
+        nav a:hover::after {
+            width: 100%;
         }
 
         .chat-container {
             display: flex;
             flex-direction: column;
             width: 100%;
-            height: 100%;
-            padding-bottom: 2%;
+            min-height: 500px;
+            max-height: 600px;
             overflow: hidden;
-            background-color: #3b3b3b;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
         }
 
         .chat-window {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
             flex: 1;
-            padding: 20px;
-            padding-left: 10%;
-            padding-right: 10%;
+            padding: 24px;
             overflow-y: auto;
-            scrollbar-color: dimgray #3b3b3b;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+        }
+
+        .chat-window::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-window::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-window::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 3px;
+        }
+
+        .chat-window::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.5);
+        }
+
+        .glass-card-input {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
+            margin: 16px;
         }
 
         .message-input-container {
             display: flex;
             align-items: end;
-            padding: 10px;
-            background-color: dimgray;
-            border-radius: 20px;
-            margin-left: 10%;
-            margin-right: 10%;
+            padding: 12px 16px;
+            gap: 12px;
         }
 
         .message-input {
             flex-grow: 1;
-            border: 0px;
+            border: none;
             outline: none;
             resize: none;
-            max-height: 150px;
-            background-color: dimgray;
-            color: white;
-            scrollbar-color: #3b3b3b dimgray;
-            margin: 10px;
+            max-height: 120px;
+            background: transparent;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
         }
 
         .message-input::placeholder {
-            color: lightgray;
+            color: #94a3b8;
         }
 
         .send-button {
-            background-color: white;
-            color: black;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 15px;
+            padding: 12px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            align-self: center;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
         }
 
         .send-button:disabled {
-            background: dimgray;
-            color: dimgray;
+            background: rgba(71, 85, 105, 0.5);
+            color: #64748b;
             cursor: not-allowed;
+            box-shadow: none;
         }
 
-        .send-button:hover {
-            background-color: lightgray;
+        .send-button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            box-shadow: 0 6px 16px rgba(56, 189, 248, 0.35);
+            transform: translateY(-1px);
         }
 
         .chat-window div {
             display: flex;
-            color: white;
+            color: #e2e8f0;
             max-width: 100%;
             word-wrap: break-word;
             align-self: flex-start;
             flex-direction: row;
+            gap: 12px;
         }
 
         .icon-border {
@@ -113,82 +467,87 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            border: 1px solid dimgray;
-            align-self: center;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            align-self: flex-start;
+            flex-shrink: 0;
         }
 
         .icon {
-            width: 25px;
-            height: 25px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             object-fit: cover;
         }
 
         .chat-window .user-message {
             padding: 12px 16px;
-            background-color: dimgray;
+            background: linear-gradient(135deg, #475569, #334155);
             align-self: flex-end;
-            max-width: 70%;
-            border-radius: 20px;
+            max-width: 75%;
+            border-radius: 16px 16px 4px 16px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .chat-window div .bot-message {
-            max-width: 100%;
-            align-self: center;
-            padding: 8px 12px;
+            max-width: 75%;
+            align-self: flex-start;
+            padding: 12px 16px;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 16px 16px 16px 4px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            backdrop-filter: blur(10px);
         }
 
+        /* Enhanced Loading Animations */
         .loader {
-            width: 10px;
-            height: 10px;
             border-radius: 50%;
             display: block;
-            margin: 15px auto;
+            width: 20px;
+            height: 20px;
+            margin: auto 0;
             position: relative;
-            color: #FFF;
-            left: -100px;
-            margin-left: 100px;
-            box-sizing: border-box;
-            animation: shadowRolling 2s linear infinite;
         }
 
-        @@keyframes shadowRolling {
-        0% {
-            box-shadow: 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+        /* Primary loader - Pulsing Neural Network Style */
+        .loader.neural-pulse {
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, transparent 50%);
+            border-radius: 50%;
+            animation: neuralPulse 2s ease-in-out infinite;
         }
 
-        12% {
-            box-shadow: 100px 0 white, 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+        .loader.neural-pulse::before,
+        .loader.neural-pulse::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.4) 0%, transparent 60%);
+            animation: neuralPulse 2s ease-in-out infinite;
         }
 
-        25% {
-            box-shadow: 110px 0 white, 100px 0 white, 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+        .loader.neural-pulse::before {
+            animation-delay: 0.5s;
+            transform: scale(1.2);
         }
 
-        36% {
-            box-shadow: 120px 0 white, 110px 0 white, 100px 0 white, 0px 0 rgba(255, 255, 255, 0);
+        .loader.neural-pulse::after {
+            animation-delay: 1s;
+            transform: scale(1.4);
         }
 
-        50% {
-            box-shadow: 130px 0 white, 120px 0 white, 110px 0 white, 100px 0 white;
-        }
-
-        62% {
-            box-shadow: 200px 0 rgba(255, 255, 255, 0), 130px 0 white, 120px 0 white, 110px 0 white;
-        }
-
-        75% {
-            box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 130px 0 white, 120px 0 white;
-        }
-
-        87% {
-            box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 130px 0 white;
-        }
-
-        100% {
-            box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0);
-        }
-
+        /* Keyframe animations */
+        @@keyframes neuralPulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
         }
 
     </style>

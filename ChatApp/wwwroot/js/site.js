@@ -85,6 +85,7 @@ sendButton.addEventListener("click", async () => {
     const newMessageIcon = document.createElement("img");
 
     loadingIndicator.classList.add('loader');
+    loadingIndicator.classList.add('neural-pulse');
 
     newMessageIcon.classList.add('icon');
     newMessageIcon.src = "CZ.png";
