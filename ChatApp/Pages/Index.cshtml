@@ -25,8 +25,10 @@
                 <a href="#resumen" class="hover:text-sky-400">Resumen</a>
                 <a href="#problema" class="hover:text-sky-400">Problema</a>
                 <a href="#solucion" class="hover:text-sky-400">Solución</a>
+                <a href="#funcionamiento" class="hover:text-sky-400">Funcionamiento</a>
                 <a href="#arquitectura" class="hover:text-sky-400">Arquitectura</a>
                 <a href="#tecnologias" class="hover:text-sky-400">Tecnologías</a>
+                <a href="#seleccion-llm" class="hover:text-sky-400">Selección LLMs</a>
                 <a href="#demo" class="hover:text-sky-400">Demo</a>
                 <a href="#conclusion" class="hover:text-sky-400">Conclusión</a>
             </div>
@@ -114,10 +116,10 @@
             </div>
         </section>
 
-        <!-- Section 5: Arquitectura -->
-        <section id="arquitectura" class="section">
+        <!-- Section 5: Funcionamiento -->
+        <section id="funcionamiento" class="section">
             <div class="max-w-5xl w-full text-center">
-                <h2 class="text-3xl font-bold text-white mb-8">Arquitectura del Sistema</h2>
+                <h2 class="text-3xl font-bold text-white mb-8">Funcionamiento del Sistema</h2>
                 <div class="glass-card p-8">
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 text-white">
                         <!-- Cliente -->
@@ -351,53 +353,105 @@
             </div>
         </section>
 
+        <!-- Section 6: Arquitectura -->
+        <section id="arquitectura" class="section">
+            <div class="max-w-5xl w-full text-center">
+                <h2 class="text-3xl font-bold text-white mb-8">Arquitectura del Sistema</h2>
+                <p class="text-slate-400 mb-10 max-w-3xl mx-auto">Para construir una base sólida, escalable y mantenible, el proyecto se adhiere a los siguientes principios y patrones de diseño.</p>
+                <div class="grid md:grid-cols-2 gap-8 text-left">
+                    <div class="glass-card h-full">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-3">Arquitectura Hexagonal</h3>
+                        <p class="text-slate-300">
+                            Esta arquitectura aísla la lógica central de la aplicación de los servicios externos (base de datos, APIs y LLMs). Esto permite que la aplicación sea independiente de la tecnología y mucho más fácil de probar, mantener o intercambiar tecnologías (ej: LLMs).
+                        </p>
+                    </div>
+                    <div class="glass-card h-full">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-3">Principios SOLID</h3>
+                        <p class="text-slate-300">
+                            Son un conjunto de cinco principios de diseño que facilitan el desarrollo de software comprensible, flexible y mantenible. Guían la creación de clases y módulos bien definidos, reduciendo acoplamientos.
+                        </p>
+                    </div>
+                    <div class="glass-card h-full">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-3">Domain-Driven Design (DDD)</h3>
+                        <p class="text-slate-300">
+                            Enfoca el desarrollo en el dominio del negocio. Se crea un modelo rico que refleja los procesos y reglas de la empresa (en este caso, el soporte de software), utilizando un "Lenguaje Ubicuo" compartido por todo el equipo.
+                        </p>
+                    </div>
+                    <div class="glass-card h-full">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-3">Patrón Outbox</h3>
+                        <p class="text-slate-300">
+                            Garantiza la consistencia de datos en operaciones que escribir en la base de datos y publican eventos. Asegura la resilencia del sistema incluso si ocurren fallos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <!-- Section 6: Tecnologías -->
+
+        <!-- Section 7: Tecnologías -->
         <section id="tecnologias" class="section">
             <div class="max-w-4xl w-full text-center">
                 <h2 class="text-3xl font-bold text-white mb-10">Stack Tecnológico</h2>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
                     <!-- .NET 8 -->
                     <div class="glass-card flex flex-col items-center p-6">
-                        <img src="https://img.icons8.com/color/96/net-framework.png" alt=".NET Logo" class="h-16 w-16 mb-3">
+                        <img src="https://img.icons8.com/color/96/net-framework.png" alt=".NET Icon" class="h-16 w-16 mb-3">
                         <h3 class="font-bold text-xl text-white">.NET 8</h3>
                         <p class="text-slate-400 text-sm">Framework principal</p>
                     </div>
                     <!-- Semantic Kernel -->
                     <div class="glass-card flex flex-col items-center p-6">
-                        <img src="https://img.icons8.com/ios-filled/100/A9A9A9/brain.png" alt="Brain Icon" class="h-16 w-16 mb-3 filter invert">
+                        <img src="https://devblogs.microsoft.com/semantic-kernel/wp-content/uploads/sites/78/2024/03/Large_SK_Logo.png" alt="SK Icon" class="h-16 w-16 mb-3">
                         <h3 class="font-bold text-xl text-white">Semantic Kernel</h3>
-                        <p class="text-slate-400 text-sm">Orquestador de IA</p>
+                        <p class="text-slate-400 text-sm">Orquestador de LLM</p>
                     </div>
                     <!-- SQL Server -->
                     <div class="glass-card flex flex-col items-center p-6">
-                        <img src="https://img.icons8.com/color/96/microsoft-sql-server.png" alt="SQL Server Logo" class="h-16 w-16 mb-3">
+                        <img src="https://img.icons8.com/color/96/microsoft-sql-server.png" alt="SQL Server IcON" class="h-16 w-16 mb-3">
                         <h3 class="font-bold text-xl text-white">SQL Server</h3>
                         <p class="text-slate-400 text-sm">Base de datos</p>
                     </div>
                     <!-- Entity Framework -->
                     <div class="glass-card flex flex-col items-center p-6">
-                        <img src="https://img.icons8.com/ios-filled/100/A9A9A9/data-configuration.png" alt="EF Core Icon" class="h-16 w-16 mb-3 filter invert">
+                        <img src="https://img.icons8.com/?size=100&id=RXrON5kyN96A&format=png&color=000000" alt="EF Core Icon" class="h-16 w-16 mb-3">
                         <h3 class="font-bold text-xl text-white">Entity Framework</h3>
                         <p class="text-slate-400 text-sm">ORM para datos</p>
                     </div>
+                    <!-- LLM SoTA -->
+                    <div class="glass-card flex flex-col items-center p-6">
+                        <img src="https://img.icons8.com/?size=100&id=unXm4ixWAr6H&format=png&color=000000" alt="LLM SoTA Icon" class="h-16 w-16 mb-3">
+                        <h3 class="font-bold text-xl text-white">Gemini 2.0 Flash</h3>
+                        <p class="text-slate-400 text-sm">LLM SoTA</p>
+                    </div>
                     <!-- Docker -->
                     <div class="glass-card flex flex-col items-center p-6">
-                        <img src="https://img.icons8.com/fluency/96/docker.png" alt="Docker Logo" class="h-16 w-16 mb-3">
-                        <h3 class="font-bold text-xl text-white">Docker</h3>
-                        <p class="text-slate-400 text-sm">Contenerización</p>
-                    </div>
-                    <!-- LLMs -->
-                    <div class="glass-card flex flex-col items-center p-6">
-                        <img src="https://img.icons8.com/stickers/100/processor.png" alt="LLM Icon" class="h-16 w-16 mb-3">
-                        <h3 class="font-bold text-xl text-white">Modelos LLM</h3>
-                        <p class="text-slate-400 text-sm">OpenAI / Azure</p>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Qwen_logo.svg" alt="LLM Local Icon" class="h-16 w-16 mb-3">
+                        <h3 class="font-bold text-xl text-white">Qwen 2.5 32B</h3>
+                        <p class="text-slate-400 text-sm">LLM Local</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Section 7: Demo-->
+        <!-- Section 8: Selección de LLMs -->
+        <section id="seleccion-llm" class="section">
+            <div class="glass-card max-w-4xl w-full">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Selección de LLMs</h2>
+                <p class="text-center text-slate-400 mb-8">La elección de los modelos de lenguaje es crucial. Se evaluaron múltiples opciones a través de un analisis cuantitativo basándose en los siguientes criterios:</p>
+                <div class="grid md:grid-cols-2 gap-6 text-left">
+                    <div class="bg-slate-800/50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-sky-400 mb-2">1. Rendimiento y Precisión</h3>
+                        <p class="text-slate-300 text-sm">Se priorizaron modelos con alto rendimiento en benchmarks de comprensión de lenguaje y razonamiento, asegurando respuestas coherentes y precisas.</p>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-sky-400 mb-2">2. Costo-Eficiencia</h3>
+                        <p class="text-slate-300 text-sm">Se analizó el modelo de precios por token para encontrar un balance óptimo entre capacidad y costo operativo, garantizando la viabilidad económica del proyecto.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 9: Demo-->
         <section id="demo" class="section">
             <div class="glass-card max-w-4xl w-full">
                 <h2 class="text-3xl font-bold text-white mb-6 text-center">Demostración en Vivo</h2>
@@ -421,7 +475,7 @@
             </div>
         </section>
 
-        <!-- Section 8: Conclusión -->
+        <!-- Section 10: Conclusión -->
         <section id="conclusion" class="section">
             <div class="glass-card max-w-4xl w-full">
                 <h2 class="text-3xl font-bold text-white mb-6 text-center">Conclusión e Impacto</h2>
