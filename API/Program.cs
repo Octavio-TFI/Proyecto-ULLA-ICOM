@@ -8,6 +8,7 @@ using Infrastructure.LLM;
 using Infrastructure.Outbox;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging.EventLog;
+using Serilog;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,19 +34,19 @@ builder.Services.AddFileManagerServices();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Setup Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom
+    .Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
 // Configuracion de deployment como windows service
 if (builder.Environment.IsProduction())
 {
     Directory.SetCurrentDirectory(AppContext.BaseDirectory);
     builder.Services.AddWindowsService();
-
-    builder.Logging
-        .AddEventLog(
-            x =>
-            {
-                x.LogName = "Application";
-                x.SourceName = "LLM API";
-            });
 
     builder.WebHost
         .ConfigureKestrel(
