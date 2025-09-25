@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -11,31 +12,38 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Database.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    [Migration("20250728234538_SeparacionLlamadaHerramienta")]
-    partial class SeparacionLlamadaHerramienta
+    [Migration("20250924174526_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Domain.Entities.ChatAgregado.Chat", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ChatPlataformaId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Plataforma")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UsuarioId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -48,22 +56,22 @@ namespace Infrastructure.Database.Migrations
             modelBuilder.Entity("Domain.Entities.ChatAgregado.ConsultaRecuperada", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ConsultaId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MensajeHerramientaId")
-                        .HasColumnType("TEXT");
+                    b.Property<Guid>("MensajeHerramientaInfoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Rank")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ConsultaId");
 
-                    b.HasIndex("MensajeHerramientaId");
+                    b.HasIndex("MensajeHerramientaInfoId");
 
                     b.ToTable("ConsultaRecuperada");
                 });
@@ -71,22 +79,22 @@ namespace Infrastructure.Database.Migrations
             modelBuilder.Entity("Domain.Entities.ChatAgregado.DocumentoRecuperado", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("DocumentoId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MensajeHerramientaId")
-                        .HasColumnType("TEXT");
+                    b.Property<Guid>("MensajeHerramientaInfoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Rank")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DocumentoId");
 
-                    b.HasIndex("MensajeHerramientaId");
+                    b.HasIndex("MensajeHerramientaInfoId");
 
                     b.ToTable("DocumentoRecuperado");
                 });
@@ -94,16 +102,16 @@ namespace Infrastructure.Database.Migrations
             modelBuilder.Entity("Domain.Entities.ChatAgregado.Mensaje", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ChatId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("PlataformaMensajeId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -117,30 +125,30 @@ namespace Infrastructure.Database.Migrations
             modelBuilder.Entity("Domain.Entities.ConsultaAgregado.Consulta", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.PrimitiveCollection<string>("EmbeddingDescripcion")
                         .IsRequired()
-                        .HasColumnType("float[768]");
+                        .HasColumnType("vector(768)");
 
                     b.PrimitiveCollection<string>("EmbeddingTitulo")
                         .IsRequired()
-                        .HasColumnType("float[768]");
+                        .HasColumnType("vector(768)");
 
                     b.Property<int>("RemoteId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("Solucion")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -150,15 +158,15 @@ namespace Infrastructure.Database.Migrations
             modelBuilder.Entity("Domain.Entities.DocumentoAgregado.Document", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Filename")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Texto")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -171,18 +179,18 @@ namespace Infrastructure.Database.Migrations
             modelBuilder.Entity("Domain.Entities.DocumentoAgregado.DocumentChunk", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("DocumentId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
                     b.PrimitiveCollection<string>("Embedding")
                         .IsRequired()
-                        .HasColumnType("float[768]");
+                        .HasColumnType("vector(768)");
 
                     b.Property<string>("Texto")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -195,24 +203,38 @@ namespace Infrastructure.Database.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("EventData")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EventType")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsProcessed")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MaxRetries")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("NextRetryOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("OccurredOn")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("ProcessedOn")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("int");
+
+                    b.Property<double>("RetryIntervalSeconds")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -223,11 +245,14 @@ namespace Infrastructure.Database.Migrations
                 {
                     b.HasBaseType("Domain.Entities.ChatAgregado.Mensaje");
 
-                    b.Property<string>("Texto")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<Guid>("LlamadaId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.ToTable("MensajeHerramienta");
+                    b.HasIndex("LlamadaId")
+                        .IsUnique()
+                        .HasFilter("[LlamadaId] IS NOT NULL");
+
+                    b.ToTable((string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ChatAgregado.MensajeIA", b =>
@@ -235,13 +260,31 @@ namespace Infrastructure.Database.Migrations
                     b.HasBaseType("Domain.Entities.ChatAgregado.Mensaje");
 
                     b.Property<bool?>("Calificacion")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<string>("Texto")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.ToTable("MensajesIA");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ChatAgregado.MensajeLlamadaHerramienta", b =>
+                {
+                    b.HasBaseType("Domain.Entities.ChatAgregado.Mensaje");
+
+                    b.Property<string>("Argumentos")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FunctionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PluginName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("MensajesLlamadaHerramienta");
                 });
 
             modelBuilder.Entity("Domain.Entities.ChatAgregado.MensajeTextoUsuario", b =>
@@ -250,9 +293,16 @@ namespace Infrastructure.Database.Migrations
 
                     b.Property<string>("Texto")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("MensajeTextoUsuario");
+                    b.ToTable("MensajesTextoUsuario");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ChatAgregado.MensajeHerramientaInfo", b =>
+                {
+                    b.HasBaseType("Domain.Entities.ChatAgregado.MensajeHerramienta");
+
+                    b.ToTable("MensajeHerramientaInfo");
                 });
 
             modelBuilder.Entity("Domain.Entities.ChatAgregado.ConsultaRecuperada", b =>
@@ -263,9 +313,9 @@ namespace Infrastructure.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ChatAgregado.MensajeHerramienta", null)
+                    b.HasOne("Domain.Entities.ChatAgregado.MensajeHerramientaInfo", null)
                         .WithMany("ConsultasRecuperadas")
-                        .HasForeignKey("MensajeHerramientaId")
+                        .HasForeignKey("MensajeHerramientaInfoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -278,9 +328,9 @@ namespace Infrastructure.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ChatAgregado.MensajeHerramienta", null)
+                    b.HasOne("Domain.Entities.ChatAgregado.MensajeHerramientaInfo", null)
                         .WithMany("DocumentosRecuperados")
-                        .HasForeignKey("MensajeHerramientaId")
+                        .HasForeignKey("MensajeHerramientaInfoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -303,6 +353,17 @@ namespace Infrastructure.Database.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Entities.ChatAgregado.MensajeHerramienta", b =>
+                {
+                    b.HasOne("Domain.Entities.ChatAgregado.MensajeLlamadaHerramienta", "Llamada")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.ChatAgregado.MensajeHerramienta", "LlamadaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Llamada");
+                });
+
             modelBuilder.Entity("Domain.Entities.ChatAgregado.Chat", b =>
                 {
                     b.Navigation("Mensajes");
@@ -313,7 +374,7 @@ namespace Infrastructure.Database.Migrations
                     b.Navigation("Chunks");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ChatAgregado.MensajeHerramienta", b =>
+            modelBuilder.Entity("Domain.Entities.ChatAgregado.MensajeHerramientaInfo", b =>
                 {
                     b.Navigation("ConsultasRecuperadas");
 

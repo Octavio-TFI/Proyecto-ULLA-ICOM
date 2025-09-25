@@ -1,7 +1,6 @@
 ﻿using Domain.Entities.DocumentoAgregado;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using SQLitePCL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +20,11 @@ namespace Infrastructure.Database.Repositories
                 .OrderBy(
                     d => d.Chunks
                         .Min(
-                            c => _context.CosineDistance(
-                                    c.Embedding,
-                                    embedding.ToArray())))
+                            c => EF.Functions
+                                    .VectorDistance(
+                                        "cosine",
+                                        c.Embedding,
+                                        embedding.ToArray())))
                 .Take(15)
                 .ToListAsync();
         }

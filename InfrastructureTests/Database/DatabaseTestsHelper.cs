@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +11,8 @@ namespace InfrastructureTests.Database.Tests
     {
         public static ChatContext CreateInMemoryChatContext()
         {
-            var connection = new SqliteConnection("Data Source=:memory:");
-            connection.Open();
-
-            connection.LoadExtension("vec0");
-
             var options = new DbContextOptionsBuilder<ChatContext>()
-                .UseSqlite(connection)
+                .UseInMemoryDatabase(TestContext.CurrentContext.Test.ID)
                 .Options;
 
             var context = new ChatContext(options);

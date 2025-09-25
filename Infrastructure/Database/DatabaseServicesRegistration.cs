@@ -3,7 +3,6 @@ using Domain;
 using Domain.Repositories;
 using Infrastructure.Database.Repositories;
 using Infrastructure.Outbox;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Proxies;
@@ -22,16 +21,14 @@ namespace Infrastructure.Database
             this IServiceCollection services,
             string connectionString)
         {
-            // Como SQL Server todavia no soporta Vector Search
-            // Se utiliza SQLite
             services.AddDbContext<ChatContext>(
                 options =>
                 {
                     options.UseLazyLoadingProxies()
-                        .UseSqlite(connectionString)
-                        .AddInterceptors(
-                            new OutboxInterceptor(),
-                            new SQLiteExtensionInterceptor());
+                        .UseSqlServer(
+                            connectionString,
+                            options => options.UseVectorSearch())
+                        .AddInterceptors(new OutboxInterceptor());
                 });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();

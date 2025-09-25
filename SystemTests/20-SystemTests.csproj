@@ -12,10 +12,11 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-	<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.2" />
+	<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.9" />
     <PackageReference Include="NUnit" Version="3.14.0" />
     <PackageReference Include="NUnit.Analyzers" Version="3.9.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="Testcontainers.MsSql" Version="4.7.0" />
     <PackageReference Include="WireMock.Net.FluentAssertions" Version="1.7.4" />
   </ItemGroup>
 

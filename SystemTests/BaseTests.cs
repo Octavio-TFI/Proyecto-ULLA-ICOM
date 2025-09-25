@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Testcontainers.MsSql;
 
 namespace System.Tests
 {
@@ -10,11 +11,22 @@ namespace System.Tests
     {
         readonly Dictionary<string, APIFactory> _apiFactories = [];
 
-        protected APIFactory CreateAPIFactory(int LLMPort, int testClientPort)
+        protected async Task<APIFactory> CreateAPIFactoryAsync(
+            int LLMPort,
+            int testClientPort)
         {
-            string testId = Guid.NewGuid().ToString();
+            var sqlContainer = new MsSqlBuilder()
+                .WithImage("mcr.microsoft.com/mssql/server:2025-latest")
+                .Build();
 
-            var apiFactory = new APIFactory(LLMPort, testClientPort, testId);
+            await sqlContainer.StartAsync();
+
+            var apiFactory = new APIFactory(
+                LLMPort,
+                testClientPort,
+                sqlContainer.GetConnectionString());
+
+            string testId = Guid.NewGuid().ToString();
 
             _apiFactories.Add(testId, apiFactory);
 
