@@ -61,10 +61,6 @@ namespace Infrastructure.Database
             modelBuilder.Entity<MensajeIA>().HasBaseType<Mensaje>();
             modelBuilder.Entity<MensajeTextoUsuario>().HasBaseType<Mensaje>();
 
-            modelBuilder.HasDbFunction(
-                typeof(ChatContext).GetMethod(nameof(CosineDistance))!)
-                .HasName("vec_distance_cosine");
-
             ConfigureDocumentModel(modelBuilder.Entity<Document>());
             ConfigureDocumentChunkModel(modelBuilder.Entity<DocumentChunk>());
             ConfigureConsultaModel(modelBuilder.Entity<Consulta>());
@@ -94,17 +90,24 @@ namespace Infrastructure.Database
         {
             llamadaHerramientaBuilder
                 .Property(e => e.Argumentos)
-                .HasColumnType("json")
                 .HasConversion(
                     v => JsonConvert.SerializeObject(v),
                     v => JsonConvert.DeserializeObject<Dictionary<string, object>>(
                         v)!)
+                .HasColumnType("nvarchar(max)")
                 .IsRequired();
         }
 
         static void ConfigureMensajeHerramientaInfoModel(
             EntityTypeBuilder<MensajeHerramientaInfo> mensajeHerramientaBuilder)
         {
+            mensajeHerramientaBuilder
+                .HasOne(m => m.Llamada)
+                .WithOne()
+                .HasForeignKey<MensajeHerramientaInfo>()
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             mensajeHerramientaBuilder
                 .HasMany(m => m.DocumentosRecuperados)
                 .WithOne()
@@ -152,7 +155,7 @@ namespace Infrastructure.Database
         {
             docmuentChunckBuilder
                 .Property(e => e.Embedding)
-                .HasColumnType("float[768]");
+                .HasColumnType("vector(768)");
         }
 
         static void ConfigureConsultaModel(
@@ -160,16 +163,16 @@ namespace Infrastructure.Database
         {
             consultaBuilder
                 .Property(e => e.EmbeddingTitulo)
-                .HasColumnType("float[768]");
+                .HasColumnType("vector(768)");
 
             consultaBuilder
                 .Property(e => e.EmbeddingDescripcion)
-                .HasColumnType("float[768]");
+                .HasColumnType("vector(768)");
         }
 
-        public double CosineDistance(float[] vector1, float[] vector2)
-        {
-            throw new NotSupportedException();
-        }
+        //public double CosineDistance(float[] vector1, float[] vector2)
+        //{
+        //    throw new NotSupportedException();
+        //}
     }
 }

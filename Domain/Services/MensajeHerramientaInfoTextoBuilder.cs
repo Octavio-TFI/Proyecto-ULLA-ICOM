@@ -25,26 +25,31 @@ namespace Domain.Services
                     $"Tipo de mensaje no soportado: {mensajeHerramienta.GetType().Name}");
             }
 
-            var rankedDocuments = await Task.WhenAll(
-                mensajeHerramientaInfo.DocumentosRecuperados
-                    .Where(d => d.Rank)
-                    .Select(
-                        async d => await documentRepository.GetTextoAsync(
-                                d.DocumentoId)));
+            // Se podria optimizar obteniendo los textos en una sola consulta
+            var rankedDocuments = new List<string>();
 
-            var rankedConsultas = await Task.WhenAll(
-                mensajeHerramientaInfo.ConsultasRecuperadas
-                    .Where(c => c.Rank)
-                    .Select(
-                        async c => await consultaRepository.GetTextoAsync(
-                                c.ConsultaId)));
+            foreach (var doc in mensajeHerramientaInfo.DocumentosRecuperados
+                .Where(d => d.Rank))
+            {
+                rankedDocuments.Add(
+                    await documentRepository.GetTextoAsync(doc.DocumentoId));
+            }
+
+            var rankedConsultas = new List<string>();
+
+            foreach (var consulta in mensajeHerramientaInfo.ConsultasRecuperadas
+                .Where(c => c.Rank))
+            {
+                rankedConsultas.Add(
+                    await consultaRepository.GetTextoAsync(consulta.ConsultaId));
+            }
 
 
             var stringBuilder = new StringBuilder();
 
             stringBuilder.Append("[Documentación]").AppendLine();
 
-            if (rankedDocuments.Length > 0)
+            if (rankedDocuments.Count > 0)
             {
                 stringBuilder
                     .AppendJoin("\r\n", rankedDocuments);
@@ -58,7 +63,7 @@ namespace Domain.Services
             stringBuilder.AppendLine();
             stringBuilder.Append("[Consultas Históricas]").AppendLine();
 
-            if (rankedConsultas.Length > 0)
+            if (rankedConsultas.Count > 0)
             {
                 stringBuilder
                     .AppendJoin(

@@ -28,7 +28,7 @@ namespace System.Tests.NoFuncionales
             using var localLLMServer = WireMockServer.Start();
             using var chatServer = WireMockServer.Start();
 
-            var apiFactory = CreateAPIFactory(
+            var apiFactory = await CreateAPIFactoryAsync(
                 localLLMServer.Port,
                 chatServer.Port);
 
@@ -39,6 +39,8 @@ namespace System.Tests.NoFuncionales
             Guid documentoId = Guid.NewGuid();
             Guid consultaId = Guid.NewGuid();
 
+            var embedding = Enumerable.Range(1, 768).Select(x => x * 1.0f).ToArray();
+
             context.Documents
                 .Add(
                     new Document
@@ -47,12 +49,12 @@ namespace System.Tests.NoFuncionales
                         Texto = "Documento",
                         Filename = "doc1.txt",
                         Chunks =
-                            [new()
+                            [ new()
                                 {
                                     Id = Guid.NewGuid(),
                                     Texto = "Texto del documento",
-                                    Embedding = [1,2,3]
-                                }]
+                                    Embedding = embedding
+                                } ]
                     });
 
             context.Consultas
@@ -61,8 +63,8 @@ namespace System.Tests.NoFuncionales
                     {
                         Id = consultaId,
                         RemoteId = 1,
-                        EmbeddingTitulo = [1, 2, 3],
-                        EmbeddingDescripcion = [1, 2, 3],
+                        EmbeddingTitulo = embedding,
+                        EmbeddingDescripcion = embedding,
                         Titulo = "Titulo de la consulta",
                         Descripcion = "Descripcion de la consulta",
                         Solucion = "Solucion"
@@ -81,12 +83,12 @@ namespace System.Tests.NoFuncionales
                             new EmbeddingResponseList
                                 {
                                     Data =
-                                        [..Enumerable.Repeat(
+                                        [ ..Enumerable.Repeat(
                                                     new EmbeddingResponse
-                                        {
-                                            Embedding = [1,2,3]
-                                        },
-                                                    10)]
+                                                    {
+                                                        Embedding = embedding
+                                                    },
+                                                    10) ]
                                 }));
 
             // Mock llamada de herramienta de información

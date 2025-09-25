@@ -23,7 +23,7 @@ namespace System.Tests.NoFuncionales
             using var localLLMServer = WireMockServer.Start();
             using var chatServer = WireMockServer.Start();
 
-            var apiFactory = CreateAPIFactory(
+            var apiFactory = await CreateAPIFactoryAsync(
                 localLLMServer.Port,
                 chatServer.Port);
 

@@ -8,6 +8,8 @@ using Infrastructure.LLM;
 using Infrastructure.Outbox;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging.EventLog;
+using Serilog;
+using Serilog.Events;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +34,23 @@ builder.Services.AddFileManagerServices();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Setup Serilog
+// Logger inicial para capturar logs durante el arranque
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel
+    .Debug()
+    .Enrich
+    .FromLogContext()
+    .WriteTo
+    .EventLog("LLM API")
+    .WriteTo
+    .Console()
+    .CreateBootstrapLogger();
+
+// Reconfiguracion de logger final para usar la configuracion del appsettings.json
+builder.Host
+    .UseSerilog((services, lc) => lc.ReadFrom.Configuration(builder.Configuration));
 
 // Configuracion de deployment como windows service
 if (builder.Environment.IsProduction())

@@ -4,107 +4,693 @@
     ViewData["Title"] = "Chat";
 }
 
-<div class="chat-container">
-    <div id="chat-window" class="chat-window"></div>
-    <div class="message-input-container" id="message-input-container">
-        <textarea type="text" id="message-input" class="message-input" rows="1" placeholder="Escribe un mensaje..."></textarea>
-        <button id="send-button" class="send-button" disabled>Enviar</button>
-    </div>
-</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Integrador: REST API LLM para Soporte de Software</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="w-full">
+
+    <!-- Header / Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-slate-900/60 backdrop-blur-md border-b border-slate-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold text-white">Proyecto Integrador</div>
+            <div class="hidden md:flex space-x-8 text-slate-300" id="nav-links">
+                <a href="#inicio" class="hover:text-sky-400">Inicio</a>
+                <a href="#resumen" class="hover:text-sky-400">Resumen</a>
+                <a href="#problema" class="hover:text-sky-400">Problema</a>
+                <a href="#solucion" class="hover:text-sky-400">Solución</a>
+                <a href="#funcionamiento" class="hover:text-sky-400">Funcionamiento</a>
+                <a href="#arquitectura" class="hover:text-sky-400">Arquitectura</a>
+                <a href="#tecnologias" class="hover:text-sky-400">Tecnologías</a>
+                <a href="#seleccion-llm" class="hover:text-sky-400">Selección LLMs</a>
+                <a href="#demo" class="hover:text-sky-400">Demo</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Section 1: Inicio -->
+        <section id="inicio" class="section">
+            <div class="text-center max-w-4xl mx-auto">
+                <div class="mb-4">
+                    <span class="inline-block bg-sky-500/10 text-sky-400 text-sm font-semibold px-3 py-1 rounded-full">Ingeniería en Computación - FCEFyN, UNC</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
+                    <span class="gradient-text">REST API LLM</span><br> para Soporte de Software
+                </h1>
+                <p class="text-lg md:text-xl text-slate-400 mb-8">
+                    Un proyecto para automatizar y optimizar la asistencia al cliente mediante el uso de Modelos de Lenguaje Grandes (LLMs).
+                </p>
+                <div class="text-slate-300">
+                    <p class="font-semibold text-lg">Realizado por: Octavio Ulla</p>
+                    <p class="text-sm mt-2">Dirigido por: Laura Díaz | Co-dirigido por: Danilo Páez</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Resumen -->
+        <section id="resumen" class="section">
+            <div class="glass-card max-w-4xl w-full">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Resumen del Proyecto</h2>
+                <div class="space-y-4 text-slate-300 text-lg text-left leading-relaxed">
+                    <p>
+                        Este proyecto aborda la creación de una <strong>API RESTful</strong> diseñada para eficientizar el soporte de software. La API integra <strong>Grandes Modelos de Lenguaje (LLMs)</strong> con una base de conocimientos específica de la empresa.
+                    </p>
+                    <p>
+                        El objetivo principal es proporcionar <strong>respuestas rápidas y precisas</strong> a las consultas de los usuarios, automatizando un proceso que tradicionalmente consume mucho tiempo y recursos. Para lograrlo, se implementa un sistema de <strong>Retrieval-Augmented Generation (RAG)</strong>, que permite al modelo consultar información actualizada y relevante de la base de conocimientos antes de generar una respuesta.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: El Problema -->
+        <section id="problema" class="section">
+            <div class="max-w-4xl w-full text-center">
+                <h2 class="text-3xl font-bold text-white mb-8">Problema</h2>
+                <div class="glass-card mb-4">
+                    <h3 class="text-xl font-semibold text-sky-400 mb-3">Contexto</h3>
+                    <p class="text-slate-300">
+                        El origen de este proyecto nace a partir de una necesidad específica de la empresa <strong>CAPATAZ S.A.S.</strong>, que ofrece soluciones de software a sus clientes. La empresa enfrenta desafíos en la gestión de soporte técnico, donde los usuarios reportan dudas y problemas técnicos al área de soporte.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 text-left">
+                    <div class="glass-card">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-3">Altos Costos y Tiempo</h3>
+                        <p class="text-slate-300">
+                            El soporte manual requiere un equipo dedicado, lo que implica costos significativos en salarios y capacitación. Además, el tiempo de respuesta puede ser lento, afectando la satisfacción del cliente.
+                        </p>
+                    </div>
+                    <div class="glass-card">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-3">Inconsistencia y Escalabilidad</h3>
+                        <p class="text-slate-300">
+                            La calidad del soporte puede variar entre agentes. Escalar el equipo para manejar un mayor volumen de consultas es un desafío logístico y financiero constante para las empresas en crecimiento.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: La Solución Propuesta -->
+        <section id="solucion" class="section">
+            <div class="glass-card max-w-4xl w-full">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Una Solución Inteligente y Automatizada</h2>
+                <div class="space-y-4 text-slate-300 text-lg leading-relaxed">
+                    <p>
+                        La solución es una <strong>API REST</strong> que actúa como un asistente inteligente. Permite a los clientes de CAPATAZ u otros sistemas realizar consultas en lenguaje natural y recibir respuestas coherentes y contextualizadas.
+                    </p>
+                    <ul class="list-disc list-inside space-y-3 pl-4">
+                        <li><strong>Disponibilidad 24/7:</strong> El soporte está siempre activo, sin interrupciones.</li>
+                        <li><strong>Respuestas más Rápidas:</strong> Reduce drásticamente los tiempos de espera para los usuarios.</li>
+                        <li><strong>Base de Conocimiento Centralizada:</strong> Utiliza la documentación existente y tickets de soporte para asegurar respuestas precisas y basadas en la realidad de la empresa.</li>
+                        <li><strong>Aprendizaje y Mejora Continua:</strong> La base de conocimiento puede actualizarse constantemente para mejorar la calidad de las respuestas.</li>
+                        <li><strong>Liberación RRHH:</strong> Solución automatizada de problemas mas simples dejando libre a recursos humanos para problemas mas complejos.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Funcionamiento -->
+        <section id="funcionamiento" class="section">
+            <div class="max-w-5xl w-full text-center">
+                <h2 class="text-3xl font-bold text-white mb-8">Funcionamiento del Sistema</h2>
+                <div class="glass-card p-8">
+                    <div class="flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 text-white">
+                        <!-- Cliente -->
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-sky-400" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.425 3.488"/>
+                            </svg>
+                            <span class="font-bold">Plataforma de Mensajería</span>
+                            <p class="text-sm text-slate-400">Cliente realiza consulta</p>
+                        </div>
+
+                        <div class="text-3xl text-slate-500 font-thin">&rarr;</div>
+
+                        <!-- API REST -->
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
+                            <span class="font-bold">API REST (.NET 8)</span>
+                            <p class="text-sm text-slate-400">Procesa la petición</p>
+                        </div>
+
+                        <div class="text-3xl text-slate-500 font-thin">&rarr;</div>
+
+                        <!-- Lógica con LLM -->
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-sky-400" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Input Layer -->
+                                <circle cx="4" cy="6" r="1.5" fill="currentColor" opacity="0.8"/>
+                                <circle cx="4" cy="12" r="1.5" fill="currentColor" opacity="0.8"/>
+                                <circle cx="4" cy="18" r="1.5" fill="currentColor" opacity="0.8"/>
+                                
+                                <!-- Hidden Layer 1 -->
+                                <circle cx="10" cy="4" r="1.5" fill="currentColor" opacity="0.9"/>
+                                <circle cx="10" cy="8" r="1.5" fill="currentColor" opacity="0.9"/>
+                                <circle cx="10" cy="12" r="1.5" fill="currentColor" opacity="0.9"/>
+                                <circle cx="10" cy="16" r="1.5" fill="currentColor" opacity="0.9"/>
+                                <circle cx="10" cy="20" r="1.5" fill="currentColor" opacity="0.9"/>
+                                
+                                <!-- Hidden Layer 2 -->
+                                <circle cx="16" cy="6" r="1.5" fill="currentColor" opacity="0.9"/>
+                                <circle cx="16" cy="10" r="1.5" fill="currentColor" opacity="0.9"/>
+                                <circle cx="16" cy="14" r="1.5" fill="currentColor" opacity="0.9"/>
+                                <circle cx="16" cy="18" r="1.5" fill="currentColor" opacity="0.9"/>
+                                
+                                <!-- Output Layer -->
+                                <circle cx="22" cy="8" r="1.5" fill="currentColor"/>
+                                <circle cx="22" cy="12" r="1.5" fill="currentColor"/>
+                                <circle cx="22" cy="16" r="1.5" fill="currentColor"/>
+                                
+                                <!-- Connections Input to Hidden1 -->
+                                <line x1="5.5" y1="6" x2="8.5" y2="4" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="5.5" y1="6" x2="8.5" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="5.5" y1="6" x2="8.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="5.5" y1="12" x2="8.5" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="5.5" y1="12" x2="8.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="5.5" y1="12" x2="8.5" y2="16" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="5.5" y1="18" x2="8.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="5.5" y1="18" x2="8.5" y2="16" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="5.5" y1="18" x2="8.5" y2="20" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                
+                                <!-- Connections Hidden1 to Hidden2 -->
+                                <line x1="11.5" y1="4" x2="14.5" y2="6" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="11.5" y1="8" x2="14.5" y2="6" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="11.5" y1="8" x2="14.5" y2="10" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="11.5" y1="12" x2="14.5" y2="10" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="11.5" y1="12" x2="14.5" y2="14" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="11.5" y1="16" x2="14.5" y2="14" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="11.5" y1="16" x2="14.5" y2="18" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="11.5" y1="20" x2="14.5" y2="18" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                
+                                <!-- Connections Hidden2 to Output -->
+                                <line x1="17.5" y1="6" x2="20.5" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="17.5" y1="10" x2="20.5" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="17.5" y1="10" x2="20.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="17.5" y1="14" x2="20.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="17.5" y1="14" x2="20.5" y2="16" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                                <line x1="17.5" y1="18" x2="20.5" y2="16" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                            </svg>
+                            <span class="font-bold">LLM SoTA</span>
+                            <p class="text-sm text-slate-400">Decide qué información recuperar</p>
+                        </div>
+
+                        <div class="text-3xl text-slate-500 font-thin">&rarr;</div>
+
+                        <!-- Base de Conocimiento -->
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                            <span class="font-bold">Base de Datos</span>
+                            <p class="text-sm text-slate-400">Documentación y tickets de Soporte</p>
+                        </div>
+
+                        </div>
+                        <div class="flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 text-white mt-8">
+
+
+                        <div class="text-3xl text-slate-500 font-thin">&rarr;</div>
+
+                        <!-- LLM Local -->
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-sky-400" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Input Layer -->
+                                <circle cx="4" cy="6" r="1.5" fill="currentColor" opacity="0.8" />
+                                <circle cx="4" cy="12" r="1.5" fill="currentColor" opacity="0.8" />
+                                <circle cx="4" cy="18" r="1.5" fill="currentColor" opacity="0.8" />
+
+                                <!-- Hidden Layer 1 -->
+                                <circle cx="10" cy="4" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="10" cy="8" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="10" cy="12" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="10" cy="16" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="10" cy="20" r="1.5" fill="currentColor" opacity="0.9" />
+
+                                <!-- Hidden Layer 2 -->
+                                <circle cx="16" cy="6" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="16" cy="10" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="16" cy="14" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="16" cy="18" r="1.5" fill="currentColor" opacity="0.9" />
+
+                                <!-- Output Layer -->
+                                <circle cx="22" cy="8" r="1.5" fill="currentColor" />
+                                <circle cx="22" cy="12" r="1.5" fill="currentColor" />
+                                <circle cx="22" cy="16" r="1.5" fill="currentColor" />
+
+                                <!-- Connections Input to Hidden1 -->
+                                <line x1="5.5" y1="6" x2="8.5" y2="4" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="6" x2="8.5" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="6" x2="8.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="12" x2="8.5" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="12" x2="8.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="12" x2="8.5" y2="16" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="18" x2="8.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="18" x2="8.5" y2="16" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="18" x2="8.5" y2="20" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+
+                                <!-- Connections Hidden1 to Hidden2 -->
+                                <line x1="11.5" y1="4" x2="14.5" y2="6" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="8" x2="14.5" y2="6" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="8" x2="14.5" y2="10" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="12" x2="14.5" y2="10" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="12" x2="14.5" y2="14" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="16" x2="14.5" y2="14" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="16" x2="14.5" y2="18" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="20" x2="14.5" y2="18" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+
+                                <!-- Connections Hidden2 to Output -->
+                                <line x1="17.5" y1="6" x2="20.5" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="17.5" y1="10" x2="20.5" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="17.5" y1="10" x2="20.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="17.5" y1="14" x2="20.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="17.5" y1="14" x2="20.5" y2="16" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="17.5" y1="18" x2="20.5" y2="16" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                            </svg>
+                            <span class="font-bold">LLM Local</span>
+                            <p class="text-sm text-slate-400">Filtra información</p>
+                        </div>
+
+                        <div class="text-3xl text-slate-500 font-thin">&rarr;</div>
+
+                        <!-- Lógica con LLM -->
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-sky-400" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Input Layer -->
+                                <circle cx="4" cy="6" r="1.5" fill="currentColor" opacity="0.8" />
+                                <circle cx="4" cy="12" r="1.5" fill="currentColor" opacity="0.8" />
+                                <circle cx="4" cy="18" r="1.5" fill="currentColor" opacity="0.8" />
+
+                                <!-- Hidden Layer 1 -->
+                                <circle cx="10" cy="4" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="10" cy="8" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="10" cy="12" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="10" cy="16" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="10" cy="20" r="1.5" fill="currentColor" opacity="0.9" />
+
+                                <!-- Hidden Layer 2 -->
+                                <circle cx="16" cy="6" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="16" cy="10" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="16" cy="14" r="1.5" fill="currentColor" opacity="0.9" />
+                                <circle cx="16" cy="18" r="1.5" fill="currentColor" opacity="0.9" />
+
+                                <!-- Output Layer -->
+                                <circle cx="22" cy="8" r="1.5" fill="currentColor" />
+                                <circle cx="22" cy="12" r="1.5" fill="currentColor" />
+                                <circle cx="22" cy="16" r="1.5" fill="currentColor" />
+
+                                <!-- Connections Input to Hidden1 -->
+                                <line x1="5.5" y1="6" x2="8.5" y2="4" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="6" x2="8.5" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="6" x2="8.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="12" x2="8.5" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="12" x2="8.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="12" x2="8.5" y2="16" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="18" x2="8.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="18" x2="8.5" y2="16" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="5.5" y1="18" x2="8.5" y2="20" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+
+                                <!-- Connections Hidden1 to Hidden2 -->
+                                <line x1="11.5" y1="4" x2="14.5" y2="6" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="8" x2="14.5" y2="6" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="8" x2="14.5" y2="10" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="12" x2="14.5" y2="10" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="12" x2="14.5" y2="14" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="16" x2="14.5" y2="14" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="16" x2="14.5" y2="18" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="11.5" y1="20" x2="14.5" y2="18" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+
+                                <!-- Connections Hidden2 to Output -->
+                                <line x1="17.5" y1="6" x2="20.5" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="17.5" y1="10" x2="20.5" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="17.5" y1="10" x2="20.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="17.5" y1="14" x2="20.5" y2="12" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="17.5" y1="14" x2="20.5" y2="16" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                                <line x1="17.5" y1="18" x2="20.5" y2="16" stroke="currentColor" stroke-width="0.5" opacity="0.4" />
+                            </svg>
+                            <span class="font-bold">LLM SoTA</span>
+                            <p class="text-sm text-slate-400">Construye respuesta</p>
+                        </div>
+
+                        <div class="text-3xl text-slate-500 font-thin">&rarr;</div>
+
+                        <!-- Cliente -->
+                        <div class="flex flex-col items-center">
+                            <svg class="w-16 h-16 mb-2 text-sky-400" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.425 3.488" />
+                            </svg>
+                            <span class="font-bold">Plataforma de Mensajería</span>
+                            <p class="text-sm text-slate-400">Cliente recibe consulta</p>
+                        </div>
+                    </div>
+                    
+                    <p class="mt-8 text-slate-300">El flujo comienza con una consulta del cliente, que la API procesa. Aquí el LLM SoTA decide si es necesario buscar información para responder la pregunta y qué información. Si es necesario, se busca información relevante en la base de datos (vectorizada) la cual luego es filtrada por un LLM Local para eliminar información irrelevante. Finalmente, esto se envía al LLM SoTA para que genere una respuesta fundamentada y se la envíe al cliente.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Arquitectura -->
+        <section id="arquitectura" class="section">
+            <div class="max-w-5xl w-full text-center">
+                <h2 class="text-3xl font-bold text-white mb-8">Arquitectura del Sistema</h2>
+                <p class="text-slate-400 mb-10 max-w-3xl mx-auto">Para construir una base sólida, escalable y mantenible, el proyecto se adhiere a los siguientes principios y patrones de diseño.</p>
+                <div class="grid md:grid-cols-2 gap-8 text-left">
+                    <div class="glass-card h-full">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-3">Arquitectura Hexagonal</h3>
+                        <p class="text-slate-300">
+                            Esta arquitectura aísla la lógica central de la aplicación de los servicios externos (base de datos, APIs y LLMs). Esto permite que la aplicación sea independiente de la tecnología y mucho más fácil de probar, mantener o intercambiar tecnologías (ej: LLMs).
+                        </p>
+                    </div>
+                    <div class="glass-card h-full">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-3">Principios SOLID</h3>
+                        <p class="text-slate-300">
+                            Son un conjunto de cinco principios de diseño que facilitan el desarrollo de software comprensible, flexible y mantenible.
+                        </p>
+                    </div>
+                    <div class="glass-card h-full">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-3">Domain-Driven Design (DDD)</h3>
+                        <p class="text-slate-300">
+                            Enfoca el desarrollo en el dominio del negocio. Se crea un modelo rico que refleja los procesos y reglas del negocio.
+                        </p>
+                    </div>
+                    <div class="glass-card h-full">
+                        <h3 class="text-xl font-semibold text-sky-400 mb-3">Patrón Outbox</h3>
+                        <p class="text-slate-300">
+                            Garantiza la consistencia de datos en operaciones que escribir en la base de datos y publican eventos. Asegura la resilencia del sistema incluso si ocurren fallos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Section 7: Tecnologías -->
+        <section id="tecnologias" class="section">
+            <div class="max-w-4xl w-full text-center">
+                <h2 class="text-3xl font-bold text-white mb-10">Stack Tecnológico</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- .NET 8 -->
+                    <div class="glass-card flex flex-col items-center p-6">
+                        <img src="https://img.icons8.com/color/96/net-framework.png" alt=".NET Icon" class="h-16 w-16 mb-3">
+                        <h3 class="font-bold text-xl text-white">.NET 8</h3>
+                        <p class="text-slate-400 text-sm">Framework principal</p>
+                    </div>
+                    <!-- Semantic Kernel -->
+                    <div class="glass-card flex flex-col items-center p-6">
+                        <img src="https://devblogs.microsoft.com/semantic-kernel/wp-content/uploads/sites/78/2024/03/Large_SK_Logo.png" alt="SK Icon" class="h-16 w-16 mb-3">
+                        <h3 class="font-bold text-xl text-white">Semantic Kernel</h3>
+                        <p class="text-slate-400 text-sm">Orquestador de LLM</p>
+                    </div>
+                    <!-- SQL Server -->
+                    <div class="glass-card flex flex-col items-center p-6">
+                        <img src="https://img.icons8.com/color/96/microsoft-sql-server.png" alt="SQL Server IcON" class="h-16 w-16 mb-3">
+                        <h3 class="font-bold text-xl text-white">SQL Server</h3>
+                        <p class="text-slate-400 text-sm">Base de datos</p>
+                    </div>
+                    <!-- Entity Framework -->
+                    <div class="glass-card flex flex-col items-center p-6">
+                        <img src="https://img.icons8.com/?size=100&id=RXrON5kyN96A&format=png&color=000000" alt="EF Core Icon" class="h-16 w-16 mb-3">
+                        <h3 class="font-bold text-xl text-white">Entity Framework</h3>
+                        <p class="text-slate-400 text-sm">ORM para datos</p>
+                    </div>
+                    <!-- LLM SoTA -->
+                    <div class="glass-card flex flex-col items-center p-6">
+                        <img src="https://img.icons8.com/?size=100&id=unXm4ixWAr6H&format=png&color=000000" alt="LLM SoTA Icon" class="h-16 w-16 mb-3">
+                        <h3 class="font-bold text-xl text-white">Gemini 2.0 Flash</h3>
+                        <p class="text-slate-400 text-sm">LLM SoTA</p>
+                    </div>
+                    <!-- Docker -->
+                    <div class="glass-card flex flex-col items-center p-6">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Qwen_logo.svg" alt="LLM Local Icon" class="h-16 w-16 mb-3">
+                        <h3 class="font-bold text-xl text-white">Qwen 2.5 32B</h3>
+                        <p class="text-slate-400 text-sm">LLM Local</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8: Selección de LLMs -->
+        <section id="seleccion-llm" class="section">
+            <div class="glass-card max-w-4xl w-full">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Selección de LLMs</h2>
+                <p class="text-center text-slate-400 mb-8">La elección de los modelos de lenguaje es crucial. Se evaluaron múltiples opciones a través de un analisis cuantitativo basándose en los siguientes criterios:</p>
+                <div class="grid md:grid-cols-2 gap-6 text-left">
+                    <div class="bg-slate-800/50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-sky-400 mb-2">1. Rendimiento y Precisión</h3>
+                        <p class="text-slate-300 text-sm">Se priorizaron modelos con alto rendimiento en benchmarks de comprensión de lenguaje y razonamiento, asegurando respuestas coherentes y precisas.</p>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-sky-400 mb-2">2. Costo-Eficiencia</h3>
+                        <p class="text-slate-300 text-sm">Se analizaron los precios por token para encontrar un balance óptimo entre capacidad y costo operativo, garantizando la viabilidad económica del proyecto.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 9: Demo-->
+        <section id="demo" class="section">
+            <div class="glass-card max-w-4xl w-full">
+                <h2 class="text-3xl font-bold text-white mb-6 text-center">Demostración en Vivo</h2>
+                <div class="space-y-4 text-slate-300 text-lg leading-relaxed">
+                    <p class="text-center text-slate-400 mb-6">
+                        Prueba la API en tiempo real. Escribe tu consulta y obtén una respuesta automática del sistema de IA.
+                    </p>
+                    <div class="chat-container glass-card border-slate-600 bg-slate-900/50">
+                        <div id="chat-window" class="chat-window"></div>
+                        <div class="message-input-container glass-card-input" id="message-input-container">
+                            <textarea id="message-input" class="message-input" rows="2" placeholder="Escribe tu consulta aquí..."></textarea>
+                            <button id="send-button" class="send-button" disabled>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                </svg>
+                                Enviar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('#nav-links a');
+
+            // --- Animación de Scroll ---
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // --- Navegación Activa ---
+            const navObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.remove('active', 'text-sky-400');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active', 'text-sky-400');
+                            }
+                        });
+                    }
+                });
+            }, {
+                rootMargin: '-50% 0px -50% 0px'
+            });
+
+            sections.forEach(section => {
+                navObserver.observe(section);
+            });
+        });
+    </script>
+</body>
 
 @section Styles {
     <style>
-        header {
-            width: 100%;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
         }
 
-        html, body {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            background-color: #3b3b3b;
+        .section {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
+            padding: 4rem 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .gradient-text {
+            background: -webkit-linear-gradient(45deg, #38bdf8, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav a {
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #38bdf8;
+            transition: width 0.3s ease-out;
+        }
+
+        nav a.active::after,
+        nav a:hover::after {
+            width: 100%;
         }
 
         .chat-container {
             display: flex;
             flex-direction: column;
             width: 100%;
-            height: 100%;
-            padding-bottom: 2%;
+            min-height: 500px;
+            max-height: 600px;
             overflow: hidden;
-            background-color: #3b3b3b;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
         }
 
         .chat-window {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
             flex: 1;
-            padding: 20px;
-            padding-left: 10%;
-            padding-right: 10%;
+            padding: 24px;
             overflow-y: auto;
-            scrollbar-color: dimgray #3b3b3b;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+        }
+
+        .chat-window::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-window::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-window::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 3px;
+        }
+
+        .chat-window::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.5);
+        }
+
+        .glass-card-input {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
+            margin: 16px;
         }
 
         .message-input-container {
             display: flex;
             align-items: end;
-            padding: 10px;
-            background-color: dimgray;
-            border-radius: 20px;
-            margin-left: 10%;
-            margin-right: 10%;
+            padding: 12px 16px;
+            gap: 12px;
         }
 
         .message-input {
             flex-grow: 1;
-            border: 0px;
+            border: none;
             outline: none;
             resize: none;
-            max-height: 150px;
-            background-color: dimgray;
-            color: white;
-            scrollbar-color: #3b3b3b dimgray;
-            margin: 10px;
+            max-height: 120px;
+            background: transparent;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
         }
 
         .message-input::placeholder {
-            color: lightgray;
+            color: #94a3b8;
         }
 
         .send-button {
-            background-color: white;
-            color: black;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 15px;
+            padding: 12px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            align-self: center;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
         }
 
         .send-button:disabled {
-            background: dimgray;
-            color: dimgray;
+            background: rgba(71, 85, 105, 0.5);
+            color: #64748b;
             cursor: not-allowed;
+            box-shadow: none;
         }
 
-        .send-button:hover {
-            background-color: lightgray;
+        .send-button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            box-shadow: 0 6px 16px rgba(56, 189, 248, 0.35);
+            transform: translateY(-1px);
         }
 
         .chat-window div {
             display: flex;
-            color: white;
+            color: #e2e8f0;
             max-width: 100%;
             word-wrap: break-word;
             align-self: flex-start;
             flex-direction: row;
+            gap: 12px;
         }
 
         .icon-border {
@@ -113,82 +699,87 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            border: 1px solid dimgray;
-            align-self: center;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            align-self: flex-start;
+            flex-shrink: 0;
         }
 
         .icon {
-            width: 25px;
-            height: 25px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             object-fit: cover;
         }
 
         .chat-window .user-message {
             padding: 12px 16px;
-            background-color: dimgray;
+            background: linear-gradient(135deg, #475569, #334155);
             align-self: flex-end;
-            max-width: 70%;
-            border-radius: 20px;
+            max-width: 75%;
+            border-radius: 16px 16px 4px 16px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .chat-window div .bot-message {
-            max-width: 100%;
-            align-self: center;
-            padding: 8px 12px;
+            max-width: 75%;
+            align-self: flex-start;
+            padding: 12px 16px;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 16px 16px 16px 4px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            backdrop-filter: blur(10px);
         }
 
+        /* Enhanced Loading Animations */
         .loader {
-            width: 10px;
-            height: 10px;
             border-radius: 50%;
             display: block;
-            margin: 15px auto;
+            width: 20px;
+            height: 20px;
+            margin: auto 0;
             position: relative;
-            color: #FFF;
-            left: -100px;
-            margin-left: 100px;
-            box-sizing: border-box;
-            animation: shadowRolling 2s linear infinite;
         }
 
-        @@keyframes shadowRolling {
-        0% {
-            box-shadow: 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+        /* Primary loader - Pulsing Neural Network Style */
+        .loader.neural-pulse {
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, transparent 50%);
+            border-radius: 50%;
+            animation: neuralPulse 2s ease-in-out infinite;
         }
 
-        12% {
-            box-shadow: 100px 0 white, 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+        .loader.neural-pulse::before,
+        .loader.neural-pulse::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.4) 0%, transparent 60%);
+            animation: neuralPulse 2s ease-in-out infinite;
         }
 
-        25% {
-            box-shadow: 110px 0 white, 100px 0 white, 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+        .loader.neural-pulse::before {
+            animation-delay: 0.5s;
+            transform: scale(1.2);
         }
 
-        36% {
-            box-shadow: 120px 0 white, 110px 0 white, 100px 0 white, 0px 0 rgba(255, 255, 255, 0);
+        .loader.neural-pulse::after {
+            animation-delay: 1s;
+            transform: scale(1.4);
         }
 
-        50% {
-            box-shadow: 130px 0 white, 120px 0 white, 110px 0 white, 100px 0 white;
-        }
-
-        62% {
-            box-shadow: 200px 0 rgba(255, 255, 255, 0), 130px 0 white, 120px 0 white, 110px 0 white;
-        }
-
-        75% {
-            box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 130px 0 white, 120px 0 white;
-        }
-
-        87% {
-            box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 130px 0 white;
-        }
-
-        100% {
-            box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0);
-        }
-
+        /* Keyframe animations */
+        @@keyframes neuralPulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
         }
 
     </style>
