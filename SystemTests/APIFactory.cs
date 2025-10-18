@@ -13,7 +13,10 @@ using Testcontainers.MsSql;
 
 namespace System.Tests
 {
-    public class APIFactory(int LLMPort, int testClientPort, string connectionString)
+    public class APIFactory(
+        int LLMPort,
+        int testClientPort,
+        string connectionString)
         : WebApplicationFactory<APIProgram>
     {
         readonly string _connectionString = connectionString;
@@ -37,7 +40,7 @@ namespace System.Tests
 
             var context = CreateContext();
 
-            context.Database.EnsureCreated();
+            context.Database.Migrate();
 
             builder.UseConfiguration(config);
         }
