@@ -26,6 +26,72 @@ namespace System.Tests.Funcionales
     public class ReciboDeMensajesTests
         : BaseTests
     {
+        // Prueba tabla de desiciones:
+        [Test]
+        [TestCase("34e8d77b-736d-4f2f-a5f8-76bb2cb8173a", false)]
+        [TestCase("91b86eaf-ca16-4eaf-aab3-0606d26a76b6", true)]
+        public async Task Mensaje_CreacionChat(
+            string chatIdMensaje,
+            bool shouldCreateChat)
+        {
+            using var LLMServer = WireMockServer.Start();
+            using var chatServer = WireMockServer.Start();
+
+            string mensajePlataformaId = Guid.NewGuid().ToString();
+
+            var apiFactory = await CreateAPIFactoryAsync(
+                LLMServer.Port,
+                chatServer.Port);
+
+            var client = apiFactory.CreateClient();
+
+            var chat = new Chat
+            {
+                Id = Guid.Parse("34e8d77b-736d-4f2f-a5f8-76bb2cb8173a"),
+                ChatPlataformaId = "34e8d77b-736d-4f2f-a5f8-76bb2cb8173a",
+                Plataforma = Platforms.Test,
+                UsuarioId = "34e8d77b-736d-4f2f-a5f8-76bb2cb8173a"
+            };
+
+            var dbContext = apiFactory.Services.CreateScope().ServiceProvider
+                .GetRequiredService<ChatContext>();
+            dbContext.Chats.Add(chat);
+            await dbContext.SaveChangesAsync();
+
+            var mensajeDTO = new TestMensajeTexto
+            {
+                ChatId = Guid.Parse(chatIdMensaje),
+                DateTime = DateTime.Now,
+                Texto = "Hola"
+            };
+
+            // Act
+            var httpResponse = await client.PostAsJsonAsync(
+                "/Test/texto",
+                mensajeDTO)
+                .ConfigureAwait(false);
+
+            // Assert
+            dbContext = apiFactory.Services.CreateScope().ServiceProvider
+                .GetRequiredService<ChatContext>();
+
+            int chatCount = await dbContext.Chats.CountAsync();
+
+            Assert.That(chatCount, Is.EqualTo(shouldCreateChat ? 2 : 1));
+
+            var chatDb = await dbContext.Chats
+                .Include(c => c.Mensajes)
+                .FirstOrDefaultAsync(c => c.ChatPlataformaId == chatIdMensaje);
+
+            Assert.That(chatDb, Is.Not.Null);
+            Assert.That(chatDb.Mensajes, Has.Count.EqualTo(1));
+            Assert.That(
+                chatDb.Mensajes.First(),
+                Is.InstanceOf<MensajeTextoUsuario>().And
+                    .Matches<MensajeTextoUsuario>(m => m.Texto == "Hola"));
+        }
+
+        // Prueba transicion de estado:
         [Test, Timeout(15000)]
         public async Task Mensaje_SinHerramienta_Test()
         {
@@ -162,6 +228,7 @@ namespace System.Tests.Funcionales
                     .EqualTo(mensajePlataformaId));
         }
 
+        // Prueba transicion de estado:
         [Test, Timeout(25000)]
         public async Task Mensaje_ConHistoriaYSinHerramienta_Test()
         {
@@ -197,7 +264,7 @@ namespace System.Tests.Funcionales
                     {
                         Texto = "Hola soy el test",
                         DateTime = DateTime.Now
-                    } ]);
+                    }]);
 
             context.Chats.Add(chat);
             context.SaveChanges();
@@ -347,6 +414,7 @@ namespace System.Tests.Funcionales
                     .EqualTo(mensajePlataformaId));
         }
 
+        // Prueba transicion de estado:
         [Test, Timeout(25000)]
         public async Task Mensaje_ConHerramienta_Test()
         {
@@ -365,7 +433,9 @@ namespace System.Tests.Funcionales
             Guid documentoId = Guid.NewGuid();
             Guid consultaId = Guid.NewGuid();
 
-            var embedding = Enumerable.Range(1, 768).Select(x => x * 1.0f).ToArray();
+            var embedding = Enumerable.Range(1, 768)
+                .Select(x => x * 1.0f)
+                .ToArray();
 
             context.Documents
                 .Add(
@@ -380,7 +450,7 @@ namespace System.Tests.Funcionales
                                     Id = Guid.NewGuid(),
                                     Texto = "Texto del documento",
                                     Embedding = embedding
-                                } ]
+                                }]
                     });
 
             context.Consultas
@@ -410,9 +480,9 @@ namespace System.Tests.Funcionales
                                     Data =
                                         [ ..Enumerable.Repeat(
                                                     new EmbeddingResponse
-                                                    {
-                                                        Embedding = embedding
-                                                    },
+                                        {
+                                            Embedding = embedding
+                                        },
                                                     10) ]
                                 }));
 
