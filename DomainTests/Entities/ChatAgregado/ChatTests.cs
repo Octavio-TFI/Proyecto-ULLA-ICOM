@@ -231,7 +231,7 @@ namespace Domain.Entities.ChatAgregado.Tests
         }
 
         [Test]
-        public async Task LlamarHerramientaAsync_Exitoso_AgregaMensajeHerramientaYEvento(
+        public async Task LlamarHerramientaAsync_UltimoMensajeEsLlamadaHerramiento_AgregaMensajeHerramientaYEvento(
             )
         {
             // Arrange
