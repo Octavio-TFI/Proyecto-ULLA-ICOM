@@ -18,10 +18,15 @@ namespace System.Tests.Funcionales
         : BaseTests
     {
         // Prueba particionado de equivalencia:
-        [TestCase("1234", ExpectedResult = true)]
-        [TestCase("abcd", ExpectedResult = false)]
+        // Particion Valida: Mensajes con ID existentes
+        [TestCase("1234", true, ExpectedResult = true)]
+        [TestCase("1234", false, ExpectedResult = true)]
+        // Particion Invalida: Mensajes con ID no existentes
+        [TestCase("abcd", true, ExpectedResult = false)]
+        [TestCase("abcd", false, ExpectedResult = false)]
         public async Task<bool> Calificacion_RecibeStatusCodeCorrecto(
-            string idMensajeCalificacion)
+            string idMensajeCalificacion,
+            bool calificacion)
         {
             using var localLLMServer = WireMockServer.Start();
             using var chatServer = WireMockServer.Start();
@@ -59,7 +64,7 @@ namespace System.Tests.Funcionales
             var calificacionMensaje = new TestCalificacionMensaje
             {
                 MensajeId = idMensajeCalificacion,
-                Calificacion = true
+                Calificacion = calificacion
             };
 
             // Act
